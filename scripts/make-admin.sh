@@ -71,6 +71,22 @@ fi
 
 # Normalised the same way AuthService normalises it, so the match is not defeated by case.
 NORMALISED="$(printf '%s' "$EMAIL" | tr '[:upper:]' '[:lower:]' | sed 's/^ *//; s/ *$//')"
+
+# Guard against a hazard this script would otherwise walk into. SQLite's UNIQUE index on email
+# is case-sensitive, so 'Susan@x.com' and 'susan@x.com' can both exist even though the
+# application treats them as one address. Without this check the lookup below returns several
+# rows and the UPDATE promotes all of them - a silent overreach, and one that is invisible
+# because the success message only names the address.
+MATCHES="$(sqlite3 "$DB" "select count(*) from users where lower(email) = '$NORMALISED';")"
+if [ "$MATCHES" -gt 1 ]; then
+  echo "ERROR: $MATCHES accounts match $NORMALISED ignoring case." >&2
+  echo "       SQLite's unique index on email is case-sensitive, so they can coexist, but the" >&2
+  echo "       application treats them as one address. Promoting all of them would be a silent" >&2
+  echo "       overreach. Resolve the duplicates first:" >&2
+  sqlite3 "$DB" "select '         ' || id || '  ' || email || '  (' || role || ')' from users where lower(email) = '$NORMALISED';" >&2
+  exit 1
+fi
+
 EXISTING_ROLE="$(sqlite3 "$DB" "select role from users where lower(email) = '$NORMALISED';")"
 
 if [ -z "$EXISTING_ROLE" ]; then
