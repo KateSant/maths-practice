@@ -164,9 +164,16 @@ jobs:
     environment: production
     # The deploy needs AWS access, but only to open and close a single firewall rule
     # for this runner's address. The role grants Lightsail and nothing else.
+    #
+    # packages: read is not optional. Declaring permissions here REPLACES the
+    # workflow-level block rather than merging with it, so adding id-token silently
+    # dropped packages: write and the host could log in to GHCR but not pull the
+    # private images ("error from registry: denied"). Read is enough to pull; the
+    # build job is the one that needs write.
     permissions:
       contents: read
       id-token: write
+      packages: read
     steps:
       - uses: actions/checkout@v4
 
