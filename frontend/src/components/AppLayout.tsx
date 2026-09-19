@@ -19,13 +19,11 @@ function navLinkClass({ isActive }: { isActive: boolean }): string {
  * gamification — a teacher editing questions does not need to be told their streak is zero, and
  * `★ 0` next to an authoring tool reads as noise.
  *
- * Practice stays in both, because a teacher is also a user with an account, and the home page
- * invites them to do either. That is the way back, not a mode switch.
- *
- * There is deliberately no link the other way. The practice side shows no sign that a question
- * bank exists, so an administrator reaches it by signing in through the Teacher door rather than
- * by being offered it mid-practice. The halves are kept apart on purpose, and switching sides
- * means signing in again.
+ * Practice stays off the teacher's navigation entirely, and the question bank never shows on the
+ * student side: the two sets of links are disjoint on purpose, and switching halves means signing
+ * in through the other door. The mark in the corner follows suit, going to the question bank while
+ * you are inside it, and a standing banner says which half you are in rather than leaving a teacher
+ * to infer it from a link being absent.
  */
 export function AppLayout() {
   const { profile, logout } = useAuth()
@@ -46,7 +44,7 @@ export function AppLayout() {
           {/* The mark stands alone while the product has no name, so the link needs an
               accessible name of its own rather than announcing the sigma. */}
           <Link
-            to="/"
+            to={inAdmin ? '/admin/questions' : '/'}
             aria-label="Home"
             title="Home"
             className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/30"
@@ -55,10 +53,6 @@ export function AppLayout() {
           </Link>
 
           <nav className="ml-2 flex items-center gap-1">
-            <NavLink to="/" end className={navLinkClass}>
-              Practice
-            </NavLink>
-
             {inAdmin ? (
               // The question bank's own navigation lives here rather than on each page, so there
               // is one place to look and the pages do not repeat it.
@@ -71,9 +65,14 @@ export function AppLayout() {
                 </NavLink>
               </>
             ) : (
-              <NavLink to="/profile" className={navLinkClass}>
-                Profile
-              </NavLink>
+              <>
+                <NavLink to="/" end className={navLinkClass}>
+                  Practice
+                </NavLink>
+                <NavLink to="/profile" className={navLinkClass}>
+                  Profile
+                </NavLink>
+              </>
             )}
           </nav>
 
@@ -114,6 +113,18 @@ export function AppLayout() {
             ) : null}
           </div>
         </div>
+
+        {/* A standing reminder of which half of the product you are in. The navigation differs
+            already, but a teacher should not have to infer that from a link being absent. */}
+        {inAdmin ? (
+          <div className="border-t border-amber-200 bg-amber-50">
+            <div className="mx-auto max-w-5xl px-4 py-1.5 sm:px-6">
+              <p className="text-xs font-semibold uppercase tracking-wide text-amber-800">
+                Teacher mode
+              </p>
+            </div>
+          </div>
+        ) : null}
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
