@@ -1,0 +1,54 @@
+# Production stack for a single small instance.
+#
+# Two containers: Caddy serving the built SPA and reverse-proxying /api, and the API
+# itself. Both sit on one origin, so there is no CORS in production and no load
+# balancer. SQLite lives on a named volume.
+#
+# Images are pulled from GHCR and tagged by commit SHA, so a deploy is a pull and a
+# restart. Nothing here needs AWS credentials.
+#
+# Required in a .env file beside this file on the host:
+#   SITE_ADDRESS=https://realmaths.example.com
+#   REALMATHS_JWT_SECRET=<at least 32 bytes>
+#   IMAGE_API=ghcr.io/owner/real-maths/api:latest
+#   IMAGE_WEB=ghcr.io/owner/real-maths/web:latest
+#
+#   docker compose -f docker-compose.prod.yml up -d
+
+services:
+  web:
+    image: ${IMAGE_WEB:?set IMAGE_WEB (see the header of this file)}
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:?set SITE_ADDRESS}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Certificates live here. Persist it, or every restart re-requests a
+      # certificate from Let's Encrypt and you will hit the rate limit.
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - api
+
+  api:
+    image: ${IMAGE_API:?set IMAGE_API (see the header of this file)}
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:sqlite:/data/realmaths.db?foreign_keys=on&journal_mode=WAL&busy_timeout=5000
+      REALMATHS_JWT_SECRET: ${REALMATHS_JWT_SECRET:?set REALMATHS_JWT_SECRET}
+      REALMATHS_CORS_ALLOWED_ORIGINS: ${SITE_ADDRESS}
+      # Leave headroom for the kernel and Docker on a small instance.
+      JAVA_TOOL_OPTIONS: -XX:MaxRAMPercentage=60
+    volumes:
+      - realmaths-data:/data
+    # Deliberately no "ports": the API is reachable only by Caddy over the compose
+    # network, never directly from the internet.
+    expose:
+      - "8081"
+
+volumes:
+  realmaths-data:
+  caddy-data:
+  caddy-config:

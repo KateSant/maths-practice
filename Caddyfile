@@ -1,0 +1,42 @@
+# Edge configuration for the deployed app.
+#
+# SITE_ADDRESS comes from the environment: the hostname users will visit, e.g.
+# realmaths.example.com. Caddy obtains and renews a Let's Encrypt certificate for it
+# automatically. If you have no domain yet, 1-2-3-4.sslip.io resolves to the IP
+# 1.2.3.4 and works for ACME without owning anything.
+#
+# The default is plain HTTP on :80, which is what you get if SITE_ADDRESS is unset.
+
+{$SITE_ADDRESS:http://localhost} {
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+
+	# Vite fingerprints asset filenames, so these can be cached forever.
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	# Everything else must not be cached, API responses included. Leaving the SPA
+	# shell cacheable is what causes a browser to hold an index.html referencing
+	# asset filenames that a later deploy has deleted, producing a blank page.
+	@dynamic not path /assets/*
+	header @dynamic Cache-Control "no-cache"
+
+	# The API is matched first so /api/* never falls through to the SPA router and
+	# returns index.html. Both are on one origin, so no CORS is involved.
+	handle /api/* {
+		reverse_proxy api:8081
+	}
+
+	# Everything else is the static SPA. try_files provides the history fallback:
+	# /results/12 is not a file, so index.html is served and the client router
+	# handles it. Without this line, refreshing any deep link returns 404.
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+}

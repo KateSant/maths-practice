@@ -1,0 +1,21 @@
+# Keeps build contexts small. The web image builds from the repository root so it
+# can reach both frontend/ and the Caddyfile, which makes this file important:
+# without it, a local node_modules or target/ would be copied into the builder.
+
+**/node_modules
+**/target
+**/dist
+**/.git
+**/.idea
+**/*.iml
+
+# Never ship a database, or the temporary files SQLite keeps beside it.
+**/data/*.db
+**/data/*.db-wal
+**/data/*.db-shm
+*.db
+*.db-wal
+*.db-shm
+
+**/.DS_Store
+**/*.log
