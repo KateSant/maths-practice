@@ -12,7 +12,7 @@ export function PrivacyPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-12">
       <Link to="/" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
-        ← Real Maths
+        ← Joy for Maths
       </Link>
 
       <h1 className="mt-6 text-3xl font-bold text-slate-900">Privacy</h1>
