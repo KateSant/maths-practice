@@ -41,6 +41,13 @@ export function AppLayout() {
             <NavLink to="/profile" className={navLinkClass}>
               Profile
             </NavLink>
+            {/* Only rendered for an administrator. Hiding it is cosmetic — the API refuses
+                /api/admin/** regardless — but an Admin link a student cannot use is just noise. */}
+            {profile?.user.role === 'ADMIN' ? (
+              <NavLink to="/admin/questions" className={navLinkClass}>
+                Admin
+              </NavLink>
+            ) : null}
           </nav>
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">

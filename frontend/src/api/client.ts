@@ -37,11 +37,15 @@ export function setUnauthorizedHandler(handler: UnauthorizedHandler | null): voi
 }
 
 interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PATCH'
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
   body?: unknown
 }
 
-async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
+/**
+ * Exported so the admin API in `api/admin.ts` can reuse the token handling, error mapping and
+ * 401 hook rather than growing a second copy of them.
+ */
+export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const token = readToken()
   const headers: Record<string, string> = {}
   if (options.body !== undefined) {
