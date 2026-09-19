@@ -262,15 +262,31 @@ jobs:
           SITE: https://${{ vars.SITE_DOMAIN }}
         run: |
           echo "Checking $SITE"
-          curl -fsS -o /dev/null "$SITE/"
+
+          # Caddy requests its certificate on first start, which takes a few seconds.
+          # Retrying beats a fixed sleep: a slow ACME round trip is not reported as a
+          # failed deploy, and a fast one costs nothing. Without this, the very first
+          # deploy fails with a TLS alert for a site that is seconds from healthy.
+          wait_for() {
+            local url="$1" want="$2" label="$3" attempts="${4:-40}"
+            local code="000"
+            for attempt in $(seq 1 "$attempts"); do
+              code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$url" 2>/dev/null || echo 000)
+              if [ "$code" = "$want" ]; then
+                echo "  $label -> $code (attempt $attempt)"
+                return 0
+              fi
+              sleep 5
+            done
+            echo "  $label -> expected $want but kept seeing $code"
+            return 1
+          }
 
           # /api is proxied through to the API, which must refuse an anonymous
-          # request with 401. A 200 (stale SPA served) or 502 (API unreachable)
-          # both fail here, so this catches a broken deploy rather than just a
-          # broken container.
-          status=$(curl -s -o /dev/null -w '%{http_code}' "$SITE/api/topics")
-          echo "  $SITE/api/topics -> $status"
-          test "$status" = "401"
+          # request with 401. A 200 (stale SPA served) or 502 (API unreachable) both
+          # fail here, so this catches a broken deploy rather than a broken container.
+          wait_for "$SITE/" 200 "GET /"
+          wait_for "$SITE/api/topics" 401 "GET /api/topics"
           echo "Deploy verified."
 
       - name: Revoke this runner's SSH access
