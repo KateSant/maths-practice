@@ -20,6 +20,11 @@ function navLinkClass({ isActive }: { isActive: boolean }): string {
  *
  * Practice stays in both, because a teacher is also a user with an account, and the home page
  * invites them to do either. That is the way back, not a mode switch.
+ *
+ * There is deliberately no link the other way. The practice side shows no sign that a question
+ * bank exists, so an administrator reaches it by signing in through the Teacher door rather than
+ * by being offered it mid-practice. The halves are kept apart on purpose, and switching sides
+ * means signing in again.
  */
 export function AppLayout() {
   const { profile, logout } = useAuth()
@@ -27,7 +32,6 @@ export function AppLayout() {
   const { pathname } = useLocation()
 
   const inAdmin = pathname.startsWith('/admin')
-  const isAdmin = profile?.user.role === 'ADMIN'
 
   const handleSignOut = () => {
     logout()
@@ -62,18 +66,9 @@ export function AppLayout() {
                 </NavLink>
               </>
             ) : (
-              <>
-                <NavLink to="/profile" className={navLinkClass}>
-                  Profile
-                </NavLink>
-                {/* Only for an administrator. Hiding it is cosmetic — the API refuses
-                    /api/admin/** regardless — but a link a student cannot use is just noise. */}
-                {isAdmin ? (
-                  <NavLink to="/admin/questions" className={navLinkClass}>
-                    Manage questions
-                  </NavLink>
-                ) : null}
-              </>
+              <NavLink to="/profile" className={navLinkClass}>
+                Profile
+              </NavLink>
             )}
           </nav>
 

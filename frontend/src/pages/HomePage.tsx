@@ -44,7 +44,6 @@ export function HomePage() {
 
   const stats = profile?.stats
   const firstName = profile?.user.displayName.split(' ')[0] ?? 'there'
-  const isAdmin = profile?.user.role === 'ADMIN'
   const tone = accuracyTone(stats?.accuracyPercent ?? 0)
   const accuracyById = new Map((stats?.byTopic ?? []).map((entry) => [entry.topicId, entry.accuracyPercent]))
 
@@ -60,27 +59,11 @@ export function HomePage() {
       </section>
 
       {/*
-        The teacher's other option, offered rather than assumed. A teacher signing in has two
-        reasonable things to do — practise, or write questions — so this page presents both and
-        lets them pick. It sits above the practice content because a teacher who has just signed
-        in is more likely to have come to author something.
+        Deliberately nothing about teaching here. The practice side is the student side, and a
+        teacher who signs in through the Student door gets a student page - no card offering the
+        question bank, no reminder that there is one. The two halves are kept apart on purpose,
+        even for the same person, and switching means signing in through the other door.
       */}
-      {isAdmin ? (
-        <section>
-          <Card className="flex flex-wrap items-center justify-between gap-4 bg-indigo-50/60 p-5">
-            <div>
-              <p className="font-semibold text-slate-900">You're a teacher</p>
-              <p className="mt-1 text-sm text-slate-500">
-                Add, edit and publish the questions students see.
-              </p>
-            </div>
-            <Link to="/admin/questions" className={buttonClasses('secondary', 'md')}>
-              Manage the question bank
-            </Link>
-          </Card>
-        </section>
-      ) : null}
-
       {stats ? (
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatTile label="Points" value={profile?.user.points ?? 0} accent="text-amber-600" />
