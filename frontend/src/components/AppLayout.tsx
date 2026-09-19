@@ -1,7 +1,6 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { initials } from '../lib/format'
-import { APP_NAME } from '../lib/branding'
 import { Button } from './ui'
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
@@ -43,11 +42,15 @@ export function AppLayout() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-200/70 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 sm:px-6">
-          <Link to="/" className="flex items-center gap-2 font-bold text-slate-900">
-            <span className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/30">
-              ∑
-            </span>
-            <span className="hidden sm:inline">{APP_NAME}</span>
+          {/* The mark stands alone while the product has no name, so the link needs an
+              accessible name of its own rather than announcing the sigma. */}
+          <Link
+            to="/"
+            aria-label="Home"
+            title="Home"
+            className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/30"
+          >
+            <span aria-hidden="true">∑</span>
           </Link>
 
           <nav className="ml-2 flex items-center gap-1">

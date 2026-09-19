@@ -50,7 +50,8 @@ export function LoginPage() {
 
   return (
     <AuthShell subtitle="Short, focused maths practice that shows you where you went wrong.">
-      <p className="mt-8 text-center text-sm font-medium text-slate-700">Who's signing in?</p>
+      {/* This is the page heading now that no product name sits above it. */}
+      <h1 className="mt-8 text-center text-xl font-bold text-slate-900">Who's signing in?</h1>
 
       <div className="mt-3 space-y-3">
         {SIGN_IN_ROLES.map((option) => (

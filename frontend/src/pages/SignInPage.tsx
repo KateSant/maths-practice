@@ -103,11 +103,12 @@ export function SignInPage() {
   if (notATeacher) {
     return (
       <AuthShell>
-        <h2 className="mt-8 text-center text-xl font-bold text-slate-900">Let's get you practising</h2>
+        <h1 className="mt-8 text-center text-xl font-bold text-slate-900">
+          You're not a teacher on this account
+        </h1>
         <p className="mt-3 text-center text-slate-600">
-          You're signed in as <strong className="font-semibold">{profile?.user.displayName}</strong>. That
-          account isn't set up for teaching, so the question bank isn't available — nothing is broken,
-          there's just no teacher access on it.
+          You're signed in as <strong className="font-semibold">{profile?.user.displayName}</strong>. The
+          question bank is only available to teacher accounts, so it isn't shown here.
         </p>
         <p className="mt-3 text-center text-sm text-slate-500">
           If you meant to use a different Google account, sign out and try again.
@@ -126,7 +127,7 @@ export function SignInPage() {
 
   return (
     <AuthShell>
-      <h2 className="mt-8 text-center text-xl font-bold text-slate-900">Sign in as a {mode}</h2>
+      <h1 className="mt-8 text-center text-xl font-bold text-slate-900">Sign in as a {mode}</h1>
       <p className="mt-2 text-center text-sm text-slate-500">{option?.description}</p>
 
       <div className="mt-7">

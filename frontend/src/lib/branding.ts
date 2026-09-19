@@ -1,11 +1,12 @@
 /**
- * The product name, in one place.
+ * The product has no name yet, so the interface shows none.
  *
- * Every user-visible use reads from here, including the browser tab, so changing the name is a
- * one-line change rather than a search and replace across components.
+ * There is deliberately nothing here to render as a wordmark. The only words the app still needs
+ * are for the browser tab, which cannot be empty, and those are a description rather than a name
+ * — inventing a placeholder would just put an invented name on screen, which is the thing being
+ * avoided.
  *
- * Note this is a plain string, not a placeholder for something to be interpolated: whatever is
- * written here is exactly what appears on screen. The `{APP_NAME}` seen in the components is JSX
- * syntax meaning "insert the value here", and does not itself reach the page.
+ * When a name is chosen, it goes in two places: this constant, and the header wordmark in
+ * `components/AppLayout.tsx`, which is currently just the mark.
  */
-export const APP_NAME = 'TBC Maths App'
+export const APP_TITLE = 'Maths practice'

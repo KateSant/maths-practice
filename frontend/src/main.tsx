@@ -3,12 +3,13 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { App } from './App'
 import { AuthProvider } from './auth/AuthContext'
-import { APP_NAME } from './lib/branding'
+import { APP_TITLE } from './lib/branding'
 import './index.css'
 
-// Set from the constant rather than hard-coded in index.html, so the tab follows a rename along
-// with everything else. index.html keeps a plain fallback for the instant before this runs.
-document.title = APP_NAME
+// Set from the constant rather than hard-coded in index.html, so the tab follows along if the
+// wording changes. index.html keeps the same string as a fallback for the instant before this
+// runs.
+document.title = APP_TITLE
 
 const container = document.getElementById('root')
 if (!container) {
