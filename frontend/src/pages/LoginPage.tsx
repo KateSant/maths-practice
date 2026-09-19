@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { ApiRequestError } from '../api/client'
+import type { Profile } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { isGoogleConfigured, renderGoogleButton } from '../auth/google'
 import { Button } from '../components/ui'
@@ -8,34 +9,39 @@ import { Button } from '../components/ui'
 type Mode = 'student' | 'teacher'
 
 /**
- * Who you are, and then how you sign in.
+ * What you want to do, then who you are.
  *
- * The choice is wayfinding, not a permission: both doors lead to the same Google sign-in, and it
- * only decides where you land afterwards. It cannot be a gate, because the client has no say in
- * what a token may do — that is the API's job, and a student who picked "Teacher" is bounced by
- * the role guard on the admin routes.
+ * The two doors are signposting and the sign-in is identity, and they answer different questions.
+ * A visitor cannot see the Admin tab until they are signed in *and* an administrator, so without
+ * a visible Teacher door a teacher arrives at what looks like a maths quiz and has no idea the
+ * question bank is editable.
  *
- * Google renders its own button inside an iframe, so the choice above it has to be ours and the
- * sign-in button has to be theirs.
+ * The door cannot be a gate, though — the role lives on the account and the client has no say in
+ * it — so it is treated as a statement of intent. The role is what decides, and when the two
+ * disagree the page says so rather than quietly landing someone somewhere they did not ask for.
+ *
+ * Google renders its own button inside an iframe, so the sign-in button has to be theirs even
+ * though the choice above it is ours.
  */
 const MODES: { value: Mode; label: string; description: string }[] = [
   { value: 'student', label: 'Student', description: 'Practise questions and track your progress.' },
   { value: 'teacher', label: 'Teacher', description: 'Write and edit the question bank.' },
 ]
 
-/** A teacher lands in the admin tools; everyone else lands on practice. */
 function landingFor(chosen: Mode): string {
   return chosen === 'teacher' ? '/admin/questions' : '/'
 }
 
 export function LoginPage() {
-  const { signInWithGoogle, continueAsGuest, profile, restoring } = useAuth()
+  const { signInWithGoogle, continueAsGuest, logout, profile, restoring } = useAuth()
   const navigate = useNavigate()
   const buttonHost = useRef<HTMLDivElement>(null)
 
   const [mode, setMode] = useState<Mode>('student')
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
+  /** Signed in, but not into the area they asked for. */
+  const [notATeacher, setNotATeacher] = useState(false)
 
   /**
    * Set once we have decided where to go. Without it the "already signed in" check below can win
@@ -44,11 +50,19 @@ export function LoginPage() {
   const leaving = useRef(false)
 
   const run = useCallback(
-    async (action: () => Promise<void>, chosen: Mode) => {
+    async (action: () => Promise<Profile>, chosen: Mode) => {
       setMessage('')
       setBusy(true)
       try {
-        await action()
+        const who = await action()
+
+        if (chosen === 'teacher' && who.user.role !== 'ADMIN') {
+          // Say so, rather than silently landing them on practice. Most likely cause is signing
+          // in with the wrong Google account, so the panel offers a way to try another.
+          setNotATeacher(true)
+          return
+        }
+
         leaving.current = true
         navigate(landingFor(chosen), { replace: true })
       } catch (error) {
@@ -64,7 +78,7 @@ export function LoginPage() {
 
   useEffect(() => {
     const host = buttonHost.current
-    if (!isGoogleConfigured || !host) return
+    if (!isGoogleConfigured || !host || notATeacher) return
 
     let cancelled = false
     void (async () => {
@@ -84,11 +98,34 @@ export function LoginPage() {
     return () => {
       cancelled = true
     }
-  }, [run, signInWithGoogle, mode])
+  }, [run, signInWithGoogle, mode, notATeacher])
 
   // Deliberately after every hook, so the hook order cannot change between renders.
-  if (!restoring && !busy && profile && !leaving.current) {
+  if (!restoring && !busy && profile && !leaving.current && !notATeacher) {
     return <Navigate to="/" replace />
+  }
+
+  if (notATeacher) {
+    return (
+      <div className="grid min-h-screen place-items-center px-6 py-12">
+        <div className="w-full max-w-md animate-rise text-center">
+          <h1 className="text-2xl font-bold text-slate-900">That account isn't set up for teaching</h1>
+          <p className="mt-3 text-slate-600">
+            You're signed in as <strong className="font-semibold">{profile?.user.displayName}</strong> as a
+            student, so the question bank isn't available. If you meant to use a different Google
+            account, sign out and try again.
+          </p>
+          <div className="mt-8 flex flex-col gap-3">
+            <Button size="lg" onClick={() => navigate('/', { replace: true })}>
+              Carry on as a student
+            </Button>
+            <Button variant="secondary" size="lg" onClick={logout}>
+              Use a different account
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const active = MODES.find((option) => option.value === mode)
@@ -104,7 +141,7 @@ export function LoginPage() {
           <p className="mt-2 text-slate-500">{active?.description}</p>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 gap-3" role="group" aria-label="Who is signing in">
+        <div className="mt-8 grid grid-cols-2 gap-3" role="group" aria-label="What are you here to do">
           {MODES.map((option) => (
             <button
               key={option.value}

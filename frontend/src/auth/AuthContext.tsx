@@ -15,8 +15,13 @@ interface AuthContextValue {
   profile: Profile | null
   /** True only while the stored session is being restored on first load. */
   restoring: boolean
-  signInWithGoogle: (idToken: string) => Promise<void>
-  continueAsGuest: () => Promise<void>
+  /**
+   * Both return the signed-in profile, because the caller needs to know the role: the start
+   * page routes a teacher to the admin tools and everyone else to practice, and that decision
+   * cannot wait for context state to settle.
+   */
+  signInWithGoogle: (idToken: string) => Promise<Profile>
+  continueAsGuest: () => Promise<Profile>
   logout: () => void
   refresh: () => Promise<void>}
 
@@ -74,21 +79,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   /**
-   * `idToken` is the Google credential, passed straight through and never stored.
-   * What we persist is our own JWT, exactly as before, so nothing downstream of here
-   * knows Google was involved.
+   * `idToken` is the Google credential, passed straight through and never stored. What we
+   * persist is our own JWT, exactly as before, so nothing downstream of here knows Google was
+   * involved.
    */
   const signInWithGoogle = useCallback(async (idToken: string) => {
     const auth = await api.signInWithGoogle(idToken)
     writeToken(auth.token)
     // Fetch the profile so stats come along too, rather than synthesising a stub.
-    setProfile(await api.profile())
+    const loaded = await api.profile()
+    setProfile(loaded)
+    return loaded
   }, [])
 
   const continueAsGuest = useCallback(async () => {
     const auth = await api.continueAsGuest()
     writeToken(auth.token)
-    setProfile(await api.profile())
+    const loaded = await api.profile()
+    setProfile(loaded)
+    return loaded
   }, [])
 
   const value = useMemo(
