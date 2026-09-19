@@ -382,8 +382,8 @@ export function AdminQuestionEditorPage() {
             ) : null}
           </QuestionCard>
           <p className="mt-3 text-xs text-slate-400">
-            This preview is the same component the quiz renders, so it cannot drift from what students
-            actually see.
+            This preview is the same component the practice questions use, so it cannot drift from what
+            students actually see.
           </p>
         </div>
       </div>

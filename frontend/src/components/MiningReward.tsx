@@ -276,7 +276,7 @@ export function MiningReward({ correctCount, questionCount }: { correctCount: nu
 
       {allMined ? (
         <p className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
-          All mined. {perfect ? 'A flawless quiz — diamond grade.' : 'Nice digging.'}
+          All mined. {perfect ? 'A flawless round — diamond grade.' : 'Nice digging.'}
         </p>
       ) : null}
     </div>

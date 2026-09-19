@@ -72,13 +72,13 @@ public class QuizService {
     public AnswerResult submitAnswer(Long userId, Long sessionId, SubmitAnswerRequest request) {
         QuizSession session = requireSession(userId, sessionId);
         if (session.isCompleted()) {
-            throw ApiException.badRequest("This quiz has already been finished.");
+            throw ApiException.badRequest("This round has already been finished.");
         }
 
         Question question = session.getQuestions().stream()
                 .filter(candidate -> candidate.getId().equals(request.questionId()))
                 .findFirst()
-                .orElseThrow(() -> ApiException.badRequest("That question is not part of this quiz."));
+                .orElseThrow(() -> ApiException.badRequest("That question is not part of this round."));
 
         Optional<QuizAnswer> previous = answerRepository.findBySessionIdAndQuestionId(sessionId, question.getId());
         if (previous.isPresent()) {
@@ -154,7 +154,7 @@ public class QuizService {
     private int resolveQuestionCount(Integer requested) {
         int count = requested == null ? properties.quiz().defaultQuestionCount() : requested;
         if (count < 1) {
-            throw ApiException.badRequest("A quiz needs at least one question.");
+            throw ApiException.badRequest("A round needs at least one question.");
         }
         // Silently cap rather than reject: the client asking for 500 is not an error.
         return Math.min(count, properties.quiz().maxQuestionCount());

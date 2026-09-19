@@ -18,7 +18,7 @@ export function HomePage() {
   const [questionCount, setQuestionCount] = useState(5)
   const [error, setError] = useState('')
 
-  // Pull fresh stats too, so points and streaks are right after finishing a quiz.
+  // Pull fresh stats too, so points and streaks are right after finishing a round.
   useEffect(() => {
     void refresh()
   }, [refresh])
@@ -79,7 +79,7 @@ export function HomePage() {
             hint={`${stats.totalCorrect} of ${stats.totalAnswered}`}
             accent={tone.text}
           />
-          <StatTile label="Quizzes" value={stats.sessionsCompleted} hint="completed" />
+          <StatTile label="Rounds" value={stats.sessionsCompleted} hint="completed" />
         </section>
       ) : null}
 
@@ -127,7 +127,7 @@ export function HomePage() {
                   to={`/quiz?count=${questionCount}`}
                   className={buttonClasses('secondary', 'sm', 'w-full justify-center')}
                 >
-                  Start mixed quiz
+                  Start mixed practice
                 </Link>
               </div>
             </Card>
@@ -157,10 +157,10 @@ export function HomePage() {
         <div className="mt-4">
           {history.length === 0 ? (
             <EmptyState
-              title="No quizzes yet"
-              body="Your completed quizzes will appear here with your score for each one."
+              title="No rounds yet"
+              body="Your finished rounds will appear here with your score for each one."
               action={
-                <Button onClick={() => navigate(`/quiz?count=${questionCount}`)}>Start your first quiz</Button>
+                <Button onClick={() => navigate(`/quiz?count=${questionCount}`)}>Start your first round</Button>
               }
             />
           ) : (

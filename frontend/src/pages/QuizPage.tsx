@@ -53,7 +53,7 @@ export function QuizPage() {
       })
       .catch((caught: unknown) => {
         if (cancelled) return
-        setError(caught instanceof ApiRequestError ? caught.message : 'Could not start the quiz.')
+        setError(caught instanceof ApiRequestError ? caught.message : 'Could not start practice.')
       })
     return () => {
       cancelled = true
@@ -98,7 +98,7 @@ export function QuizPage() {
       await refresh()
       navigate(`/results/${session.sessionId}`, { replace: true, state: { summary } })
     } catch (caught) {
-      setError(caught instanceof ApiRequestError ? caught.message : 'Could not finish the quiz.')
+      setError(caught instanceof ApiRequestError ? caught.message : 'Could not finish that round.')
       setFinishing(false)
     }
   }, [session, isLast, navigate, refresh])
@@ -137,7 +137,7 @@ export function QuizPage() {
   if (error) {
     return (
       <Card className="mx-auto max-w-lg p-6 text-center">
-        <p className="font-semibold text-slate-900">Quiz unavailable</p>
+        <p className="font-semibold text-slate-900">Can't start practice</p>
         <p className="mt-1 text-sm text-slate-500">{error}</p>
         <div className="mt-5 flex justify-center gap-3">
           <Link to="/" className={buttonClasses('primary', 'md')}>
@@ -159,7 +159,7 @@ export function QuizPage() {
   if (!question) {
     return (
       <Card className="mx-auto max-w-lg p-6 text-center">
-        <p className="font-semibold text-slate-900">This quiz has no questions</p>
+        <p className="font-semibold text-slate-900">Nothing to practise yet</p>
         <p className="mt-1 text-sm text-slate-500">
           There may be no active questions for this topic yet.
         </p>
@@ -240,7 +240,7 @@ export function QuizPage() {
             size="lg"
             className={result ? '' : 'invisible'}
           >
-            {isLast ? 'Finish quiz' : 'Next question'}
+            {isLast ? 'See my results' : 'Next question'}
           </Button>
         </div>
       </QuestionCard>

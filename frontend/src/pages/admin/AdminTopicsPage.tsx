@@ -118,7 +118,7 @@ export function AdminTopicsPage() {
       ) : null}
 
       <p className="rounded-xl bg-slate-100 px-4 py-3 text-sm text-slate-600">
-        The slug is the part that appears in quiz links. Changing it will not break a student's saved
+        The slug is the part that appears in practice links. Changing it will not break a student's saved
         progress — that is stored by id — but any link already shared will stop working.
       </p>
 

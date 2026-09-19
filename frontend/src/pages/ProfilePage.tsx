@@ -109,7 +109,7 @@ export function ProfilePage() {
         <StatTile label="Points" value={user.points} accent="text-amber-600" />
         <StatTile label="Current streak" value={user.currentStreak} hint={`Best ${user.bestStreak}`} accent="text-orange-600" />
         <StatTile label="Questions answered" value={stats.totalAnswered} hint={`${stats.totalCorrect} correct`} />
-        <StatTile label="Quizzes completed" value={stats.sessionsCompleted} />
+        <StatTile label="Rounds completed" value={stats.sessionsCompleted} />
       </section>
 
       <section>
@@ -163,12 +163,12 @@ export function ProfilePage() {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-900">Quiz history</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Practice history</h2>
         <div className="mt-4">
           {history === null ? (
             <Spinner label="Loading history…" />
           ) : history.length === 0 ? (
-            <EmptyState title="No completed quizzes" body="Finish a quiz and it will be listed here." />
+            <EmptyState title="Nothing practised yet" body="Finish a round and it will be listed here." />
           ) : (
             <Card className="divide-y divide-slate-100">
               {history.map((item) => {
