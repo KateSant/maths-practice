@@ -190,6 +190,57 @@ class SchemaMigrationTest {
         }
     }
 
+    // ------------------------------------------------- question lifecycle (V4) ---
+
+    @Test
+    void theActiveColumnIsReplacedByStatus() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThatThrownBy(() -> statement.executeQuery("select active from questions limit 1"))
+                    .as("questions.active should have been dropped")
+                    .isInstanceOf(SQLException.class);
+
+            // The 32 seeded questions were all published before the change, and must still be.
+            assertThat(scalar(statement, "select count(*) from questions where status = 'PUBLISHED'"))
+                    .isEqualTo(32);
+        }
+    }
+
+    /** Makes "retire the whole prototype bank" one action instead of a review of the list. */
+    @Test
+    void theStarterQuestionsAreMarkedAsSeedContent() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThat(scalar(statement, "select count(*) from questions where origin = 'SEED'"))
+                    .isEqualTo(32);
+        }
+    }
+
+    /**
+     * A new row defaults to DRAFT, so a forgotten INSERT leaves an unpublished question rather
+     * than putting half-written content in front of a student.
+     */
+    @Test
+    void aNewQuestionDefaultsToDraftAndAuthored() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            statement.executeUpdate(
+                    "insert into questions (topic_id, prompt, explanation, difficulty) values (1, 'brand new', 'x', 1)");
+
+            assertThat(text(statement, "select status from questions where prompt = 'brand new'"))
+                    .isEqualTo("DRAFT");
+            assertThat(text(statement, "select origin from questions where prompt = 'brand new'"))
+                    .isEqualTo("AUTHORED");
+        }
+    }
+
+    @Test
+    void sqliteRefusesAnUnknownQuestionStatus() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThatThrownBy(() -> statement.executeUpdate(
+                            "update questions set status = 'NONSENSE' where id = 1"))
+                    .as("the check constraint should reject this")
+                    .isInstanceOf(SQLException.class);
+        }
+    }
+
     @Test
     void deletingAUserCascadesToTheirIdentities() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {

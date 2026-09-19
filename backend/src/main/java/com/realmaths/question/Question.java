@@ -3,6 +3,8 @@ package com.realmaths.question;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,12 +40,17 @@ public class Question {
     @Column(length = 1000)
     private String explanation;
 
-    /** 1 = easy up to 5 = hard. Will drive student levels later. */
+    /** 1 = easy up to 5 = hard. Rendered as an ore tier in the Minecraft theme. */
     @Column(nullable = false)
     private int difficulty;
 
-    @Column(nullable = false)
-    private boolean active = true;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private QuestionStatus status = QuestionStatus.DRAFT;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private QuestionOrigin origin = QuestionOrigin.AUTHORED;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();
@@ -67,6 +74,33 @@ public class Question {
         options.add(new AnswerOption(this, options.size() + 1, label, text, correct));
     }
 
+    /**
+     * Empties the option set so it can be rebuilt.
+     *
+     * <p>Callers must flush between clearing and re-adding. The new options occupy the same
+     * {@code (question_id, position)} values as the old ones, so unless the deletes reach the
+     * database first the partial unique index rejects the inserts.
+     */
+    public void clearOptions() {
+        options.clear();
+    }
+
+    /** Applies an edit to the parts a teacher can change. Options are handled separately. */
+    public void revise(Topic topic, String prompt, String explanation, int difficulty) {
+        this.topic = topic;
+        this.prompt = prompt;
+        this.explanation = explanation;
+        this.difficulty = difficulty;
+    }
+
+    public void setStatus(QuestionStatus status) {
+        this.status = status;
+    }
+
+    public void setOrigin(QuestionOrigin origin) {
+        this.origin = origin;
+    }
+
     public Long getId() {
         return id;
     }
@@ -87,8 +121,17 @@ public class Question {
         return difficulty;
     }
 
-    public boolean isActive() {
-        return active;
+    /** True when this question may be served to students. */
+    public boolean isPublished() {
+        return status == QuestionStatus.PUBLISHED;
+    }
+
+    public QuestionStatus getStatus() {
+        return status;
+    }
+
+    public QuestionOrigin getOrigin() {
+        return origin;
     }
 
     public Instant getCreatedAt() {

@@ -37,6 +37,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**", "/actuator/health/**", "/actuator/info", "/error").permitAll()
+                        // Gated on the path prefix rather than per controller, so a new admin
+                        // endpoint is protected by where it lives. The failure mode to avoid is
+                        // an admin route mounted outside /api/admin/**, which the catch-all below
+                        // would serve to any signed-in student; AdminApiTest asserts a student is
+                        // refused, so a route that escapes fails the build.
+                        //
+                        // hasRole is enough, and instantly revocable, because
+                        // JwtToUserPrincipalConverter re-reads the user row on every request:
+                        // the authority comes from the database, not from the token.
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtConverter))

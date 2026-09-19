@@ -25,7 +25,9 @@ public class QuestionCatalogService {
 
     @Transactional(readOnly = true)
     public List<TopicView> listTopics() {
-        Map<Long, Long> counts = questionRepository.countActiveByTopic().stream()
+        Map<Long, Long> counts = questionRepository
+                .countByTopicWithStatus(QuestionStatus.PUBLISHED)
+                .stream()
                 .collect(Collectors.toMap(
                         QuestionRepository.TopicQuestionCount::getTopicId,
                         QuestionRepository.TopicQuestionCount::getTotal));
@@ -67,10 +69,5 @@ public class QuestionCatalogService {
     public Question requireQuestion(Long questionId) {
         return questionRepository.findById(questionId)
                 .orElseThrow(() -> ApiException.notFound("Question " + questionId + " does not exist."));
-    }
-
-    @Transactional(readOnly = true)
-    public long totalActiveQuestions() {
-        return questionRepository.countByActiveTrue();
     }
 }

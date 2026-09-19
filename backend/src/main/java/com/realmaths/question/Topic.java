@@ -42,6 +42,21 @@ public class Topic {
         this.sortOrder = sortOrder;
     }
 
+    /**
+     * Applies an edit from the admin interface.
+     *
+     * <p>The slug is editable, which is worth a moment's thought: it is what quiz links carry,
+     * so renaming one breaks bookmarks and any link already shared. Nothing stored depends on
+     * it — {@code quiz_sessions} references the topic by id — so the cost is a stale URL rather
+     * than lost data, and refusing the edit would be more annoying than the risk.
+     */
+    public void revise(String slug, String name, String description, int sortOrder) {
+        this.slug = slug;
+        this.name = name;
+        this.description = description;
+        this.sortOrder = sortOrder;
+    }
+
     public Long getId() {
         return id;
     }

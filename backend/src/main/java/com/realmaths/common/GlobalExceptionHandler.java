@@ -13,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
@@ -20,10 +21,35 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    /**
+     * A rule the application enforces rather than a malformed request: 422, with field keys the
+     * editor can attach to the right input. Spring picks the most specific handler, so this wins
+     * over the {@link ApiException} one below despite the subclass relationship.
+     */
+    @ExceptionHandler(ApiValidationException.class)
+    public ResponseEntity<ApiError> handleApiValidation(ApiValidationException ex) {
+        return ResponseEntity.status(ex.getStatus())
+                .body(ApiError.validation(ex.getStatus().value(), ex.getMessage(), ex.getFieldErrors()));
+    }
+
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiError> handleApiException(ApiException ex) {
         return ResponseEntity.status(ex.getStatus())
                 .body(ApiError.of(ex.getStatus().value(), ex.getMessage()));
+    }
+
+    /**
+     * An unparseable query parameter, such as {@code ?status=BOGUS} or {@code ?difficulty=hard}.
+     * Declared explicitly because the catch-all below would otherwise answer a client mistake
+     * with a 500 and a stack trace.
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String name = ex.getName();
+        return ResponseEntity.badRequest()
+                .body(ApiError.validation(
+                        "That filter value is not recognised.",
+                        Map.of(name, "'" + ex.getValue() + "' is not a valid " + name + ".")));
     }
 
     /** Bean-validation failures from {@code @Valid} request bodies. */
