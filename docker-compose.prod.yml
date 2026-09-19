@@ -15,10 +15,22 @@
 #
 #   docker compose -f docker-compose.prod.yml up -d
 
+# Caps container log growth. Docker's default json-file driver has NO size limit, so
+# Caddy request lines and Spring logs accumulate on the instance disk indefinitely.
+# On a 40 GB volume that is how the disk fills - not the database, which is measured
+# in kilobytes. Lightsail publishes no disk metric, so without this the first sign
+# would be the app failing rather than an alarm.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   web:
     image: ${IMAGE_WEB:?set IMAGE_WEB (see the header of this file)}
     restart: unless-stopped
+    logging: *default-logging
     environment:
       SITE_ADDRESS: ${SITE_ADDRESS:?set SITE_ADDRESS}
     ports:
@@ -35,6 +47,7 @@ services:
   api:
     image: ${IMAGE_API:?set IMAGE_API (see the header of this file)}
     restart: unless-stopped
+    logging: *default-logging
     environment:
       SPRING_DATASOURCE_URL: jdbc:sqlite:/data/realmaths.db?foreign_keys=on&journal_mode=WAL&busy_timeout=5000
       REALMATHS_JWT_SECRET: ${REALMATHS_JWT_SECRET:?set REALMATHS_JWT_SECRET}
