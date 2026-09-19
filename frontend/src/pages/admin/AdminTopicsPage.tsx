@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { ApiRequestError } from '../../api/client'
 import { adminApi, type AdminTopic, type SaveTopicRequest } from '../../api/admin'
 import { Button, Card, Spinner } from '../../components/ui'
-import { AdminHeader, AdminNav } from './adminUi'
+import { AdminHeader } from './adminUi'
 import { fieldClass } from './AdminQuestionListPage'
 
 interface TopicRow extends SaveTopicRequest {
@@ -104,7 +104,6 @@ export function AdminTopicsPage() {
       <AdminHeader
         title="Topics"
         subtitle="Her wording, and the order they appear in."
-        action={<AdminNav />}
       />
 
       {error ? (

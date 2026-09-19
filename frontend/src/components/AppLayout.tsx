@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { initials } from '../lib/format'
 import { Button } from './ui'
@@ -10,9 +10,24 @@ function navLinkClass({ isActive }: { isActive: boolean }): string {
   ].join(' ')
 }
 
+/**
+ * The app chrome, which changes shape between the two halves of the product.
+ *
+ * On the practice side it shows the student things: where to practise, your profile, your points
+ * and streak. Inside the question bank it shows the authoring things instead, and drops the
+ * gamification — a teacher editing questions does not need to be told their streak is zero, and
+ * `★ 0` next to an authoring tool reads as noise.
+ *
+ * Practice stays in both, because a teacher is also a user with an account, and the home page
+ * invites them to do either. That is the way back, not a mode switch.
+ */
 export function AppLayout() {
   const { profile, logout } = useAuth()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+
+  const inAdmin = pathname.startsWith('/admin')
+  const isAdmin = profile?.user.role === 'ADMIN'
 
   const handleSignOut = () => {
     logout()
@@ -34,35 +49,57 @@ export function AppLayout() {
             <NavLink to="/" end className={navLinkClass}>
               Practice
             </NavLink>
-            <NavLink to="/profile" className={navLinkClass}>
-              Profile
-            </NavLink>
-            {/* Only rendered for an administrator. Hiding it is cosmetic — the API refuses
-                /api/admin/** regardless — but an Admin link a student cannot use is just noise. */}
-            {profile?.user.role === 'ADMIN' ? (
-              <NavLink to="/admin/questions" className={navLinkClass}>
-                Admin
-              </NavLink>
-            ) : null}
+
+            {inAdmin ? (
+              // The question bank's own navigation lives here rather than on each page, so there
+              // is one place to look and the pages do not repeat it.
+              <>
+                <NavLink to="/admin/questions" className={navLinkClass}>
+                  Questions
+                </NavLink>
+                <NavLink to="/admin/topics" className={navLinkClass}>
+                  Topics
+                </NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink to="/profile" className={navLinkClass}>
+                  Profile
+                </NavLink>
+                {/* Only for an administrator. Hiding it is cosmetic — the API refuses
+                    /api/admin/** regardless — but a link a student cannot use is just noise. */}
+                {isAdmin ? (
+                  <NavLink to="/admin/questions" className={navLinkClass}>
+                    Manage questions
+                  </NavLink>
+                ) : null}
+              </>
+            )}
           </nav>
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             {profile ? (
               <>
-                <span
-                  className="hidden items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700 sm:inline-flex"
-                  title="Points earned"
-                >
-                  <span aria-hidden="true">★</span>
-                  <span className="tabular-nums">{profile.user.points}</span>
-                </span>
-                <span
-                  className="hidden items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-700 sm:inline-flex"
-                  title="Current streak of correct answers"
-                >
-                  <span aria-hidden="true">🔥</span>
-                  <span className="tabular-nums">{profile.user.currentStreak}</span>
-                </span>
+                {/* Points and streak are the student side of the product, so they step aside for
+                    the authoring tools. The teacher still sees them on the home page. */}
+                {!inAdmin ? (
+                  <>
+                    <span
+                      className="hidden items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700 sm:inline-flex"
+                      title="Points earned"
+                    >
+                      <span aria-hidden="true">★</span>
+                      <span className="tabular-nums">{profile.user.points}</span>
+                    </span>
+                    <span
+                      className="hidden items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-700 sm:inline-flex"
+                      title="Current streak of correct answers"
+                    >
+                      <span aria-hidden="true">🔥</span>
+                      <span className="tabular-nums">{profile.user.currentStreak}</span>
+                    </span>
+                  </>
+                ) : null}
                 <Link
                   to="/profile"
                   className="grid h-9 w-9 place-items-center rounded-full bg-slate-900 text-xs font-bold text-white"
@@ -84,7 +121,7 @@ export function AppLayout() {
       </main>
 
       <footer className="mx-auto max-w-5xl px-4 pb-10 pt-4 text-center text-xs text-slate-400 sm:px-6">
-        Real Maths prototype · questions are a starter set
+        <p>Real Maths prototype · questions are a starter set</p>
       </footer>
     </div>
   )

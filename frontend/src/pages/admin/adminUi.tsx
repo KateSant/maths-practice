@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import type { ReactNode } from 'react'
 import type { QuestionOrigin, QuestionStatus } from '../../api/admin'
 import { Badge } from '../../components/ui'
 import { difficultyLabel } from '../../lib/format'
@@ -30,7 +30,7 @@ export function DifficultyBadge({ difficulty }: { difficulty: number }) {
   return <Badge tone="indigo">{difficultyLabel(difficulty)}</Badge>
 }
 
-export function AdminHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
+export function AdminHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: ReactNode }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-3">
       <div>
@@ -39,19 +39,5 @@ export function AdminHeader({ title, subtitle, action }: { title: string; subtit
       </div>
       {action}
     </div>
-  )
-}
-
-export function AdminNav() {
-  return (
-    <nav className="flex gap-2 text-sm">
-      <Link to="/admin/questions" className="text-slate-500 hover:text-slate-800">
-        Questions
-      </Link>
-      <span className="text-slate-300">·</span>
-      <Link to="/admin/topics" className="text-slate-500 hover:text-slate-800">
-        Topics
-      </Link>
-    </nav>
   )
 }

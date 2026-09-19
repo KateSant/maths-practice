@@ -9,7 +9,7 @@ import {
   type QuestionStatus,
 } from '../../api/admin'
 import { Button, Card, EmptyState, Spinner, buttonClasses } from '../../components/ui'
-import { AdminHeader, AdminNav, DifficultyBadge, OriginBadge, StatusBadge } from './adminUi'
+import { AdminHeader, DifficultyBadge, OriginBadge, StatusBadge } from './adminUi'
 
 const PAGE_SIZE = 20
 
@@ -113,12 +113,9 @@ export function AdminQuestionListPage() {
         title="Questions"
         subtitle="Everything in the bank, drafts included."
         action={
-          <div className="flex items-center gap-3">
-            <AdminNav />
-            <Link to="/admin/questions/new" className={buttonClasses('primary', 'md')}>
-              New question
-            </Link>
-          </div>
+          <Link to="/admin/questions/new" className={buttonClasses('primary', 'md')}>
+            New question
+          </Link>
         }
       />
 
