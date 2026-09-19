@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { PrototypeBadge } from './PrototypeBadge'
 
 /**
  * The centred layout both sign-in steps sit in, so the choice and the sign-in look like one
@@ -22,6 +23,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
         </div>
         {children}
       </div>
+      <PrototypeBadge />
     </div>
   )
 }

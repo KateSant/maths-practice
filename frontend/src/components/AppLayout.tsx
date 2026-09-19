@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { initials } from '../lib/format'
+import { PrototypeBadge } from './PrototypeBadge'
 import { Button } from './ui'
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
@@ -120,8 +121,12 @@ export function AppLayout() {
       </main>
 
       <footer className="mx-auto max-w-5xl px-4 pb-10 pt-4 text-center text-xs text-slate-400 sm:px-6">
-        <p>prototype · questions are a starter set</p>
+        <p>Questions are a starter set</p>
       </footer>
+
+      {/* Rendered here and in the sign-in shell, so it is present whether or not anyone is signed
+          in. The footer used to say "prototype" as well; the badge is the one place for it now. */}
+      <PrototypeBadge />
     </div>
   )
 }
