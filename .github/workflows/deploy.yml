@@ -231,18 +231,25 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           GHCR_USER: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SITE_ADDRESS: ${{ vars.SITE_DOMAIN }}
         run: |
           # GITHUB_TOKEN is scoped to this run and expires with it, so the host is
           # never left holding a long-lived registry credential: it logs in, pulls,
           # and logs out again. The token is briefly visible in the remote process
           # list, which is an accepted tradeoff for not storing a PAT on the box.
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes "$DEPLOY_USER@$DEPLOY_HOST" \
-            bash -s -- "$GHCR_TOKEN" "$IMAGE_TAG" "$IMAGE_BASE" "$GHCR_USER" <<'REMOTE'
+            bash -s -- "$GHCR_TOKEN" "$IMAGE_TAG" "$IMAGE_BASE" "$GHCR_USER" "$SITE_ADDRESS" <<'REMOTE'
           set -euo pipefail
-          TOKEN="$1"; TAG="$2"; BASE="$3"; USERNAME="$4"
+          TOKEN="$1"; TAG="$2"; BASE="$3"; USERNAME="$4"; SITE="$5"
           cd /srv/realmaths
 
           echo "$TOKEN" | docker login ghcr.io -u "$USERNAME" --password-stdin
+
+          # SITE_ADDRESS otherwise lives only in the host's .env, written once at
+          # bootstrap, which would make changing the domain an ssh session instead of
+          # a variable change. Keeping it in step here means the repository variable
+          # is the single source of truth for the address.
+          sed -i "s|^SITE_ADDRESS=.*|SITE_ADDRESS=$SITE|" .env
 
           # Exported so they override the values in the host's .env file. Compose
           # gives shell environment precedence over .env.
