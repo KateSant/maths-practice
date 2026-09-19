@@ -31,7 +31,7 @@ export function AppLayout() {
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/30">
               ∑
             </span>
-            <span className="hidden sm:inline">Joy for Maths</span>
+            <span className="hidden sm:inline">Real Maths</span>
           </Link>
 
           <nav className="ml-2 flex items-center gap-1">
@@ -91,10 +91,10 @@ export function AppLayout() {
       </main>
 
       <footer className="mx-auto max-w-5xl px-4 pb-10 pt-4 text-center text-xs text-slate-400 sm:px-6">
-        <p>Joy for Maths prototype · questions are a starter set</p>
+        <p>Real Maths prototype · questions are a starter set</p>
         {isMinecraft ? (
           // Mojang's usage guidelines ask for this wording wherever the Minecraft name or look
-          // is shown. The product is Joy for Maths; "Minecraft" is only ever a theme label, which
+          // is shown. The product is Real Maths; "Minecraft" is only ever a theme label, which
           // is the secondary use the guidelines permit. No Mojang assets are used anywhere -
           // the look is approximated in CSS, and the pixel font is open-licensed.
           <p className="mx-auto mt-2 max-w-md text-[11px] leading-relaxed">
