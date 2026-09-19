@@ -18,7 +18,7 @@ replaced by a real teacher's content through the admin screens.
 
 | | |
 |---|---|
-| `docs/deferred.md` | What was deliberately not done, and why. Includes the repository rename procedure, which has a sequencing trap. |
+| `docs/deferred.md` | What was deliberately not done, and why. |
 | `docs/google-signin.md` | The whole sign-in design, what to configure in Google Cloud, and the two bugs that only showed up in production. |
 | `docs/content-admin-architecture.md` | The question bank's design: lifecycle, publish gate, and the decisions behind them. |
 
@@ -325,9 +325,8 @@ After deploying, the workflow checks:
 
 ### The trust policy names the repository
 
-`realmaths-github-ci` trusts `repo:KateSant@*/real-maths@*:...`. **Renaming the repository changes
-that subject claim and CI will refuse to assume the role.** Add the new name to the policy before
-renaming — the full sequence is in `docs/deferred.md`.
+`realmaths-github-ci` trusts `repo:KateSant@*/real-maths@*:...`, so only this repository's
+workflows can assume the role over OIDC.
 
 ### Operating it
 
@@ -383,6 +382,6 @@ Other things that have actually gone wrong, so worth checking first:
 
 ## Parked work
 
-See `docs/deferred.md`. It covers the repository rename, publishing the Google OAuth app, the
-missing privacy policy, case-insensitive email uniqueness, guest accounts losing their progress on
-signing in, and the untested admin screens.
+See `docs/deferred.md`. It covers publishing the Google OAuth app, the missing privacy policy,
+case-insensitive email uniqueness, guest accounts losing their progress on signing in, and the
+untested admin screens.
