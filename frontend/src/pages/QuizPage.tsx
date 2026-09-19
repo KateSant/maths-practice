@@ -6,6 +6,7 @@ import { useAuth } from '../auth/AuthContext'
 import { Badge, Button, Card, ProgressBar, Spinner, buttonClasses } from '../components/ui'
 import { OreBadge } from '../components/OreBadge'
 import { AdvancementToast } from '../components/AdvancementToast'
+import { BlockCharacter } from '../components/BlockCharacter'
 import { difficultyLabel, oreTier } from '../lib/format'
 import { useTheme } from '../theme/ThemeContext'
 
@@ -281,17 +282,39 @@ export function QuizPage() {
               result.correct ? 'bg-emerald-50 text-emerald-900' : 'bg-rose-50 text-rose-900'
             }`}
           >
-            <p className="flex items-center gap-2 font-semibold">
-              <span aria-hidden="true">{result.correct ? '🎉' : '💡'}</span>
-              {result.correct ? `Correct! +${result.pointsAwarded} points` : 'Not quite'}
-            </p>
+            <div className="flex items-center gap-3">
+              {isMinecraft ? (
+                // The character reacts, which is the point of having one: a face that
+                // responds to what you just did reads as a game rather than as a form.
+                <BlockCharacter
+                  variant="full"
+                  size={30}
+                  className="shrink-0"
+                  expression={result.correct ? 'happy' : 'sad'}
+                  label={
+                    result.correct
+                      ? 'Your character looks pleased'
+                      : 'Your character looks disappointed'
+                  }
+                />
+              ) : (
+                <span aria-hidden="true">{result.correct ? '🎉' : '💡'}</span>
+              )}
+
+              <div>
+                <p className="font-semibold">
+                  {result.correct ? `Correct! +${result.pointsAwarded} points` : 'Not quite'}
+                </p>
+                {result.correct && result.currentStreak > 1 ? (
+                  <p className="mt-1 text-sm font-medium opacity-90">
+                    🔥 {result.currentStreak} in a row
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
             {result.explanation ? (
-              <p className="mt-1.5 text-sm leading-relaxed opacity-90">{result.explanation}</p>
-            ) : null}
-            {result.correct && result.currentStreak > 1 ? (
-              <p className="mt-2 text-sm font-medium opacity-90">
-                🔥 {result.currentStreak} in a row
-              </p>
+              <p className="mt-2 text-sm leading-relaxed opacity-90">{result.explanation}</p>
             ) : null}
           </div>
         ) : null}

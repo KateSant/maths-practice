@@ -3,6 +3,7 @@ import { useAuth } from '../auth/AuthContext'
 import { useTheme } from '../theme/ThemeContext'
 import { initials } from '../lib/format'
 import { ThemeToggle } from './ThemeToggle'
+import { BlockCharacter } from './BlockCharacter'
 import { XpBar } from './XpBar'
 import { Button } from './ui'
 
@@ -65,10 +66,25 @@ export function AppLayout() {
                 </span>
                 <Link
                   to="/profile"
-                  className="grid h-9 w-9 place-items-center rounded-full bg-slate-900 text-xs font-bold text-white"
                   title={profile.user.displayName}
+                  className={
+                    isMinecraft
+                      ? 'shrink-0 rounded-xl'
+                      : 'grid h-9 w-9 place-items-center rounded-full bg-slate-900 text-xs font-bold text-white'
+                  }
                 >
-                  {initials(profile.user.displayName)}
+                  {isMinecraft ? (
+                    <BlockCharacter
+                      variant="head"
+                      size={36}
+                      // A small bit of life: the character looks pleased while a streak is
+                      // running and neutral once it has been broken.
+                      expression={profile.user.currentStreak > 0 ? 'happy' : 'neutral'}
+                      label={profile.user.displayName}
+                    />
+                  ) : (
+                    initials(profile.user.displayName)
+                  )}
                 </Link>
                 <Button variant="ghost" size="sm" onClick={handleSignOut}>
                   Sign out
