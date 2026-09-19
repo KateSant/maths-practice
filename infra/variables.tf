@@ -13,12 +13,20 @@ variable "availability_zone" {
 
 variable "domain_name" {
   description = <<-EOT
-    Public hostname the app is served on, e.g. realmaths.example.com. Caddy uses it
-    to obtain the TLS certificate, so it must resolve to the static IP before the
-    first boot or certificate issuance will fail.
+    The Caddy site address, INCLUDING scheme, e.g. "https://realmaths.example.com" or
+    "http://16.60.38.27".
 
-    No domain yet? 1-2-3-4.sslip.io resolves to the address 1.2.3.4, so you can use
-    that as a stand-in while still getting real HTTPS.
+    The scheme is part of the value because it decides Caddy's behaviour: a bare
+    hostname makes Caddy request a certificate automatically, while an explicit
+    http:// serves plain HTTP instead.
+
+    A bare IP address cannot obtain a publicly trusted certificate - Let's Encrypt
+    will not issue for one, and Caddy falls back to its own internal CA, which no
+    browser trusts. Use http:// if you are serving from an IP.
+
+    No domain yet? 1-2-3-4.sslip.io resolves to the address 1.2.3.4, which works for
+    ACME and therefore gives real HTTPS without owning anything, but it is a
+    third-party service and the name is not memorable.
   EOT
   type        = string
 }

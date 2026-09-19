@@ -252,6 +252,12 @@ jobs:
           docker compose -f docker-compose.prod.yml pull
           docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
+          # Record the tags just deployed. The host deliberately holds no registry
+          # credential, so a later manual `docker compose up` has to reference images
+          # already on disk. Without this, .env drifts to :latest, which the host
+          # cannot authenticate to pull.
+          sed -i "s|^IMAGE_API=.*|IMAGE_API=$IMAGE_API|; s|^IMAGE_WEB=.*|IMAGE_WEB=$IMAGE_WEB|" .env
+
           docker logout ghcr.io
           # Reclaim space from superseded images on a small disk.
           docker image prune -f
@@ -259,7 +265,11 @@ jobs:
 
       - name: Smoke test
         env:
-          SITE: https://${{ vars.SITE_DOMAIN }}
+          # The full site address INCLUDING scheme. Caddy uses the scheme to decide
+          # whether to request a certificate, so it is configuration rather than
+          # something to assume: 'http://16.60.38.27' serves plain HTTP, while a bare
+          # hostname triggers automatic HTTPS.
+          SITE: ${{ vars.SITE_DOMAIN }}
         run: |
           echo "Checking $SITE"
 

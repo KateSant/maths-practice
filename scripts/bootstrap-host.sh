@@ -2,8 +2,13 @@
 #
 # One-time host setup for the Real Maths deployment target. Safe to re-run.
 #
-#   SITE_ADDRESS=https://realmaths.example.com \
+#   SITE_ADDRESS=http://1.2.3.4 \
+#   GHCR_OWNER=katesant GHCR_REPO=real-maths \
 #     ssh -i <private-key> ubuntu@<static-ip> 'bash -s' < scripts/bootstrap-host.sh
+#
+# SITE_ADDRESS is the Caddy site address and includes the scheme. A bare hostname
+# makes Caddy request a certificate; http:// serves plain HTTP. A bare IP cannot get
+# a publicly trusted certificate at all, so use http:// for one.
 #
 # Installs Docker with the Compose plugin and writes /srv/realmaths/.env. It does
 # not start the app: that is the deploy workflow's job, so that the first thing to
@@ -11,7 +16,9 @@
 
 set -euo pipefail
 
-SITE_ADDRESS="${SITE_ADDRESS:?set SITE_ADDRESS, for example https://realmaths.example.com}"
+SITE_ADDRESS="${SITE_ADDRESS:?set SITE_ADDRESS, for example http://1.2.3.4 or https://realmaths.example.com}"
+GHCR_OWNER="${GHCR_OWNER:?set GHCR_OWNER, the lowercase GitHub owner, e.g. katesant}"
+GHCR_REPO="${GHCR_REPO:?set GHCR_REPO, e.g. real-maths}"
 APP_DIR=/srv/realmaths
 
 echo "==> Installing Docker"
@@ -60,13 +67,16 @@ else
   echo "    generated a new JWT secret"
 fi
 
-# IMAGE_API and IMAGE_WEB are placeholders. The deploy workflow exports the real
-# values for each release, and shell environment wins over this file in Compose.
+# The image names must be real rather than placeholders: Compose validates them even
+# when the deploy workflow overrides them, and a placeholder like CHANGEME fails with
+# "invalid reference format: repository name must be lowercase", which makes every
+# manual `docker compose` command on the host unusable. The workflow records the
+# deployed commit sha here on each release.
 sudo tee "$APP_DIR/.env" >/dev/null <<EOF
 SITE_ADDRESS=$SITE_ADDRESS
 REALMATHS_JWT_SECRET=$SECRET
-IMAGE_API=ghcr.io/CHANGEME/real-maths/api:latest
-IMAGE_WEB=ghcr.io/CHANGEME/real-maths/web:latest
+IMAGE_API=ghcr.io/$GHCR_OWNER/$GHCR_REPO/api:latest
+IMAGE_WEB=ghcr.io/$GHCR_OWNER/$GHCR_REPO/web:latest
 EOF
 sudo chown "$USER:$USER" "$APP_DIR/.env"
 sudo chmod 600 "$APP_DIR/.env"
