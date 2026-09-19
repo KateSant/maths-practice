@@ -1,35 +1,18 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { ApiRequestError, api } from '../api/client'
-import type { HistoryItem } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { AccuracyRing } from '../components/AccuracyRing'
 import { Button, Card, EmptyState, ProgressBar, Spinner, StatTile } from '../components/ui'
-import { accuracyTone, formatDate, formatDateTime, initials, percent } from '../lib/format'
+import { accuracyTone, formatDate, initials, percent } from '../lib/format'
 import { Link } from 'react-router-dom'
 
 export function ProfilePage() {
   const { profile, refresh } = useAuth()
 
-  const [history, setHistory] = useState<HistoryItem[] | null>(null)
   const [name, setName] = useState(profile?.user.displayName ?? '')
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
-
-  useEffect(() => {
-    let cancelled = false
-    void (async () => {
-      try {
-        const loaded = await api.history()
-        if (!cancelled) setHistory(loaded)
-      } catch {
-        if (!cancelled) setHistory([])
-      }
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [])
 
   if (!profile) {
     return <Spinner label="Loading your profile…" />
@@ -105,11 +88,10 @@ export function ProfilePage() {
         </div>
       </Card>
 
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <StatTile label="Points" value={user.points} accent="text-amber-600" />
         <StatTile label="Current streak" value={user.currentStreak} hint={`Best ${user.bestStreak}`} accent="text-orange-600" />
         <StatTile label="Questions answered" value={stats.totalAnswered} hint={`${stats.totalCorrect} correct`} />
-        <StatTile label="Rounds completed" value={stats.sessionsCompleted} />
       </section>
 
       <section>
@@ -155,42 +137,6 @@ export function ProfilePage() {
                       </p>
                     </div>
                   </div>
-                )
-              })}
-            </Card>
-          )}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold text-slate-900">Practice history</h2>
-        <div className="mt-4">
-          {history === null ? (
-            <Spinner label="Loading history…" />
-          ) : history.length === 0 ? (
-            <EmptyState title="Nothing practised yet" body="Finish a round and it will be listed here." />
-          ) : (
-            <Card className="divide-y divide-slate-100">
-              {history.map((item) => {
-                const itemTone = accuracyTone(item.accuracyPercent)
-                return (
-                  <Link
-                    key={item.sessionId}
-                    to={`/results/${item.sessionId}`}
-                    className="flex items-center gap-4 px-5 py-4 transition hover:bg-slate-50"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-medium text-slate-800">{item.topicName}</p>
-                      <p className="text-xs text-slate-400">{formatDateTime(item.completedAt)}</p>
-                    </div>
-                    <span className={`text-sm font-bold tabular-nums ${itemTone.text}`}>
-                      {item.correctCount}/{item.questionCount}
-                    </span>
-                    <span className="hidden text-xs text-amber-600 sm:block">+{item.pointsAwarded}</span>
-                    <span className="text-slate-300" aria-hidden="true">
-                      ›
-                    </span>
-                  </Link>
                 )
               })}
             </Card>

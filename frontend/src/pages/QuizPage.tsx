@@ -98,7 +98,7 @@ export function QuizPage() {
       await refresh()
       navigate(`/results/${session.sessionId}`, { replace: true, state: { summary } })
     } catch (caught) {
-      setError(caught instanceof ApiRequestError ? caught.message : 'Could not finish that round.')
+      setError(caught instanceof ApiRequestError ? caught.message : 'Could not mark your answers.')
       setFinishing(false)
     }
   }, [session, isLast, navigate, refresh])

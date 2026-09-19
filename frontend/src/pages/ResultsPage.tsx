@@ -156,8 +156,8 @@ export function ResultsPage() {
 
       {estimateDuration(summary) > 0 ? (
         <p className="pb-6 text-center text-xs text-slate-400">
-          Session lasted about {formatDuration(estimateDuration(summary))}, including reading the
-          explanations.
+          You spent about {formatDuration(estimateDuration(summary))} on this topic, including reading
+          the explanations.
         </p>
       ) : null}
     </div>

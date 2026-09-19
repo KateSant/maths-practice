@@ -3,17 +3,9 @@ import { Badge, Card, buttonClasses } from './ui'
 import { Link } from 'react-router-dom'
 import { percent, pluralise } from '../lib/format'
 
-/** One topic tile on the practice picker. `accuracy` is undefined until answered. */
-export function TopicCard({
-  topic,
-  questionCount,
-  accuracy,
-}: {
-  topic: Topic
-  questionCount: number
-  accuracy?: number
-}) {
-  const href = `/quiz?topic=${encodeURIComponent(topic.slug)}&count=${questionCount}`
+/** One topic tile. Practising a topic works through its whole set of questions. */
+export function TopicCard({ topic, accuracy }: { topic: Topic; accuracy?: number }) {
+  const href = `/quiz?topic=${encodeURIComponent(topic.slug)}&count=${topic.questionCount}`
   const tone = accuracy === undefined ? null : accuracy >= 80 ? 'emerald' : accuracy >= 50 ? 'amber' : 'rose'
 
   return (
