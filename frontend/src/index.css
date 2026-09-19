@@ -158,3 +158,48 @@ body {
   --color-orange-600: #b5651d;
   --color-orange-700: #8f4f16;
 }
+
+/* The page sits on a tiled pixel texture rather than a flat colour, scaled up four times
+   with nearest-neighbour so the pixels stay crisp. Generated for this project - see
+   public/texture-stone.png - so it is our own artwork in the game's style rather than any
+   of Mojang's. */
+[data-theme='minecraft'] body {
+  background-color: var(--color-slate-50);
+  background-image: url('/texture-stone.png');
+  background-repeat: repeat;
+  background-size: 64px 64px;
+  background-attachment: fixed;
+  image-rendering: pixelated;
+}
+
+/* Minecraft's interface is built from bevelled panels: a light edge top-left, a dark edge
+   bottom-right, no gradients and no soft shadows. Reproducing that is most of what makes a
+   page read as the game rather than as a recoloured website.
+
+   These selectors reach into Tailwind's class names, which is a deliberate trade. The tidy
+   alternative is a semantic-token refactor of every component, which is not worth doing for
+   one themed skin. They are unlayered, so they win over Tailwind's own box-shadow utilities
+   without needing !important. */
+[data-theme='minecraft'] .rounded-2xl,
+[data-theme='minecraft'] button.rounded-xl,
+[data-theme='minecraft'] a.rounded-xl {
+  /* Opaque panels, so the texture shows around them rather than through them. */
+  background-color: var(--color-white);
+  box-shadow:
+    inset -2px -2px 0 0 rgba(0, 0, 0, 0.28),
+    inset 2px 2px 0 0 rgba(255, 255, 255, 0.55);
+}
+
+/* A chunky edge instead of a hairline border, as the game's panels have. */
+[data-theme='minecraft'] header {
+  border-bottom-width: 3px;
+  border-bottom-color: var(--color-slate-200);
+  box-shadow: inset 0 -2px 0 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Progress and accuracy bars become hard-edged blocks rather than pills. */
+[data-theme='minecraft'] .rounded-full:has(> .bg-emerald-500),
+[data-theme='minecraft'] .rounded-full:has(> .h-full) {
+  border-radius: 0;
+  box-shadow: inset -1px -1px 0 0 rgba(0, 0, 0, 0.3);
+}

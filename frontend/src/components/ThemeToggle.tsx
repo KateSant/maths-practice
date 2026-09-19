@@ -1,25 +1,47 @@
-import { useTheme } from '../theme/ThemeContext'
+import { useTheme, type Theme } from '../theme/ThemeContext'
+
+const OPTIONS: Array<{ value: Theme; label: string }> = [
+  { value: 'vanilla', label: 'Vanilla' },
+  { value: 'minecraft', label: 'Minecraft' },
+]
 
 /**
- * Switches between the default look and the Minecraft-style one.
+ * Theme picker.
  *
- * A real button with aria-pressed rather than a styled div, so it is reachable by keyboard
- * and announces its state. "Vanilla" is deliberately the label for the default: it is what
- * the app called it before, and it also happens to be the Minecraft term for unmodded.
+ * Both options are shown and the active one is highlighted, rather than a single button
+ * naming the current theme. A lone button reading "Minecraft" says what the theme *is* but
+ * not that pressing it changes anything - it reads as a label, not a control. Showing the
+ * alternatives, next to the word "Theme", makes the choice obvious without a tooltip.
+ *
+ * Not a native <select>: a two-option segmented control is clearer for two options, and it
+ * matches the question-count picker elsewhere in the app.
  */
 export function ThemeToggle() {
-  const { isMinecraft, toggleTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
 
   return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      aria-pressed={isMinecraft}
-      title={isMinecraft ? 'Switch back to the standard theme' : 'Switch to the Minecraft-style theme'}
-      className="font-display inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-semibold ring-1 ring-slate-200 transition hover:bg-slate-100"
+    <div
+      className="flex items-center gap-1 rounded-xl bg-slate-100 p-1"
+      role="group"
+      aria-label="Theme"
     >
-      <span aria-hidden="true">{isMinecraft ? '🟩' : '⬜'}</span>
-      <span className="hidden sm:inline">{isMinecraft ? 'Minecraft' : 'Vanilla'}</span>
-    </button>
+      <span className="px-1.5 text-xs font-semibold text-slate-500">Theme</span>
+      {OPTIONS.map((option) => {
+        const active = theme === option.value
+        return (
+          <button
+            key={option.value}
+            type="button"
+            onClick={() => setTheme(option.value)}
+            aria-pressed={active}
+            className={`font-display rounded-xl px-2 py-1 text-[11px] font-semibold transition ${
+              active ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            {option.label}
+          </button>
+        )
+      })}
+    </div>
   )
 }

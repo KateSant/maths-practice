@@ -5,7 +5,8 @@ import type { AnswerResult, QuizSession } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { Badge, Button, Card, ProgressBar, Spinner, buttonClasses } from '../components/ui'
 import { OreBadge } from '../components/OreBadge'
-import { difficultyLabel } from '../lib/format'
+import { AdvancementToast } from '../components/AdvancementToast'
+import { difficultyLabel, oreTier } from '../lib/format'
 import { useTheme } from '../theme/ThemeContext'
 
 const DEFAULT_QUESTIONS = 5
@@ -52,6 +53,10 @@ export function QuizPage() {
   const [finishing, setFinishing] = useState(false)
   const [askedAt, setAskedAt] = useState(() => Date.now())
 
+  // The themed reward popup. Held here rather than in a component of its own so it can be
+  // triggered from the answer that caused it, and cleared by the toast's own timer.
+  const [advancement, setAdvancement] = useState<{ name: string; detail: string } | null>(null)
+
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
 
   /**
@@ -92,6 +97,17 @@ export function QuizPage() {
       try {
         const answered = await api.submitAnswer(session.sessionId, question.id, optionId, Date.now() - askedAt)
         setResult(answered)
+
+        if (isMinecraft && answered.correct) {
+          // Named after the ore for this question's difficulty, so a hard question yields a
+          // rarer reward: "Diamond mined" means more than "Coal mined".
+          setAdvancement({
+            name: `${oreTier(question.difficulty).name} mined`,
+            detail: `+${answered.pointsAwarded} XP${
+              answered.currentStreak > 1 ? ` · ${answered.currentStreak} in a row` : ''
+            }`,
+          })
+        }
       } catch (caught) {
         setSelectedId(null)
         setError(caught instanceof ApiRequestError ? caught.message : 'Could not submit that answer.')
@@ -199,6 +215,14 @@ export function QuizPage() {
 
   return (
     <div className="mx-auto max-w-3xl animate-rise">
+      {advancement ? (
+        <AdvancementToast
+          name={advancement.name}
+          detail={advancement.detail}
+          onDismiss={() => setAdvancement(null)}
+        />
+      ) : null}
+
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-wide text-slate-400">{session.topicName}</p>

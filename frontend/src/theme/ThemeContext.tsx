@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 
 export type Theme = 'vanilla' | 'minecraft'
 
@@ -19,7 +19,7 @@ function readStoredTheme(): Theme {
 interface ThemeContextValue {
   theme: Theme
   isMinecraft: boolean
-  toggleTheme: () => void
+  setTheme: (theme: Theme) => void
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
@@ -43,14 +43,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, [theme])
 
-  const toggleTheme = useCallback(() => {
-    setTheme((current) => (current === 'minecraft' ? 'vanilla' : 'minecraft'))
-  }, [])
-
-  const value = useMemo(
-    () => ({ theme, isMinecraft: theme === 'minecraft', toggleTheme }),
-    [theme, toggleTheme],
-  )
+  const value = useMemo(() => ({ theme, isMinecraft: theme === 'minecraft', setTheme }), [theme])
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
