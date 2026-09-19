@@ -1,5 +1,11 @@
 server:
   port: ${SERVER_PORT:8081}
+  # Trust X-Forwarded-* from Caddy. The rate limiter depends on this: the API container
+  # publishes no ports and is reachable only from Caddy, so the header can only have come
+  # from Caddy. Without it Spring ignores the header and every request looks like it arrives
+  # from the Docker network address, putting all clients in one bucket and throttling them
+  # together - which presents as "the site is broken sometimes".
+  forward-headers-strategy: framework
 
 spring:
   application:
@@ -50,6 +56,40 @@ realmaths:
     # Comma-separated Google Workspace domains to restrict sign-in to, checked against
     # the hd claim. Empty means any Google account, which is what we want for now.
     allowed-domains: ${REALMATHS_GOOGLE_ALLOWED_DOMAINS:}
+
+  rate-limit:
+    enabled: true
+    # Ceiling on distinct client keys held in memory. An attacker with a large address pool
+    # would otherwise grow the limiter until the heap ran out, turning a rate limiter into a
+    # denial of service. When the map is full a NEW key is refused rather than evicting the
+    # oldest, because evicting would let an attacker reset their own exhausted bucket.
+    max-keys: 10000
+    idle-expiry: PT1H
+
+    # First match wins, so specific rules must come before the fallback.
+    rules:
+      # Unauthenticated account creation: this endpoint needs no credentials of any kind, so
+      # it is the one thing a script can point at to grow the database or harvest tokens.
+      - name: guest
+        path: /api/auth/guest
+        method: POST
+        requests: 30
+        period: PT1H
+      # Verifying a Google ID token costs a signature check per call.
+      - name: google-signin
+        path: /api/auth/google
+        method: POST
+        requests: 60
+        period: PT15M
+
+    # Deliberately generous. A school is one NAT address, so thirty students answering
+    # questions arrive as a single client: at 600/min a full class would throttle itself,
+    # and the failure would look like the app being broken rather than like a limit.
+    fallback:
+      name: default
+      path: /api/**
+      requests: 1200
+      period: PT1M
 
 management:
   endpoints:
