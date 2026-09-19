@@ -1,6 +1,6 @@
 # Content admin: prototype plan
 
-**Status:** design only, nothing built.
+**Status:** the backend is built (§9). The admin screens are next.
 **Goal:** let a maths teacher add and change quiz questions through a UI, so we can *show her
 the workflow* rather than describe it.
 
@@ -343,3 +343,52 @@ Trimmed to the ones that actually change what we build:
 
 Not worth asking yet: publish/review workflow, admin visibility of student results, guest
 accounts. Those are real questions, but not for a prototype.
+
+---
+
+## 9. Built so far
+
+On branch `admin-interface`, in a separate `git worktree` at `/Users/kate/maths-admin`, so the
+other agent's checkout and branch stay untouched. 86 backend tests (was 63).
+
+| | |
+|---|---|
+| `V4__question_lifecycle.sql` | `status` replaces `active`; `origin` marks the 32 seeded questions |
+| `POST/PUT /api/admin/questions` | Create and edit. Labels derived from position, never sent by the client |
+| `GET /api/admin/questions` | Paged, filter by topic/status/difficulty/origin and prompt search |
+| `POST .../{id}/publish`, `.../retire` | The only two status transitions |
+| `/api/admin/topics` | List, create, edit |
+| `QuestionValidator` | The publish gate, in one place |
+| `scripts/make-admin.sh` | Promotes an existing account to ADMIN |
+
+No review step: publish goes live immediately, confirmed as the intended behaviour.
+
+### Decisions taken while building
+
+- **No hard delete.** Retiring is the only removal on offer. `quiz_answers` cascades on delete,
+  so a hard delete would erase students' answer history and the provenance of their points
+  along with the question. A "delete a draft" endpoint can come later, scoped to drafts with no
+  answers.
+- **Structural limits on save, answerability on publish.** A draft may be empty. That meant
+  normalising a null prompt to an empty string at the boundary, because the column is NOT NULL
+  and the distinction the domain cares about is blank versus non-blank.
+- **422 rather than 409 for an unpublishable question**, with field keys such as
+  `options[2].text` and `options.correct` that name the offending input. 409 stays for genuine
+  conflicts, like a duplicate topic slug.
+- **Page size capped at 100**, and filters reject unrecognised values with 400. Without an
+  explicit handler the catch-all turned a mistyped filter into a 500.
+
+### Three bugs the tests caught
+
+1. `findDetailedById` used an inner `join fetch` on options, so a draft with no options matched
+   no rows and the editor got a 404 for a question that existed. Now a `left join`.
+2. `questions.prompt` is NOT NULL, so a null prompt from a draft reached the database as a
+   constraint violation and a 500.
+3. `ApiError.validation` hardcoded 400, so a 422 body misreported its own status.
+
+### Next
+
+Question list, then the editor with live preview, then topics. The preview must render through
+**the same component the quiz uses** — a second rendering path can drift, and the whole value of
+a preview is that it tells the truth. Difficulty should render through the other agent's
+`OreBadge` so the editor and the quiz agree.
