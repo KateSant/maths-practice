@@ -3,6 +3,11 @@ output "static_ip" {
   value       = aws_lightsail_static_ip.app.ip_address
 }
 
+output "instance_name" {
+  description = "Consumed by the deploy workflow, so the firewall rule it opens cannot drift from the real instance name."
+  value       = aws_lightsail_instance.app.name
+}
+
 output "ssh_command" {
   description = "How to reach the instance for the bootstrap step."
   value       = "ssh -i <path-to-private-key> ubuntu@${aws_lightsail_static_ip.app.ip_address}"

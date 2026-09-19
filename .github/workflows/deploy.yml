@@ -41,6 +41,7 @@ jobs:
         working-directory: infra
     outputs:
       static_ip: ${{ steps.apply.outputs.static_ip }}
+      instance_name: ${{ steps.apply.outputs.instance_name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -87,6 +88,7 @@ jobs:
         run: |
           terraform apply -auto-approve -input=false
           echo "static_ip=$(terraform output -raw static_ip)" >> "$GITHUB_OUTPUT"
+          echo "instance_name=$(terraform output -raw instance_name)" >> "$GITHUB_OUTPUT"
 
       - name: Summary
         run: |
@@ -160,8 +162,37 @@ jobs:
     if: vars.SITE_DOMAIN != ''
     # An environment allows a required reviewer and scopes the deploy secrets.
     environment: production
+    # The deploy needs AWS access, but only to open and close a single firewall rule
+    # for this runner's address. The role grants Lightsail and nothing else.
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Assume the CI role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: gha-deploy-${{ github.run_id }}
+
+      - name: Authorise this runner for SSH
+        # Port 22 is closed to the world and open only to the developer's address, so
+        # a runner cannot reach it: GitHub's egress addresses are unpredictable, which
+        # is exactly why a static allow-list is not an option. Instead the runner adds
+        # its own address for the duration of the deploy and removes it again below.
+        # The rule is a single /32 for one address.
+        env:
+          INSTANCE: ${{ needs.infra.outputs.instance_name }}
+        run: |
+          RUNNER_IP=$(curl -fsS https://api.ipify.org)
+          echo "runner egress address: $RUNNER_IP"
+          echo "RUNNER_CIDR=$RUNNER_IP/32" >> "$GITHUB_ENV"
+          aws lightsail open-instance-public-ports \
+            --instance-name "$INSTANCE" \
+            --port-info "fromPort=22,toPort=22,protocol=TCP,cidrs=$RUNNER_IP/32"
+          echo "opened for $RUNNER_IP/32"
 
       - name: Install SSH key
         run: |
@@ -234,3 +265,20 @@ jobs:
           echo "  $SITE/api/topics -> $status"
           test "$status" = "401"
           echo "Deploy verified."
+
+      - name: Revoke this runner's SSH access
+        # Always runs, including after a failure above, so the temporary rule cannot
+        # linger. If the job is killed outright the rule survives until the next
+        # deploy opens and closes its own, which is a single address either way.
+        if: always()
+        env:
+          INSTANCE: ${{ needs.infra.outputs.instance_name }}
+        run: |
+          if [ -z "${RUNNER_CIDR:-}" ]; then
+            echo "no rule was opened, nothing to revoke"
+            exit 0
+          fi
+          aws lightsail close-instance-public-ports \
+            --instance-name "$INSTANCE" \
+            --port-info "fromPort=22,toPort=22,protocol=TCP,cidrs=$RUNNER_CIDR"
+          echo "closed for $RUNNER_CIDR"
