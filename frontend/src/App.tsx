@@ -6,6 +6,7 @@ import { AppLayout } from './components/AppLayout'
 import { Spinner } from './components/ui'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
+import { SignInPage } from './pages/SignInPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { QuizPage } from './pages/QuizPage'
 import { ResultsPage } from './pages/ResultsPage'
@@ -43,7 +44,10 @@ function AdminRoute({ children }: { children: ReactNode }) {
 export function App() {
   return (
     <Routes>
+      {/* Two steps on purpose: choose who is signing in, then sign in as them. The role is in
+          the URL, so the second step survives a refresh and the back button works. */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/login/:role" element={<SignInPage />} />
 
       {/* Everything below shares the app chrome and needs a signed-in user. */}
       <Route
