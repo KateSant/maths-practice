@@ -90,14 +90,14 @@ async function readError(response: Response): Promise<{ message: string; fieldEr
 }
 
 export const api = {
-  register: (email: string, password: string, displayName: string) =>
-    apiRequest<AuthResponse>('/auth/register', {
-      method: 'POST',
-      body: { email, password, displayName },
-    }),
+  /**
+   * Exchanges the Google ID token the browser received for one of our own JWTs. The
+   * ID token is never stored — only the token we get back.
+   */
+  signInWithGoogle: (idToken: string) =>
+    apiRequest<AuthResponse>('/auth/google', { method: 'POST', body: { idToken } }),
 
-  login: (email: string, password: string) =>
-    apiRequest<AuthResponse>('/auth/login', { method: 'POST', body: { email, password } }),
+  continueAsGuest: () => apiRequest<AuthResponse>('/auth/guest', { method: 'POST' }),
 
   profile: () => apiRequest<Profile>('/me'),
 

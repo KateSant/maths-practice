@@ -145,6 +145,13 @@ jobs:
           # Repository root, because the image needs the top-level Caddyfile.
           context: .
           file: ./frontend/Dockerfile
+          # Vite inlines import.meta.env.* into the bundle at build time, so this must be
+          # a build arg. Setting it as a runtime environment variable on the container
+          # would silently produce a bundle with no client ID, and the sign-in page would
+          # report itself unconfigured with nothing useful in the logs.
+          # Public value: it ships in the browser bundle. Not a secret.
+          build-args: |
+            VITE_GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}
           push: true
           tags: |
             ${{ steps.vars.outputs.image_base }}/web:${{ github.sha }}

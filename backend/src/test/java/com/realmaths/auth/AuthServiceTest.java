@@ -3,19 +3,21 @@ package com.realmaths.auth;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.realmaths.auth.dto.AuthResponse;
-import com.realmaths.auth.dto.LoginRequest;
-import com.realmaths.auth.dto.RegisterRequest;
 import com.realmaths.common.ApiException;
+import com.realmaths.support.Fixtures;
 import com.realmaths.user.User;
+import com.realmaths.user.UserIdentity;
+import com.realmaths.user.UserIdentityRepository;
 import com.realmaths.user.UserRepository;
+import java.time.Clock;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,17 +26,25 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Orchestration only: resolving a verified identity to a user row. What counts as a
+ * verified identity is {@link GoogleIdTokenVerifierTest}'s problem.
+ */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
+
+    private static final Instant NOW = Instant.parse("2026-01-01T09:00:00Z");
+    private static final String ID_TOKEN = "google-id-token";
 
     @Mock
     private UserRepository userRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private UserIdentityRepository identityRepository;
+
+    @Mock
+    private GoogleIdTokenVerifier googleVerifier;
 
     @Mock
     private JwtService jwtService;
@@ -43,83 +53,141 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        // The constructor hashes a throwaway value for the timing-equalisation path.
-        when(passwordEncoder.encode(anyString())).thenReturn("$2a$dummyhash");
-        authService = new AuthService(userRepository, passwordEncoder, jwtService);
+        authService = new AuthService(
+                userRepository, identityRepository, googleVerifier, jwtService, Clock.fixed(NOW, ZoneOffset.UTC));
+        // Lenient: the refusal paths throw before a token is ever issued, so this stub is
+        // legitimately unused in those tests.
+        lenient().when(jwtService.issueFor(any()))
+                .thenReturn(new JwtService.IssuedToken("our.jwt", NOW.plusSeconds(3600)));
     }
 
-    private void stubToken() {
-        when(jwtService.issueFor(any())).thenReturn(new JwtService.IssuedToken("signed.jwt.token", Instant.now()));
+    private void givenGoogleReturns(GoogleIdentity identity) {
+        when(googleVerifier.verify(ID_TOKEN)).thenReturn(identity);
+    }
+
+    private static GoogleIdentity gmailIdentity() {
+        return new GoogleIdentity("sub-1", "learner@gmail.com", "Ada Lovelace", null, true);
+    }
+
+    // -------------------------------------------------------------- first sight ---
+
+    @Test
+    void createsAUserAndAnIdentityOnFirstSignIn() {
+        givenGoogleReturns(gmailIdentity());
+        when(identityRepository.findByProviderAndSubject("google", "sub-1")).thenReturn(Optional.empty());
+        when(userRepository.findByEmailIgnoreCase("learner@gmail.com")).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenAnswer(call -> call.getArgument(0));
+
+        AuthResponse response = authService.signInWithGoogle(ID_TOKEN);
+
+        ArgumentCaptor<User> savedUser = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(savedUser.capture());
+        assertThat(savedUser.getValue().getEmail()).isEqualTo("learner@gmail.com");
+        assertThat(savedUser.getValue().getDisplayName()).isEqualTo("Ada Lovelace");
+
+        ArgumentCaptor<UserIdentity> savedIdentity = ArgumentCaptor.forClass(UserIdentity.class);
+        verify(identityRepository).save(savedIdentity.capture());
+        assertThat(savedIdentity.getValue().getProvider()).isEqualTo("google");
+        assertThat(savedIdentity.getValue().getSubject()).isEqualTo("sub-1");
+        assertThat(savedIdentity.getValue().getLastLoginAt()).isEqualTo(NOW);
+
+        assertThat(response.token()).isEqualTo("our.jwt");
+        assertThat(response.user().email()).isEqualTo("learner@gmail.com");
+    }
+
+    /** The whole point of keying on subject: signing in twice is not two accounts. */
+    @Test
+    void reusesTheExistingUserForTheSameGoogleSubject() {
+        User existingUser = Fixtures.user(7L, "learner@gmail.com", "Ada");
+        UserIdentity identity = new UserIdentity(existingUser, "google", "sub-1", "learner@gmail.com", NOW.minusSeconds(60));
+        when(identityRepository.findByProviderAndSubject("google", "sub-1")).thenReturn(Optional.of(identity));
+        givenGoogleReturns(gmailIdentity());
+
+        AuthResponse response = authService.signInWithGoogle(ID_TOKEN);
+
+        assertThat(response.user().id()).isEqualTo(7L);
+        verify(userRepository, never()).save(any());
+        verify(identityRepository, never()).save(any());
     }
 
     @Test
-    void registerHashesThePasswordAndNormalisesTheEmail() {
-        when(userRepository.existsByEmailIgnoreCase("learner@example.com")).thenReturn(false);
-        when(passwordEncoder.encode("password123")).thenReturn("$2a$hashed");
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        stubToken();
+    void refreshesTheStoredProviderEmailOnEverySignIn() {
+        User existingUser = Fixtures.user(7L, "learner@gmail.com", "Ada");
+        UserIdentity identity =
+                new UserIdentity(existingUser, "google", "sub-1", "old-address@gmail.com", NOW.minusSeconds(60));
+        when(identityRepository.findByProviderAndSubject("google", "sub-1")).thenReturn(Optional.of(identity));
+        givenGoogleReturns(gmailIdentity());
 
-        AuthResponse response = authService.register(
-                new RegisterRequest("  Learner@Example.COM  ", "password123", "  Ada  "));
+        authService.signInWithGoogle(ID_TOKEN);
 
-        ArgumentCaptor<User> saved = ArgumentCaptor.forClass(User.class);
-        verify(userRepository).save(saved.capture());
-
-        assertThat(saved.getValue().getEmail()).isEqualTo("learner@example.com");
-        assertThat(saved.getValue().getDisplayName()).isEqualTo("Ada");
-        assertThat(saved.getValue().getPasswordHash()).isEqualTo("$2a$hashed");
-        assertThat(saved.getValue().getPasswordHash()).isNotEqualTo("password123");
-        assertThat(response.token()).isEqualTo("signed.jwt.token");
-        assertThat(response.user().email()).isEqualTo("learner@example.com");
+        assertThat(identity.getEmailAtProvider()).isEqualTo("learner@gmail.com");
+        assertThat(identity.getLastLoginAt()).isEqualTo(NOW);
     }
 
-    @Test
-    void registerRejectsADuplicateEmail() {
-        when(userRepository.existsByEmailIgnoreCase("taken@example.com")).thenReturn(true);
+    // ------------------------------------------------- account linking by email ---
 
-        assertThatThrownBy(() -> authService.register(new RegisterRequest("taken@example.com", "password123", "Ada")))
+    @Test
+    void linksToAnExistingAccountWhenGoogleIsAuthoritativeForTheEmail() {
+        User existing = Fixtures.user(9L, "learner@gmail.com", "Ada");
+        when(identityRepository.findByProviderAndSubject("google", "sub-1")).thenReturn(Optional.empty());
+        when(userRepository.findByEmailIgnoreCase("learner@gmail.com")).thenReturn(Optional.of(existing));
+        givenGoogleReturns(gmailIdentity());
+
+        AuthResponse response = authService.signInWithGoogle(ID_TOKEN);
+
+        assertThat(response.user().id()).isEqualTo(9L);
+        // Linked, not duplicated.
+        verify(userRepository, never()).save(any());
+        verify(identityRepository).save(any(UserIdentity.class));
+    }
+
+    /**
+     * Google can be relaying an address it did not issue and does not vouch for. If we
+     * attached the identity anyway, whoever controls that Google account would inherit
+     * the existing learner's account.
+     */
+    @Test
+    void refusesToLinkToAnExistingAccountWhenGoogleIsNotAuthoritativeForTheEmail() {
+        User existing = Fixtures.user(9L, "someone@school.example", "Someone");
+        when(identityRepository.findByProviderAndSubject("google", "sub-1")).thenReturn(Optional.empty());
+        when(userRepository.findByEmailIgnoreCase("someone@school.example")).thenReturn(Optional.of(existing));
+        givenGoogleReturns(new GoogleIdentity("sub-1", "someone@school.example", "Someone", null, false));
+
+        assertThatThrownBy(() -> authService.signInWithGoogle(ID_TOKEN))
                 .isInstanceOf(ApiException.class)
-                .hasMessageContaining("already exists")
                 .extracting(ex -> ((ApiException) ex).getStatus())
                 .isEqualTo(HttpStatus.CONFLICT);
 
-        verify(userRepository, never()).save(any());
+        verify(identityRepository, never()).save(any());
     }
 
+    // ------------------------------------------------------------------- guests ---
+
     @Test
-    void loginSucceedsWithTheRightPassword() {
-        User existing = new User("learner@example.com", "$2a$stored", "Ada");
-        when(userRepository.findByEmailIgnoreCase("learner@example.com")).thenReturn(Optional.of(existing));
-        when(passwordEncoder.matches("password123", "$2a$stored")).thenReturn(true);
-        stubToken();
+    void createsAGuestWithNoIdentitySoItCannotBeSignedIntoAgain() {
+        when(userRepository.save(any(User.class))).thenAnswer(call -> call.getArgument(0));
 
-        AuthResponse response = authService.login(new LoginRequest("LEARNER@example.com", "password123"));
+        AuthResponse response = authService.continueAsGuest();
 
-        assertThat(response.token()).isEqualTo("signed.jwt.token");
-        assertThat(response.user().displayName()).isEqualTo("Ada");
+        ArgumentCaptor<User> saved = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(saved.capture());
+        assertThat(saved.getValue().getEmail()).matches("guest_[0-9a-f]{10}@realmaths\\.local");
+        assertThat(saved.getValue().getDisplayName()).startsWith("Guest ");
+        assertThat(saved.getValue().getRole()).isEqualTo(com.realmaths.user.Role.STUDENT);
+
+        // No identity row, so there is no way back into this account.
+        verify(identityRepository, never()).save(any());
+        assertThat(response.token()).isEqualTo("our.jwt");
     }
 
+    /** Generated server-side, so two guests never collide and a client cannot choose one. */
     @Test
-    void loginRejectsTheWrongPassword() {
-        when(userRepository.findByEmailIgnoreCase("learner@example.com"))
-                .thenReturn(Optional.of(new User("learner@example.com", "$2a$stored", "Ada")));
-        when(passwordEncoder.matches("wrong", "$2a$stored")).thenReturn(false);
+    void givesEachGuestItsOwnAccount() {
+        when(userRepository.save(any(User.class))).thenAnswer(call -> call.getArgument(0));
 
-        assertThatThrownBy(() -> authService.login(new LoginRequest("learner@example.com", "wrong")))
-                .isInstanceOf(BadCredentialsException.class)
-                .hasMessage("Email or password is incorrect.");
-    }
+        String first = authService.continueAsGuest().user().email();
+        String second = authService.continueAsGuest().user().email();
 
-    @Test
-    void loginForAnUnknownEmailStillHashesAValueToAvoidLeakingWhichEmailsExist() {
-        when(userRepository.findByEmailIgnoreCase("ghost@example.com")).thenReturn(Optional.empty());
-        when(passwordEncoder.matches(eq("password123"), anyString())).thenReturn(false);
-
-        assertThatThrownBy(() -> authService.login(new LoginRequest("ghost@example.com", "password123")))
-                .isInstanceOf(BadCredentialsException.class)
-                .hasMessage("Email or password is incorrect.");
-
-        // Same message as a wrong password, and a real hash comparison still happened.
-        verify(passwordEncoder).matches("password123", "$2a$dummyhash");
+        assertThat(first).isNotEqualTo(second);
     }
 }

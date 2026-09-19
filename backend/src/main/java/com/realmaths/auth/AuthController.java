@@ -1,8 +1,7 @@
 package com.realmaths.auth;
 
 import com.realmaths.auth.dto.AuthResponse;
-import com.realmaths.auth.dto.LoginRequest;
-import com.realmaths.auth.dto.RegisterRequest;
+import com.realmaths.auth.dto.GoogleSignInRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Both endpoints are open ({@code /api/auth/**} is permitted in SecurityConfig) and
+ * return one of our own JWTs. There is no password endpoint by design.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -21,14 +24,14 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
-        return authService.register(request);
+    @PostMapping("/google")
+    public AuthResponse signInWithGoogle(@Valid @RequestBody GoogleSignInRequest request) {
+        return authService.signInWithGoogle(request.idToken());
     }
 
-    @PostMapping("/login")
-    public AuthResponse login(@Valid @RequestBody LoginRequest request) {
-        return authService.login(request);
+    @PostMapping("/guest")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthResponse continueAsGuest() {
+        return authService.continueAsGuest();
     }
 }

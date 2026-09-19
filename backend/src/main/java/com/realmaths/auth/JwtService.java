@@ -36,7 +36,11 @@ public class JwtService {
                 .subject(String.valueOf(user.getId()))
                 .claim("email", user.getEmail())
                 .claim("name", user.getDisplayName())
-                // Space-delimited scopes are the Spring Security convention.
+                // NOT used for authorisation, and must not be: it is stale the moment a
+                // role changes, whereas JwtToUserPrincipalConverter re-reads the user
+                // row on every request and builds authorities from that. Kept only as a
+                // convenience for the browser. Note also that once an identity provider
+                // is involved, "scope" is a name it may want for itself.
                 .claim("scope", user.getRole().name())
                 .build();
 

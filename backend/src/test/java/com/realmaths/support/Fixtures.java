@@ -41,7 +41,7 @@ public final class Fixtures {
     }
 
     public static User user(long id, String email, String displayName) {
-        User user = new User(email, "hashed-password", displayName);
+        User user = new User(email, displayName);
         setField(user, "id", id);
         return user;
     }

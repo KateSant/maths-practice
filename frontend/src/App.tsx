@@ -3,6 +3,7 @@ import { RequireAuth } from './auth/RequireAuth'
 import { AppLayout } from './components/AppLayout'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
+import { PrivacyPage } from './pages/PrivacyPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { QuizPage } from './pages/QuizPage'
 import { ResultsPage } from './pages/ResultsPage'
@@ -11,6 +12,10 @@ export function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+
+      {/* Public: Google requires the privacy-policy link on the consent screen to be
+          reachable without signing in. */}
+      <Route path="/privacy" element={<PrivacyPage />} />
 
       {/* Everything below shares the app chrome and needs a signed-in user. */}
       <Route

@@ -13,6 +13,10 @@ COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 
 COPY frontend/ ./
+# Inlined into the bundle at build time by Vite, so it must be present *here* and not as a
+# runtime environment variable on the container. Public, not a secret.
+ARG VITE_GOOGLE_CLIENT_ID=""
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
 # Runs tsc --noEmit as well as vite build, so a type error fails the image build.
 RUN npm run build
 

@@ -42,6 +42,14 @@ realmaths:
     default-question-count: 5
     max-question-count: 20
     points-per-correct-answer: 10
+  google:
+    # Public identifier, not a secret: it ships in the browser bundle and is used to
+    # check the ID token's aud claim, so it must match VITE_GOOGLE_CLIENT_ID. Blank
+    # disables Google sign-in (the app still starts).
+    client-id: ${REALMATHS_GOOGLE_CLIENT_ID:}
+    # Comma-separated Google Workspace domains to restrict sign-in to, checked against
+    # the hd claim. Empty means any Google account, which is what we want for now.
+    allowed-domains: ${REALMATHS_GOOGLE_ALLOWED_DOMAINS:}
 
 management:
   endpoints:

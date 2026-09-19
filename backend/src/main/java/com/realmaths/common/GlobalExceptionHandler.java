@@ -13,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -51,6 +52,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiError.of(403, "You do not have access to that."));
+    }
+
+    /**
+     * An unknown path. Declared explicitly because the catch-all below would otherwise
+     * turn every 404 into a 500 with a full stack trace logged at ERROR, which buries
+     * real failures. Spring raises this rather than NoHandlerFoundException when no
+     * handler matches, which is the default configuration here.
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiError> handleNoResourceFound(NoResourceFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiError.of(404, "No such endpoint."));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

@@ -144,12 +144,67 @@ class SchemaMigrationTest {
 
             // A row relying purely on the column default, as a future JPA insert would:
             statement.executeUpdate("""
-                    insert into users (email, password_hash, display_name)
-                    values ('typeof@example.com', 'x', 'T')
+                    insert into users (email, display_name)
+                    values ('typeof@example.com', 'T')
                     """);
             assertThat(text(statement, "select typeof(created_at) from users"))
                     .as("users.created_at written by the SQL default")
                     .isEqualTo("integer");
+        }
+    }
+
+    /**
+     * Identity is keyed on the provider's own subject, so one Google account can only
+     * ever map to one user row. This is what makes sign-in idempotent rather than a
+     * duplicate-account factory, and it is enforced here rather than in service code
+     * because that is where it cannot be bypassed.
+     */
+    @Test
+    void sqliteRefusesTheSameProviderSubjectMappingToASecondUser() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            statement.executeUpdate("insert into users (email, display_name) values ('one@example.com', 'One')");
+            statement.executeUpdate("insert into users (email, display_name) values ('two@example.com', 'Two')");
+            statement.executeUpdate("""
+                    insert into user_identities (user_id, provider, subject, email_at_provider)
+                    values ((select id from users where email = 'one@example.com'),
+                            'google', 'sub-123', 'one@example.com')
+                    """);
+
+            assertThatThrownBy(() -> statement.executeUpdate("""
+                    insert into user_identities (user_id, provider, subject, email_at_provider)
+                    values ((select id from users where email = 'two@example.com'),
+                            'google', 'sub-123', 'two@example.com')
+                    """))
+                    .as("the same Google subject must not map to a second user")
+                    .isInstanceOf(SQLException.class);
+        }
+    }
+
+    /** The password path was removed outright, so the column must be gone too. */
+    @Test
+    void thePasswordHashColumnNoLongerExists() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThatThrownBy(() -> statement.executeQuery("select password_hash from users limit 1"))
+                    .as("users.password_hash should have been dropped")
+                    .isInstanceOf(SQLException.class);
+        }
+    }
+
+    @Test
+    void deletingAUserCascadesToTheirIdentities() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            statement.executeUpdate("insert into users (email, display_name) values ('gone@example.com', 'Gone')");
+            statement.executeUpdate("""
+                    insert into user_identities (user_id, provider, subject, email_at_provider)
+                    values ((select id from users where email = 'gone@example.com'),
+                            'google', 'sub-999', 'gone@example.com')
+                    """);
+
+            statement.executeUpdate("delete from users where email = 'gone@example.com'");
+
+            assertThat(scalar(statement, "select count(*) from user_identities"))
+                    .as("identities of the deleted user")
+                    .isZero();
         }
     }
 

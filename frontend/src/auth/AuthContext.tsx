@@ -15,11 +15,10 @@ interface AuthContextValue {
   profile: Profile | null
   /** True only while the stored session is being restored on first load. */
   restoring: boolean
-  login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string, displayName: string) => Promise<void>
+  signInWithGoogle: (idToken: string) => Promise<void>
+  continueAsGuest: () => Promise<void>
   logout: () => void
-  refresh: () => Promise<void>
-}
+  refresh: () => Promise<void>}
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
@@ -74,22 +73,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const login = useCallback(async (email: string, password: string) => {
-    const auth = await api.login(email, password)
+  /**
+   * `idToken` is the Google credential, passed straight through and never stored.
+   * What we persist is our own JWT, exactly as before, so nothing downstream of here
+   * knows Google was involved.
+   */
+  const signInWithGoogle = useCallback(async (idToken: string) => {
+    const auth = await api.signInWithGoogle(idToken)
     writeToken(auth.token)
     // Fetch the profile so stats come along too, rather than synthesising a stub.
     setProfile(await api.profile())
   }, [])
 
-  const register = useCallback(async (email: string, password: string, displayName: string) => {
-    const auth = await api.register(email, password, displayName)
+  const continueAsGuest = useCallback(async () => {
+    const auth = await api.continueAsGuest()
     writeToken(auth.token)
     setProfile(await api.profile())
   }, [])
 
   const value = useMemo(
-    () => ({ profile, restoring, login, register, logout, refresh }),
-    [profile, restoring, login, register, logout, refresh],
+    () => ({ profile, restoring, signInWithGoogle, continueAsGuest, logout, refresh }),
+    [profile, restoring, signInWithGoogle, continueAsGuest, logout, refresh],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

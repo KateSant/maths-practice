@@ -13,7 +13,7 @@ intended to be replaced by a maths teacher's real content.
 | Backend | Spring Boot 3.5, Java 21, Spring Data JPA, Spring Security (JWT) |
 | Database | SQLite (single file, no server) with Flyway migrations |
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, React Router |
-| Tests | JUnit 5 + Mockito (18) · Vitest (13) |
+| Tests | JUnit 5 + Mockito (43) · Vitest (13) |
 
 ## Running it locally
 
@@ -31,6 +31,19 @@ npm run dev
 ```
 
 Then open <http://localhost:5174> and click **Quick start as a guest**.
+
+Google sign-in needs a client ID at **build** time (Vite inlines it), so for local
+development:
+
+```bash
+cd frontend
+VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com npm run dev
+```
+
+Without it the app still runs and the guest path still works; the sign-in page says the
+client ID is missing rather than showing an empty space. See `docs/google-signin.md`
+for what to set up in Google Cloud, and note that `http://localhost:5174` has to be an
+authorised JavaScript origin on that client.
 
 The database file is created at `backend/data/realmaths.db` on first run, with the
 schema and starter questions applied by Flyway. To reset it, delete that file (and
@@ -53,7 +66,7 @@ cd frontend && npm test       # 13 tests
 
 ```
 backend/src/main/java/com/realmaths/
-  auth/       registration, login, JWT issuing, principal resolution
+  auth/       Google sign-in and guest accounts, JWT issuing, principal resolution
   user/       User entity and repository
   question/   topics, questions, options, catalog queries
   quiz/       sessions, answers, grading, points and streaks
@@ -74,8 +87,8 @@ frontend/src/
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/api/auth/register` | Create an account, returns a JWT |
-| POST | `/api/auth/login` | Sign in, returns a JWT |
+| POST | `/api/auth/google` | Exchange a Google ID token for a JWT |
+| POST | `/api/auth/guest` | Create a throwaway account, returns a JWT |
 | GET | `/api/topics` | Topics with active question counts |
 | POST | `/api/quiz/sessions` | Deal a quiz (`topicSlug` optional, `count`) |
 | GET | `/api/quiz/sessions/{id}` | A session with its answers so far |
@@ -88,6 +101,15 @@ frontend/src/
 Authenticated requests use `Authorization: Bearer <token>`.
 
 ## Design notes
+
+**Identity is keyed on the provider's subject, never on email.** `user_identities` has a
+unique constraint on `(provider, subject)`, where `subject` is Google's immutable account
+identifier. Email is mutable and can be reassigned, so matching on it is how accounts get
+taken over; it is only used to find an existing account when Google is authoritative for
+the address. See `docs/google-signin.md`.
+
+**There are no passwords.** No hashes are stored, and there is no reset flow, because
+there is no password. Sign-in is Google, or a guest account with no email at all.
 
 **The answer key never leaves the server.** No JPA entity is serialised to the
 client. Questions are served as `QuestionView`/`AnswerOptionView`, which have no
