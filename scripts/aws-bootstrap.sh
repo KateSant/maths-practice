@@ -13,8 +13,14 @@
 #
 # Safe to re-run: every step checks for existing resources first.
 #
+#   EXPECTED_ACCOUNT_ID=991346485322 \
+#   AWS_PROFILE=admin \
 #   GITHUB_OWNER=KateSant GITHUB_REPO=real-maths STATE_BUCKET=realmaths-terraform-state \
-#     AWS_REGION=eu-west-2 ./scripts/aws-bootstrap.sh
+#   AWS_REGION=eu-west-2 ./scripts/aws-bootstrap.sh
+#
+# EXPECTED_ACCOUNT_ID is required. AWS_PROFILE is not, but if you have more than
+# one account configured it is the difference between creating resources here and
+# creating them somewhere else.
 #
 # Requires an administrator identity. It is deliberately not managed by Terraform,
 # because Terraform cannot run until this exists.
@@ -30,6 +36,7 @@ GITHUB_REPO="${GITHUB_REPO:?set GITHUB_REPO, e.g. real-maths}"
 BRANCH="${BRANCH:-main}"
 STATE_BUCKET="${STATE_BUCKET:?set STATE_BUCKET, e.g. realmaths-terraform-state}"
 ROLE_NAME="${ROLE_NAME:-realmaths-github-ci}"
+EXPECTED_ACCOUNT_ID="${EXPECTED_ACCOUNT_ID:?set EXPECTED_ACCOUNT_ID to the 12-digit account this should run in}"
 OIDC_URL="https://token.actions.githubusercontent.com"
 
 say() { printf '\n==> %s\n' "$1"; }
@@ -44,7 +51,24 @@ fi
 CALLER_ARN="$(aws sts get-caller-identity --query Arn --output text)"
 ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 
+# Checked before anything is created. With more than one account configured, the
+# wrong AWS_PROFILE otherwise creates a role and a bucket in the wrong place, which
+# is silent and annoying to unpick.
+if [ "$ACCOUNT_ID" != "$EXPECTED_ACCOUNT_ID" ]; then
+  cat >&2 <<ERR
+
+  ERROR: authenticated to account $ACCOUNT_ID, but EXPECTED_ACCOUNT_ID is $EXPECTED_ACCOUNT_ID.
+
+  Refusing to continue. Check which account your profile points at with:
+      aws sts get-caller-identity --profile <profile>
+  and pass the intended one explicitly, e.g. AWS_PROFILE=admin.
+
+ERR
+  exit 1
+fi
+
 say "Authenticated as $CALLER_ARN"
+say "Account $ACCOUNT_ID"
 
 case "$CALLER_ARN" in
   *:root)
@@ -146,6 +170,11 @@ fi
 
 say "GitHub Actions role: $ROLE_NAME"
 
+# GitHub's subject claim embeds immutable numeric ids, e.g.
+#   repo:KateSant@51126336/real-maths@1377364455:ref:refs/heads/main
+# The ids were added so a deleted-and-recreated repository cannot inherit trust.
+# Matching them with wildcards keeps the owner, repository and branch pinned
+# exactly while surviving a rename; the ids themselves never change.
 TRUST_POLICY="$(cat <<JSON
 {
   "Version": "2012-10-17",
@@ -161,7 +190,7 @@ TRUST_POLICY="$(cat <<JSON
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
         },
         "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:$GITHUB_OWNER/$GITHUB_REPO:ref:refs/heads/$BRANCH"
+          "token.actions.githubusercontent.com:sub": "repo:$GITHUB_OWNER@*/$GITHUB_REPO@*:ref:refs/heads/$BRANCH"
         }
       }
     }
