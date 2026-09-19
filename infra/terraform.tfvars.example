@@ -1,0 +1,28 @@
+# Copy to terraform.tfvars and fill in. That file is gitignored.
+#
+#   cd infra
+#   cp terraform.tfvars.example terraform.tfvars
+#   terraform init
+#   terraform plan
+#   terraform apply
+
+region = "eu-west-2"
+availability_zone = "eu-west-2a"
+
+# Must resolve to the static IP before the first deploy, or Caddy cannot complete
+# the ACME challenge and you get no certificate. With no domain yet you can use
+# <ip-with-dashes>.sslip.io, which resolves to that address automatically.
+domain_name = "realmaths.example.com"
+
+# Created in the Lightsail console (Account > SSH keys), not with Terraform.
+key_pair_name = "realmaths-key"
+
+# Your own address only. Find it with: curl -4 ifconfig.me
+ssh_cidr = ["203.0.113.4/32"]
+
+# Optional overrides. Confirm these ids for your region first:
+#   aws lightsail get-bundles    --region eu-west-2 --query 'bundles[].bundleId'
+#   aws lightsail get-blueprints --region eu-west-2 --query 'blueprints[].blueprintId'
+# bundle_id    = "micro_3_0"    # ~1 GB RAM, enough for Caddy + JVM + SQLite
+# blueprint_id = "ubuntu_24_04"
+# snapshot_time = "03:00"

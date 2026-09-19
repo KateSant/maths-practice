@@ -1,0 +1,15 @@
+# Never commit state: it holds resource ids and, depending on what gets added
+# later, potentially sensitive outputs.
+*.tfstate
+*.tfstate.*
+.terraform/
+# NOTE: .terraform.lock.hcl is intentionally NOT ignored. Committing it pins the
+# provider version and its hashes, so everyone (and CI) gets an identical provider.
+
+# Real variable values (may contain your home IP, domain, etc).
+*.tfvars
+!*.tfvars.example
+
+crash.log
+override.tf
+override.tf.json

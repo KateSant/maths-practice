@@ -90,8 +90,11 @@ jobs:
       - name: Install SSH key
         run: |
           mkdir -p ~/.ssh
-          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+          # Named deploy_key rather than id_ed25519: ssh reads the key type from the
+          # file contents, so a Lightsail-generated RSA key works here too, and the
+          # name should not imply ed25519. Every call below passes -i explicitly.
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
           # The host key is pinned from a secret rather than fetched with
           # ssh-keyscan, so a man in the middle cannot substitute the deploy target.
           printf '%s\n' "${{ secrets.DEPLOY_HOST_KEY }}" > ~/.ssh/known_hosts
@@ -100,8 +103,9 @@ jobs:
       - name: Upload compose file and edge config
         run: |
           HOST="${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}"
-          ssh "$HOST" 'mkdir -p /srv/realmaths'
-          scp docker-compose.prod.yml Caddyfile "$HOST:/srv/realmaths/"
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes "$HOST" 'mkdir -p /srv/realmaths'
+          scp -i ~/.ssh/deploy_key -o IdentitiesOnly=yes \
+            docker-compose.prod.yml Caddyfile "$HOST:/srv/realmaths/"
 
       - name: Pull images and restart
         env:
@@ -116,7 +120,7 @@ jobs:
           # never left holding a long-lived registry credential: it logs in, pulls,
           # and logs out again. The token is briefly visible in the remote process
           # list, which is an accepted tradeoff for not storing a PAT on the box.
-          ssh "$DEPLOY_USER@$DEPLOY_HOST" \
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes "$DEPLOY_USER@$DEPLOY_HOST" \
             bash -s -- "$GHCR_TOKEN" "$IMAGE_TAG" "$IMAGE_BASE" "$GHCR_USER" <<'REMOTE'
           set -euo pipefail
           TOKEN="$1"; TAG="$2"; BASE="$3"; USERNAME="$4"
