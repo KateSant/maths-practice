@@ -3,6 +3,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import { ApiRequestError, api } from '../api/client'
 import type { SessionSummary } from '../api/types'
 import { AccuracyRing } from '../components/AccuracyRing'
+import { MiningReward } from '../components/MiningReward'
 import { Card, Spinner, StatTile, buttonClasses } from '../components/ui'
 import { encouragement, formatDuration, percent, pluralise } from '../lib/format'
 
@@ -135,6 +136,11 @@ export function ResultsPage() {
           ))}
         </div>
       </section>
+
+      {/* The reward for finishing: one ore per correct answer, to walk to and mine. Shown even
+          for a zero score, where the patch has a single ore - a reward that only appears to
+          the successful is not much of a reward, and for a demo it should always be visible. */}
+      <MiningReward correctCount={summary.correctCount} questionCount={summary.questionCount} />
 
       <div className="flex flex-wrap justify-center gap-3 pb-4">
         <Link to={retryHref} className={buttonClasses('primary', 'lg')}>
