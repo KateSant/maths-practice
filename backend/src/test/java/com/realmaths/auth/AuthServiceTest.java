@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import com.realmaths.auth.dto.AuthResponse;
 import com.realmaths.common.ApiException;
 import com.realmaths.support.Fixtures;
+import com.realmaths.user.Role;
 import com.realmaths.user.User;
 import com.realmaths.user.UserIdentity;
 import com.realmaths.user.UserIdentityRepository;
@@ -161,6 +162,47 @@ class AuthServiceTest {
         verify(identityRepository, never()).save(any());
     }
 
+    /**
+     * Pre-registration: an account created before she has ever signed in must be adopted by her
+     * Google account rather than duplicated or refused. This is how the teacher is set up ahead
+     * of a demo, so nothing is left to do on the day.
+     */
+    @Test
+    void linksAGoogleIdentityToAPreRegisteredAdminAccount() {
+        User preRegistered = Fixtures.user(11L, "susanwatts3@gmail.com", "Susan Watts");
+        preRegistered.setRole(Role.ADMIN);
+        when(identityRepository.findByProviderAndSubject("google", "sub-1")).thenReturn(Optional.empty());
+        when(userRepository.findByEmailIgnoreCase("susanwatts3@gmail.com")).thenReturn(Optional.of(preRegistered));
+        givenGoogleReturns(new GoogleIdentity("sub-1", "susanwatts3@gmail.com", "Susan W", null, true));
+
+        AuthResponse response = authService.signInWithGoogle(ID_TOKEN);
+
+        assertThat(response.user().id()).isEqualTo(11L);
+        assertThat(response.user().role()).isEqualTo("ADMIN");
+        // Adopted, not duplicated.
+        verify(userRepository, never()).save(any());
+        verify(identityRepository).save(any(UserIdentity.class));
+    }
+
+    /**
+     * The trap in pre-registering a third-party address: Google is not authoritative for it, so
+     * linking is refused and the account can never be reached. Worth a test because the failure
+     * looks like "sign-in is broken" rather than "that address is unlinkable".
+     */
+    @Test
+    void refusesToLinkAPreRegisteredAccountOnANonGmailThirdPartyAddress() {
+        User preRegistered = Fixtures.user(11L, "s.watts@school.example", "Susan Watts");
+        preRegistered.setRole(Role.ADMIN);
+        when(identityRepository.findByProviderAndSubject("google", "sub-1")).thenReturn(Optional.empty());
+        when(userRepository.findByEmailIgnoreCase("s.watts@school.example")).thenReturn(Optional.of(preRegistered));
+        givenGoogleReturns(new GoogleIdentity("sub-1", "s.watts@school.example", "Susan Watts", null, false));
+
+        assertThatThrownBy(() -> authService.signInWithGoogle(ID_TOKEN))
+                .isInstanceOf(ApiException.class)
+                .extracting(ex -> ((ApiException) ex).getStatus())
+                .isEqualTo(HttpStatus.CONFLICT);
+    }
+
     // ------------------------------------------------------------------- guests ---
 
     @Test
@@ -173,7 +215,7 @@ class AuthServiceTest {
         verify(userRepository).save(saved.capture());
         assertThat(saved.getValue().getEmail()).matches("guest_[0-9a-f]{10}@realmaths\\.local");
         assertThat(saved.getValue().getDisplayName()).startsWith("Guest ");
-        assertThat(saved.getValue().getRole()).isEqualTo(com.realmaths.user.Role.STUDENT);
+        assertThat(saved.getValue().getRole()).isEqualTo(Role.STUDENT);
 
         // No identity row, so there is no way back into this account.
         verify(identityRepository, never()).save(any());
