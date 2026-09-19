@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { ApiRequestError } from '../api/client'
 import { useAuth } from '../auth/AuthContext'
 import { isGoogleConfigured, renderGoogleButton } from '../auth/google'
@@ -153,12 +153,6 @@ export function LoginPage() {
           </Button>
           <p className="mt-2 text-xs text-slate-400">A throwaway account. Progress is not kept.</p>
         </div>
-
-        <p className="mt-10 text-center text-xs text-slate-400">
-          <Link to="/privacy" className="hover:text-slate-600">
-            Privacy
-          </Link>
-        </p>
       </div>
     </div>
   )
