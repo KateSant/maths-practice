@@ -1,53 +1,74 @@
-# Real Maths
+# Maths practice app
 
-A maths practice app: multiple-choice questions with server-side marking, instant
-worked explanations, points and streaks, and per-topic progress.
+Multiple-choice maths practice with server-side marking, worked explanations, points and streaks,
+and per-topic progress. There is also a teacher-facing question bank, so the content can be edited
+without a deploy.
 
-Prototype. The question bank is a starter set of 32 questions across 5 topics,
-intended to be replaced by a maths teacher's real content.
+**The product has no name yet**, so the interface deliberately shows none. That is why the
+repository is `real-maths`, the Java package is `com.realmaths`, the database is
+`realmaths.db` and the environment variables are `REALMATHS_*` — those are working names from
+before the naming question was parked. See `docs/deferred.md`.
+
+Prototype stage. The question bank ships with 32 starter questions across 5 topics, intended to be
+replaced by a real teacher's content through the admin screens.
+
+---
+
+## Read these first
+
+| | |
+|---|---|
+| `docs/deferred.md` | What was deliberately not done, and why. Includes the repository rename procedure, which has a sequencing trap. |
+| `docs/google-signin.md` | The whole sign-in design, what to configure in Google Cloud, and the two bugs that only showed up in production. |
+| `docs/content-admin-architecture.md` | The question bank's design: lifecycle, publish gate, and the decisions behind them. |
+
+---
 
 ## Stack
 
 | | |
 |---|---|
-| Backend | Spring Boot 3.5, Java 21, Spring Data JPA, Spring Security (JWT) |
-| Database | SQLite (single file, no server) with Flyway migrations |
+| Backend | Spring Boot 3.5, Java 21, Spring Data JPA, Spring Security, JWT |
+| Database | SQLite, one file, no server. Schema by Flyway |
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, React Router |
-| Tests | JUnit 5 + Mockito (43) · Vitest (13) |
+| Tests | JUnit 5 + Mockito (**88**) · Vitest (**19**) |
+| Deploy | GitHub Actions → GHCR → one Lightsail instance, Caddy in front |
+
+---
 
 ## Running it locally
 
-Two terminals. No Docker required — SQLite is just a file on disk.
+Two processes, no Docker needed.
 
 ```bash
 # 1. API on http://localhost:8081
 cd backend
-mvn spring-boot:run
+REALMATHS_GOOGLE_CLIENT_ID=<client-id> mvn spring-boot:run
 
 # 2. Web app on http://localhost:5174
 cd frontend
 npm install
-npm run dev
+VITE_GOOGLE_CLIENT_ID=<client-id> npm run dev
 ```
 
-Then open <http://localhost:5174> and click **Quick start as a guest**.
+Open <http://localhost:5174>. **Both** environment variables are needed and they are the same
+value — the frontend for Google's button, the API to check the token's `aud` claim. Omitting the
+frontend one shows a "not configured for this build" message instead of the button; omitting the
+API's makes every sign-in fail with 503 *after* Google has already issued a token, which is a
+confusing place to discover it. The client ID is public, not a secret.
 
-Google sign-in needs a client ID at **build** time (Vite inlines it), so for local
-development:
+**Ports matter and are not free choices.** `frontend/vite.config.ts` sets `5174` with `strictPort`,
+and `http://localhost:5174` is an authorised JavaScript origin on the Google OAuth client. Google
+refuses sign-in from any other origin, and the button renders regardless — the only symptom is a
+console error after a click. If you need a different port, pass `--port` on the command line rather
+than editing the file, and expect to register that origin too.
 
-```bash
-cd frontend
-VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com npm run dev
-```
+The API proxies `/api` through Vite, so the browser sees one origin in development exactly as it
+does behind Caddy in production, and there is no CORS in either. `VITE_API_URL` overrides the proxy
+target if you need to point at a different API.
 
-Without it the app still runs and the guest path still works; the sign-in page says the
-client ID is missing rather than showing an empty space. See `docs/google-signin.md`
-for what to set up in Google Cloud, and note that `http://localhost:5174` has to be an
-authorised JavaScript origin on that client.
-
-The database file is created at `backend/data/realmaths.db` on first run, with the
-schema and starter questions applied by Flyway. To reset it, delete that file (and
-any `-wal`/`-shm` siblings) and restart.
+The database is created at `backend/data/realmaths.db` on first run, with the schema and starter
+questions applied by Flyway. To reset it, delete that file and any `-wal`/`-shm` siblings.
 
 ### Docker
 
@@ -55,41 +76,69 @@ any `-wal`/`-shm` siblings) and restart.
 docker compose up --build     # API + SQLite volume, on port 8081
 ```
 
+---
+
 ## Tests
 
 ```bash
-cd backend  && mvn test       # 18 tests
-cd frontend && npm test       # 13 tests
+cd backend  && mvn test       # 88 tests
+cd frontend && npm test       # 19 tests
+cd frontend && npm run build  # runs tsc --noEmit as well, so type errors fail the build
 ```
+
+Two tests are worth knowing about because they cover things nothing else can:
+
+- `db/SchemaMigrationTest` applies the real migrations to a temporary SQLite file and asserts the
+  schema guarantees directly. Hibernate's community SQLite dialect cannot reliably do
+  `ddl-auto=validate`, so this is where "the schema is what we think it is" is checked.
+- `auth/AuthWiringTest` boots the whole application context and asserts there is **exactly one**
+  `JwtDecoder` bean. See the note on Google's decoder below.
+
+There are no component tests: the frontend suite has no DOM environment. Logic worth asserting
+lives in plain functions (`auth/roles.ts`, `lib/format.ts`) so it can be tested there.
+
+---
 
 ## Layout
 
 ```
 backend/src/main/java/com/realmaths/
+  admin/      question bank authoring: controllers, services, the publish validator
   auth/       Google sign-in and guest accounts, JWT issuing, principal resolution
-  user/       User entity and repository
+  common/     error shape, exception handling, score maths
+  config/     security, JWT, properties
+  profile/    profile and per-topic statistics
   question/   topics, questions, options, catalog queries
   quiz/       sessions, answers, grading, points and streaks
-  profile/    profile and per-topic statistics
-  common/     error shape, global exception handling, score maths
+  ratelimit/  token bucket limiting, aimed at unauthenticated account creation
+  user/       User and UserIdentity entities
+
 backend/src/main/resources/db/migration/
-  V1__init.sql            schema
-  V2__seed_questions.sql  starter question bank
+  V1__init.sql              schema
+  V2__seed_questions.sql    starter question bank
+  V3__google_sign_in.sql    drops passwords, adds user_identities
+  V4__question_lifecycle.sql  status replaces active, adds origin
+
 frontend/src/
-  api/        typed client and DTO definitions
-  auth/       auth context, token storage, route guard
-  components/ shared UI primitives
-  pages/      Login, Home, Quiz, Results, Profile
-  lib/        formatting helpers
+  api/         typed client; admin.ts holds the admin endpoints and their types
+  auth/        auth context, token storage, route guards, sign-in roles
+  components/  shared primitives and layout
+  pages/       the student pages, plus pages/admin/ for the question bank
+  lib/         formatting and the product-name constant
 ```
+
+---
 
 ## API
 
+Authenticated requests use `Authorization: Bearer <token>`. The token is ours, issued by
+`JwtService`; it is not Google's.
+
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/api/auth/google` | Exchange a Google ID token for a JWT |
-| POST | `/api/auth/guest` | Create a throwaway account, returns a JWT |
-| GET | `/api/topics` | Topics with active question counts |
+| POST | `/api/auth/google` | Exchange a Google ID token for ours |
+| POST | `/api/auth/guest` | Create a throwaway student account |
+| GET | `/api/topics` | Topics with published question counts |
 | POST | `/api/quiz/sessions` | Deal a quiz (`topicSlug` optional, `count`) |
 | GET | `/api/quiz/sessions/{id}` | A session with its answers so far |
 | POST | `/api/quiz/sessions/{id}/answers` | Submit one answer, returns the grade |
@@ -97,71 +146,243 @@ frontend/src/
 | GET | `/api/me` | Profile with statistics |
 | PATCH | `/api/me` | Change display name |
 | GET | `/api/me/history` | Completed quizzes |
+| GET | `/api/admin/questions` | Paged question list. Filters: `topicId`, `status`, `difficulty`, `origin`, `q` |
+| POST | `/api/admin/questions` | Create a draft |
+| GET | `/api/admin/questions/{id}` | One question, **with the answer key** |
+| PUT | `/api/admin/questions/{id}` | Replace a question and its options |
+| POST | `/api/admin/questions/{id}/publish` | Validate, then make it live |
+| POST | `/api/admin/questions/{id}/retire` | Take it out of circulation |
+| GET/POST/PUT | `/api/admin/topics` | List, create and edit topics |
 
-Authenticated requests use `Authorization: Bearer <token>`.
+Everything under `/api/admin/**` requires `ROLE_ADMIN`, enforced in `SecurityConfig` by path
+prefix rather than per controller, so a new endpoint is protected by where it lives.
+`AdminApiTest` asserts a student is refused, so a route mounted outside the prefix fails the build.
 
-## Design notes
+---
 
-**Identity is keyed on the provider's subject, never on email.** `user_identities` has a
-unique constraint on `(provider, subject)`, where `subject` is Google's immutable account
-identifier. Email is mutable and can be reassigned, so matching on it is how accounts get
-taken over; it is only used to find an existing account when Google is authoritative for
-the address. See `docs/google-signin.md`.
+## How it works
 
-**There are no passwords.** No hashes are stored, and there is no reset flow, because
-there is no password. Sign-in is Google, or a guest account with no email at all.
+### The answer key never leaves the server
 
-**The answer key never leaves the server.** No JPA entity is serialised to the
-client. Questions are served as `QuestionView`/`AnswerOptionView`, which have no
-correctness field, and grading happens in `QuizService`. The correct option is only
-revealed in the response to a submitted answer.
+No JPA entity is serialised to a client. Students receive `QuestionView` / `AnswerOptionView`,
+which have no correctness field at all, and grading happens in `QuizService`. The correct option is
+revealed only in the response to a submitted answer.
 
-**Grading is idempotent.** `quiz_answers` has a unique constraint on
-`(session_id, question_id)`, so re-submitting an answer returns the original grade
-instead of awarding points twice. Retries after a dropped connection are safe.
+The admin DTOs *do* carry it — that is their job — which is why they live in `admin/dto` and the
+frontend mirrors that split in `api/admin.ts`. Keeping them apart makes it obvious which side of
+the line a type belongs on.
 
-**Sessions are scoped to their owner.** Every session lookup filters on the
-authenticated user id, so guessing another student's session id returns 404.
+### Identity is keyed on the provider's subject, never on email
 
-**The database enforces the invariants.** A partial unique index
-(`answer_options_one_correct_idx`) makes a question with two correct answers
-impossible to store, foreign keys and cascades are declared in the schema, and the
-schema is applied by Flyway with Hibernate set to `ddl-auto: validate` so a
-forgotten migration fails at startup rather than at runtime.
+`user_identities` is unique on `(provider, subject)`, where `subject` is Google's immutable account
+identifier. Email is mutable and can be reassigned, so matching on it is how accounts get taken
+over. It is used to find an existing account only when Google is authoritative for the address —
+`@gmail.com`, or a Workspace domain — and a pre-registered account on any other address is refused
+rather than linked.
+
+### There are no passwords
+
+No hashes, no reset flow, no breach surface. Sign-in is Google, or a guest account with no email
+at all. Guests therefore can never be made teachers: there is no identity to attach one to.
+
+### Roles, and how to grant ADMIN
+
+`users.role` is one of `STUDENT`, `TEACHER`, `ADMIN`, constrained by the schema. Nothing in the app
+sets it, and no request body can — there is no registration payload at all any more.
+
+```bash
+./scripts/make-admin.sh someone@example.com                  # promote an existing account
+./scripts/make-admin.sh --pre-register someone@gmail.com "Their Name"  # create it first
+```
+
+There is no allowlist in configuration and no admin UI for it. Because
+`JwtToUserPrincipalConverter` re-reads the user row on **every request**, the change takes effect
+on that person's next request: no re-login, no reissued token, no cache to clear.
+
+`--pre-register` exists so an account can be ready before someone first signs in. Google then
+adopts the row rather than creating a second one. It only works for an address Google is
+authoritative for, and the script warns when it is not.
+
+### The student and teacher halves are kept apart
+
+The sign-in flow asks Student or Teacher first, then signs in as that. The choice is a statement of
+intent, not a permission — it decides the landing page and nothing else — and a student who picks
+Teacher gets a plain "you're not a teacher on this account" page rather than a silent redirect.
+
+Inside the question bank the header shows authoring navigation; on the practice side there is no
+mention of teaching at all. Both are cosmetic: the API decides what anyone may actually do, and an
+administrator can call `/api/admin/**` whatever the navigation shows.
+
+### A question has a lifecycle, and a draft may be invalid
+
+`status` is `DRAFT`, `PUBLISHED` or `RETIRED`. A teacher has to be able to save something
+half-written, so structural limits are checked on save (lengths, difficulty 1–5, at most six
+options) while "is this answerable" — a prompt, at least two options, exactly one correct — is
+checked only on the `DRAFT`→`PUBLISHED` transition, in `QuestionValidator`. The editor, a bulk
+publish and any future importer all pass through that one gate.
+
+**Nothing is ever hard-deleted.** `quiz_answers` cascades on delete, so deleting a question would
+take students' answer history with it. Retiring is the only removal on offer.
+
+`origin` records where a question came from: `SEED` for the 32 starter questions, or `AUTHORED`.
+
+### Grading is idempotent, and sessions are private
+
+`quiz_answers` is unique on `(session_id, question_id)`, so a retried submission returns the
+original grade instead of awarding points twice. Every session lookup filters on the authenticated
+user id, so guessing another student's session id returns 404.
+
+### The database enforces the invariants
+
+- `answer_options_one_correct_idx`, a partial unique index, makes two correct options impossible.
+- Foreign keys and cascades are declared in the schema.
+- `users.email` is unique, and `user_identities` is unique on `(provider, subject)`.
+- `questions.status` and `origin` have `check` constraints.
 
 ### SQLite specifics
 
-Two things are easy to get wrong and are handled deliberately:
+Four things are easy to get wrong, and each is handled deliberately:
 
-- **`foreign_keys=on` is required.** SQLite ignores foreign keys unless the
-  pragma is set per connection, which is why it is part of the JDBC URL in
-  `application.yml`. Without it, the `REFERENCES` clauses are inert.
-- **Timestamps are declared `timestamp` but store epoch milliseconds.** That is how
-  `sqlite-jdbc` encodes an `Instant`, so the column defaults use
-  `unixepoch() * 1000` to match, rather than `current_timestamp` — which would
-  write TEXT into rows inserted by SQL while JPA wrote INTEGER into the same column,
-  leaving ordering unreliable. `SchemaMigrationTest` guards this.
+- **`foreign_keys=on` is required.** SQLite ignores foreign keys unless the pragma is set per
+  connection, which is why it is in the JDBC URL in `application.yml`. Without it the `REFERENCES`
+  clauses are inert. `journal_mode=WAL` and `busy_timeout` are there for the same reason: readers
+  while a writer works, and waiting rather than failing on a locked database.
+- **Timestamps are declared `timestamp` but store epoch milliseconds**, because that is how
+  `sqlite-jdbc` encodes an `Instant`. Column defaults therefore use `unixepoch() * 1000` rather than
+  `current_timestamp`, which would write TEXT where JPA writes INTEGER. `SchemaMigrationTest`
+  guards this.
+- **`AUTOINCREMENT` columns must be declared exactly `INTEGER`** to be an alias for the 64-bit
+  rowid, but the entities use `Long`. `@JdbcTypeCode(SqlTypes.INTEGER)` on each `@Id` bridges it.
+- **`DROP COLUMN` fails while an index names the column**, so the index must be dropped first.
+  `V4` does exactly that, in that order, and it is commented there.
 
-Because Hibernate's community SQLite dialect is less reliable than its Postgres one
-at schema validation, `SchemaMigrationTest` applies the real migrations to a
-temporary database and asserts the schema guarantees directly.
+### Google's decoder is not a bean
 
-### Identity columns
+`GoogleIdTokenVerifier` builds its own `JwtDecoder` internally and never publishes one. The
+application's own `JwtDecoder` bean authenticates API calls, and a second one in the context could
+wire the resource server to Google's keys — at which point any Google ID token would be a valid API
+credential. `AuthWiringTest` asserts there is exactly one.
 
-SQLite requires `AUTOINCREMENT` columns to be declared exactly `INTEGER` (that is
-what makes them an alias for the 64-bit rowid), but the entities use `Long`. The
-`@JdbcTypeCode(SqlTypes.INTEGER)` on each `@Id` bridges that gap; see `User.id`.
+The verifier reads the `iss` claim as a raw string rather than through `jwt.getIssuer()`, because
+Spring models that as a URI and Google also issues the scheme-less `accounts.google.com` form.
 
-## Deployment sketch
+---
 
-For a hobby-scale deployment, one small Lightsail instance running the API and
-serving the built frontend from Caddy is the cheapest sensible option: no load
-balancer, no managed database, nothing serverless — so no cold starts. SQLite is a
-single file on the instance's disk, and backing it up is `cp`.
+## How it is deployed
 
-Caddy should serve the SPA with a history fallback so client-side routes survive a
-refresh, and reverse-proxy `/api` to the API. Because both are then on one origin,
-no CORS configuration is needed in production.
+One Lightsail instance, one small Docker Compose stack, Caddy in front. SQLite is a file in a
+volume on that instance. No load balancer, no managed database, nothing serverless.
 
-`SPRING_DATASOURCE_URL` and `REALMATHS_JWT_SECRET` are the settings to override.
-`REALMATHS_JWT_SECRET` must be at least 32 bytes.
+```
+push to main
+   │
+   ├─ test    reuses ci.yml: backend tests, frontend tests, typecheck and build
+   ├─ infra   terraform apply, state in S3        ─┐ both need the test job
+   ├─ build   docker images → ghcr.io             ─┘ to pass
+   └─ deploy  ssh to the instance, update .env, docker compose up, smoke test
+```
+
+Runs are serialised by a `concurrency` group, so two pushes queue rather than racing for the host
+or the Terraform state.
+
+### What is where
+
+| | |
+|---|---|
+| Host | `maths.thinktalkbuild.com` → static IP `16.60.38.27`, Lightsail, `eu-west-2` |
+| Instance | `realmaths`, Ubuntu 24.04 |
+| On the host | `/srv/realmaths/` — `.env`, `docker-compose.prod.yml`, `Caddyfile` |
+| Database | volume `realmaths_realmaths-data`, at `/data/realmaths.db` in the api container |
+| Images | `ghcr.io/katesant/real-maths/api` and `/web` |
+| Terraform state | `s3://realmaths-terraform-state-991346485322` |
+| CI role | `realmaths-github-ci`, assumed over GitHub OIDC — no stored AWS keys |
+
+### Configuration
+
+Repository **variables** (not secrets): `SITE_DOMAIN`, `GOOGLE_CLIENT_ID`, `AWS_REGION`,
+`AWS_AVAILABILITY_ZONE`, `SSH_CIDR`, `SSH_PUBLIC_KEY`, `TF_STATE_BUCKET`.
+
+Secrets: `AWS_ROLE_ARN`, `DEPLOY_USER`, `DEPLOY_HOST_KEY`, `DEPLOY_SSH_KEY`. There is one
+environment, `production`.
+
+The container settings live in `docker-compose.prod.yml` and the host's `.env`. **The deploy step
+upserts new keys into that `.env` rather than `sed`-replacing them**, because `sed` does nothing at
+all when a key is absent — which is how `REALMATHS_GOOGLE_CLIENT_ID` first shipped missing while the
+deploy reported success.
+
+`VITE_GOOGLE_CLIENT_ID` reaches the web image as a **Docker build arg**, not a runtime variable,
+because Vite inlines it. Setting it on the container does nothing.
+
+### The smoke test
+
+After deploying, the workflow checks:
+
+- `GET /` returns 200 (Caddy is serving, certificate obtained)
+- `GET /api/topics` returns 401 (the API is reachable and refusing anonymous callers)
+- `POST /api/auth/google` with a junk token returns **401, not 503** — 503 means the API has no
+  client ID, which is otherwise invisible because the button still renders and Google still issues
+  a token. This check exists because that shipped once.
+
+### The trust policy names the repository
+
+`realmaths-github-ci` trusts `repo:KateSant@*/real-maths@*:...`. **Renaming the repository changes
+that subject claim and CI will refuse to assume the role.** Add the new name to the policy before
+renaming — the full sequence is in `docs/deferred.md`.
+
+### Operating it
+
+```bash
+# logs
+ssh -i ~/.ssh/realmaths-deploy ubuntu@16.60.38.27 \
+  'cd /srv/realmaths && docker compose -f docker-compose.prod.yml logs -f api'
+
+# the database: sqlite3 is on neither the host nor the api image, so use a container
+ssh -i ~/.ssh/realmaths-deploy ubuntu@16.60.38.27 \
+  'docker run --rm -v realmaths_realmaths-data:/data alpine:3 sh -c \
+   "apk add --no-cache sqlite >/dev/null && sqlite3 /data/realmaths.db \"select id,email,role from users;\""'
+```
+
+A pre-migration backup of the production database is at `/home/ubuntu/realmaths-before-v4.db` on
+the host, taken before `V4` ran. Take another before any future migration:
+
+```bash
+docker run --rm -v realmaths_realmaths-data:/data -v /home/ubuntu:/backup alpine:3 sh -c \
+  'apk add --no-cache sqlite >/dev/null && sqlite3 /data/realmaths.db ".backup /backup/realmaths-$(date +%F).db"'
+```
+
+`.backup` rather than `cp`, so anything still in the WAL is included.
+
+---
+
+## Working on this repository
+
+**More than one agent may be working here at once. Use a `git worktree`, not a second checkout of
+the same directory.**
+
+```bash
+git worktree add -b my-branch ../my-worktree main
+```
+
+Two agents in one working directory caused a real incident: one ran `git add -A` and swept up the
+other's in-progress files, which broke the build on `main` and blocked a deploy. **Never use
+`git add -A` here** — stage explicit paths. A worktree also keeps uncommitted work in one branch
+away from the other's.
+
+Other things that have actually gone wrong, so worth checking first:
+
+| Symptom | Cause |
+|---|---|
+| "Google sign-in is not configured for this build" | `VITE_GOOGLE_CLIENT_ID` missing when the dev server started. Vite inlines it at startup; the API cannot supply it. |
+| "Google sign-in is not configured on this server" (503) | `REALMATHS_GOOGLE_CLIENT_ID` missing from the API. |
+| Sign-in silently does nothing on click | The page's origin is not registered on the OAuth client, or the dev server is on a different port than the config expects. |
+| Two dev servers fighting over 5174 | `strictPort` means the second one fails rather than moving. Use `--port`. |
+| An edited question 404s | It has no options yet, and a query used an inner join. Fixed, but a reminder that a draft may be empty. |
+| `{}` in a component | JSX syntax interpolating a value. It is not text on the page. |
+
+---
+
+## Parked work
+
+See `docs/deferred.md`. It covers the repository rename, publishing the Google OAuth app, the
+missing privacy policy, case-insensitive email uniqueness, guest accounts losing their progress on
+signing in, and the untested admin screens.
