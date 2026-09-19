@@ -2,6 +2,14 @@ provider "aws" {
   region = var.region
 }
 
+# Registers your own public key rather than letting Lightsail generate a pair.
+# A generated pair would put its private half into Terraform state, which lives in
+# S3; supplying only the public key keeps the private half on your machine alone.
+resource "aws_lightsail_key_pair" "app" {
+  name       = var.instance_name
+  public_key = var.ssh_public_key
+}
+
 # A single instance runs Caddy, the API, and SQLite. No load balancer (the Lightsail
 # one alone costs more than the instance), no managed database, and nothing
 # serverless, so there are no cold starts to reason about.
@@ -10,7 +18,7 @@ resource "aws_lightsail_instance" "app" {
   availability_zone = var.availability_zone
   blueprint_id      = var.blueprint_id
   bundle_id         = var.bundle_id
-  key_pair_name     = var.key_pair_name
+  key_pair_name     = aws_lightsail_key_pair.app.name
   ip_address_type   = "ipv4"
 
   # Daily snapshot of the whole instance, which is what protects the SQLite file.

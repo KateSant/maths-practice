@@ -16,19 +16,20 @@ output "deploy_target" {
 output "next_steps" {
   description = "What to do after apply."
   value       = <<-EOT
-    1. Create a DNS A record: ${var.domain_name} -> ${aws_lightsail_static_ip.app.ip_address}
-       Wait for it to resolve before the first deploy, or Caddy cannot get a certificate.
+    1. Point DNS at the instance. Wait for it to resolve before the first deploy,
+       or Caddy cannot complete the ACME challenge and you get no certificate:
+         ${var.domain_name}  A  ${aws_lightsail_static_ip.app.ip_address}
 
-    2. Bootstrap the host:
-         ssh -i <private-key> ubuntu@${aws_lightsail_static_ip.app.ip_address} 'bash -s' < scripts/bootstrap-host.sh
+    2. Bootstrap the host once (installs Docker, writes /srv/realmaths/.env):
+         SITE_ADDRESS=https://${var.domain_name} \
+           ssh -i ~/.ssh/realmaths-deploy ubuntu@${aws_lightsail_static_ip.app.ip_address} \
+           'bash -s' < scripts/bootstrap-host.sh
 
-    3. GitHub repository settings:
-         variable SITE_ADDRESS = https://${var.domain_name}
-         secret   DEPLOY_HOST  = ${aws_lightsail_static_ip.app.ip_address}
-         secret   DEPLOY_USER  = ubuntu
-         secret   DEPLOY_SSH_KEY  = the private key matching the Lightsail key pair
-         secret   DEPLOY_HOST_KEY = output of: ssh-keyscan -H ${aws_lightsail_static_ip.app.ip_address}
+    3. Pin the host key so the deploy cannot be redirected:
+         ssh-keyscan -H ${aws_lightsail_static_ip.app.ip_address}
+       and save it as the DEPLOY_HOST_KEY secret.
 
-    4. Push to main. The deploy job's guard turns on once SITE_ADDRESS is set.
+    4. Push to main. The Terraform and deploy jobs un-skip themselves once the
+       SITE_DOMAIN repository variable is set.
   EOT
 }

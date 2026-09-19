@@ -5,15 +5,14 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Least privilege: read the repository and write container packages. Note there are
-# no AWS permissions here, because deploying is an SSH plus docker compose operation
-# rather than an AWS API call. If CI ever needs to run Terraform or touch Route 53,
-# that is when to add GitHub OIDC and an IAM role here.
+# Default permissions for every job. The infra job below overrides these, because
+# assuming an AWS role over OIDC needs id-token: write.
 permissions:
   contents: read
   packages: write
 
-# Queue deploys rather than letting two overlap and race for the same host.
+# Queue runs rather than letting two overlap and race for the same host or the same
+# Terraform state. Terraform's own S3 lock is a second line of defence.
 concurrency:
   group: deploy-production
   cancel-in-progress: false
@@ -21,8 +20,85 @@ concurrency:
 jobs:
   test:
     name: Test
-    # Reuses ci.yml verbatim, so a failing test blocks the deploy.
+    # Reuses ci.yml verbatim, so a failing test blocks everything downstream.
     uses: ./.github/workflows/ci.yml
+
+  infra:
+    name: Terraform
+    needs: test
+    runs-on: ubuntu-latest
+    # Same guard as the deploy job: until SITE_DOMAIN is configured in repository
+    # variables, infrastructure is a clean skip rather than a failed build.
+    if: vars.SITE_DOMAIN != ''
+    # Overrides the workflow-level permissions. id-token is what lets this job
+    # exchange a GitHub OIDC token for temporary AWS credentials, so no access key
+    # exists anywhere.
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: infra
+    outputs:
+      static_ip: ${{ steps.apply.outputs.static_ip }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assume the CI role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          # Named so CloudTrail shows which run made each API call.
+          role-session-name: gha-terraform-${{ github.run_id }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.16.3"
+          # The wrapper exists to capture stdout into step outputs, which we do not
+          # use. Leaving it off avoids it interfering with `terraform output`.
+          terraform_wrapper: false
+
+      - name: Init
+        # bucket and region come from here rather than versions.tf, because a
+        # backend block cannot reference variables.
+        run: |
+          terraform init -input=false \
+            -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}" \
+            -backend-config="region=${{ vars.AWS_REGION }}"
+
+      - name: Check formatting
+        run: terraform fmt -check -recursive
+
+      - name: Validate
+        run: terraform validate
+
+      - name: Apply
+        id: apply
+        # TF_VAR_* is Terraform's environment-variable convention, which keeps this
+        # step free of a long list of -var flags.
+        env:
+          TF_VAR_region: ${{ vars.AWS_REGION }}
+          TF_VAR_availability_zone: ${{ vars.AWS_AVAILABILITY_ZONE }}
+          TF_VAR_domain_name: ${{ vars.SITE_DOMAIN }}
+          TF_VAR_ssh_public_key: ${{ vars.SSH_PUBLIC_KEY }}
+          # Parsed as HCL, so the list brackets are part of the value.
+          TF_VAR_ssh_cidr: '["${{ vars.SSH_CIDR }}"]'
+        run: |
+          terraform apply -auto-approve -input=false
+          echo "static_ip=$(terraform output -raw static_ip)" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        run: |
+          {
+            echo "### Infrastructure"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Static IP | \`${{ steps.apply.outputs.static_ip }}\` |"
+            echo "| Domain | \`${{ vars.SITE_DOMAIN }}\` |"
+            echo "| Region | \`${{ vars.AWS_REGION }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   build:
     name: Build images
@@ -76,12 +152,12 @@ jobs:
 
   deploy:
     name: Deploy to Lightsail
-    needs: build
+    # Both are required: images to run and a host to run them on. The host address
+    # comes from the Terraform job rather than a stored secret, so it cannot drift
+    # from the infrastructure that actually exists.
+    needs: [infra, build]
     runs-on: ubuntu-latest
-    # Guard so that pushing the pipeline before the host exists is a clean skip
-    # rather than a red build. Set the SITE_ADDRESS repository variable (and the
-    # deploy secrets below) once the instance is up, and this job starts running.
-    if: vars.SITE_ADDRESS != ''
+    if: vars.SITE_DOMAIN != ''
     # An environment allows a required reviewer and scopes the deploy secrets.
     environment: production
     steps:
@@ -101,15 +177,17 @@ jobs:
           chmod 600 ~/.ssh/known_hosts
 
       - name: Upload compose file and edge config
+        env:
+          DEPLOY_HOST: ${{ needs.infra.outputs.static_ip }}
         run: |
-          HOST="${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}"
+          HOST="${{ secrets.DEPLOY_USER }}@$DEPLOY_HOST"
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes "$HOST" 'mkdir -p /srv/realmaths'
           scp -i ~/.ssh/deploy_key -o IdentitiesOnly=yes \
             docker-compose.prod.yml Caddyfile "$HOST:/srv/realmaths/"
 
       - name: Pull images and restart
         env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_HOST: ${{ needs.infra.outputs.static_ip }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           IMAGE_BASE: ${{ needs.build.outputs.image_base }}
           IMAGE_TAG: ${{ github.sha }}
@@ -143,7 +221,7 @@ jobs:
 
       - name: Smoke test
         env:
-          SITE: ${{ vars.SITE_ADDRESS }}
+          SITE: https://${{ vars.SITE_DOMAIN }}
         run: |
           echo "Checking $SITE"
           curl -fsS -o /dev/null "$SITE/"

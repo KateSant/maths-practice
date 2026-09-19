@@ -23,11 +23,17 @@ variable "domain_name" {
   type        = string
 }
 
-variable "key_pair_name" {
+variable "ssh_public_key" {
   description = <<-EOT
-    Name of an existing Lightsail SSH key pair. These are created in the Lightsail
-    console, not with the EC2 aws_key_pair resource - Lightsail key pairs are a
-    separate concept and a Lightsail instance will not accept an EC2 one.
+    Public half of the SSH key pair used to reach the instance and to deploy.
+
+    Generate the pair once, locally:
+      ssh-keygen -t ed25519 -f ~/.ssh/realmaths-deploy -C realmaths-deploy -N ""
+
+    Only the PUBLIC half goes here. The private half stays on your machine and in
+    the DEPLOY_SSH_KEY GitHub secret. Terraform registers the public key with
+    Lightsail but never sees the private one, so no private key is written to
+    Terraform state (which lives in S3).
   EOT
   type        = string
 }

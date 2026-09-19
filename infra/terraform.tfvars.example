@@ -14,8 +14,10 @@ availability_zone = "eu-west-2a"
 # <ip-with-dashes>.sslip.io, which resolves to that address automatically.
 domain_name = "realmaths.example.com"
 
-# Created in the Lightsail console (Account > SSH keys), not with Terraform.
-key_pair_name = "realmaths-key"
+# Generate a key pair once, then paste the PUBLIC half here:
+#   ssh-keygen -t ed25519 -f ~/.ssh/realmaths-deploy -C realmaths-deploy -N ""
+#   cat ~/.ssh/realmaths-deploy.pub
+ssh_public_key = "ssh-ed25519 AAAA... realmaths-deploy"
 
 # Your own address only. Find it with: curl -4 ifconfig.me
 ssh_cidr = ["203.0.113.4/32"]
