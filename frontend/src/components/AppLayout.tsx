@@ -1,9 +1,6 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
-import { useTheme } from '../theme/ThemeContext'
 import { initials } from '../lib/format'
-import { ThemeToggle } from './ThemeToggle'
-import { XpBar } from './XpBar'
 import { Button } from './ui'
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
@@ -15,7 +12,6 @@ function navLinkClass({ isActive }: { isActive: boolean }): string {
 
 export function AppLayout() {
   const { profile, logout } = useAuth()
-  const { isMinecraft } = useTheme()
   const navigate = useNavigate()
 
   const handleSignOut = () => {
@@ -27,7 +23,7 @@ export function AppLayout() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-200/70 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 sm:px-6">
-          <Link to="/" className="font-display flex items-center gap-2 font-bold text-slate-900">
+          <Link to="/" className="flex items-center gap-2 font-bold text-slate-900">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/30">
               ∑
             </span>
@@ -51,11 +47,8 @@ export function AppLayout() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            {/* Outside the signed-in block, so the theme can be changed from anywhere. */}
-            <ThemeToggle />
             {profile ? (
               <>
-                {isMinecraft ? <XpBar points={profile.user.points} /> : null}
                 <span
                   className="hidden items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700 sm:inline-flex"
                   title="Points earned"
@@ -91,17 +84,7 @@ export function AppLayout() {
       </main>
 
       <footer className="mx-auto max-w-5xl px-4 pb-10 pt-4 text-center text-xs text-slate-400 sm:px-6">
-        <p>Real Maths prototype · questions are a starter set</p>
-        {isMinecraft ? (
-          // Mojang's usage guidelines ask for this wording wherever the Minecraft name or look
-          // is shown. The product is Real Maths; "Minecraft" is only ever a theme label, which
-          // is the secondary use the guidelines permit. No Mojang assets are used anywhere -
-          // the look is approximated in CSS, and the pixel font is open-licensed.
-          <p className="mx-auto mt-2 max-w-md text-[11px] leading-relaxed">
-            Not an official Minecraft product. Not approved by or associated with Mojang or
-            Microsoft.
-          </p>
-        ) : null}
+        Real Maths prototype · questions are a starter set
       </footer>
     </div>
   )

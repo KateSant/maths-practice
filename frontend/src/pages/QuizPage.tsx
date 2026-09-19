@@ -4,10 +4,8 @@ import { ApiRequestError, api } from '../api/client'
 import type { AnswerResult, QuizSession } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { Badge, Button, Card, ProgressBar, Spinner, buttonClasses } from '../components/ui'
-import { OreBadge } from '../components/OreBadge'
 import { QuestionCard, type OptionState } from '../components/QuestionCard'
 import { difficultyLabel } from '../lib/format'
-import { useTheme } from '../theme/ThemeContext'
 
 const DEFAULT_QUESTIONS = 5
 const MAX_QUESTIONS = 20
@@ -16,7 +14,6 @@ export function QuizPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { refresh } = useAuth()
-  const { isMinecraft } = useTheme()
 
   const topicSlug = searchParams.get('topic')
   const requestedCount = Number(searchParams.get('count') ?? DEFAULT_QUESTIONS)
@@ -190,11 +187,7 @@ export function QuizPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {isMinecraft ? (
-            <OreBadge difficulty={question.difficulty} />
-          ) : (
-            <Badge tone="indigo">{difficultyLabel(question.difficulty)}</Badge>
-          )}
+          <Badge tone="indigo">{difficultyLabel(question.difficulty)}</Badge>
           {result ? <Badge tone="emerald">{result.correctSoFar}/{result.answeredSoFar} correct</Badge> : null}
         </div>
       </div>

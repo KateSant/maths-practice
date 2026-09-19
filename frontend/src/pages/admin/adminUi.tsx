@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom'
 import type { QuestionOrigin, QuestionStatus } from '../../api/admin'
 import { Badge } from '../../components/ui'
-import { OreBadge } from '../../components/OreBadge'
 import { difficultyLabel } from '../../lib/format'
-import { useTheme } from '../../theme/ThemeContext'
 
 /**
  * Shared status and origin display for the admin screens.
@@ -27,10 +25,9 @@ export function OriginBadge({ origin }: { origin: QuestionOrigin }) {
   return <Badge tone="slate">{label}</Badge>
 }
 
-/** Matches the quiz: an ore tier in the Minecraft theme, a plain label otherwise. */
+/** Difficulty as a plain label, matching how the quiz shows it now the theme has gone. */
 export function DifficultyBadge({ difficulty }: { difficulty: number }) {
-  const { isMinecraft } = useTheme()
-  return isMinecraft ? <OreBadge difficulty={difficulty} /> : <Badge tone="indigo">{difficultyLabel(difficulty)}</Badge>
+  return <Badge tone="indigo">{difficultyLabel(difficulty)}</Badge>
 }
 
 export function AdminHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
