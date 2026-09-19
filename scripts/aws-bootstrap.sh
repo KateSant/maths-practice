@@ -34,6 +34,8 @@ AWS_REGION="${AWS_REGION:-eu-west-2}"
 GITHUB_OWNER="${GITHUB_OWNER:?set GITHUB_OWNER, e.g. KateSant}"
 GITHUB_REPO="${GITHUB_REPO:?set GITHUB_REPO, e.g. real-maths}"
 BRANCH="${BRANCH:-main}"
+# Jobs that declare an environment emit a different subject claim (see below).
+ENVIRONMENT="${ENVIRONMENT:-production}"
 STATE_BUCKET="${STATE_BUCKET:?set STATE_BUCKET, e.g. realmaths-terraform-state}"
 ROLE_NAME="${ROLE_NAME:-realmaths-github-ci}"
 EXPECTED_ACCOUNT_ID="${EXPECTED_ACCOUNT_ID:?set EXPECTED_ACCOUNT_ID to the 12-digit account this should run in}"
@@ -175,6 +177,11 @@ say "GitHub Actions role: $ROLE_NAME"
 # The ids were added so a deleted-and-recreated repository cannot inherit trust.
 # Matching them with wildcards keeps the owner, repository and branch pinned
 # exactly while surviving a rename; the ids themselves never change.
+#
+# Note the second subject. A job that declares an environment does not emit a ref
+# claim at all - GitHub replaces it with the environment name. The infrastructure
+# job matches the first pattern and the deploy job (environment: production) matches
+# the second, which is why omitting the second silently breaks only the deploy.
 TRUST_POLICY="$(cat <<JSON
 {
   "Version": "2012-10-17",
@@ -190,7 +197,10 @@ TRUST_POLICY="$(cat <<JSON
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
         },
         "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:$GITHUB_OWNER@*/$GITHUB_REPO@*:ref:refs/heads/$BRANCH"
+          "token.actions.githubusercontent.com:sub": [
+            "repo:$GITHUB_OWNER@*/$GITHUB_REPO@*:ref:refs/heads/$BRANCH",
+            "repo:$GITHUB_OWNER@*/$GITHUB_REPO@*:environment:$ENVIRONMENT"
+          ]
         }
       }
     }
