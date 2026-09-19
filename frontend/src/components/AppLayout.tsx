@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { initials } from '../lib/format'
+import { APP_NAME } from '../lib/branding'
 import { Button } from './ui'
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
@@ -46,7 +47,7 @@ export function AppLayout() {
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/30">
               ∑
             </span>
-            <span className="hidden sm:inline">Real Maths</span>
+            <span className="hidden sm:inline">{APP_NAME}</span>
           </Link>
 
           <nav className="ml-2 flex items-center gap-1">
@@ -116,7 +117,7 @@ export function AppLayout() {
       </main>
 
       <footer className="mx-auto max-w-5xl px-4 pb-10 pt-4 text-center text-xs text-slate-400 sm:px-6">
-        <p>Real Maths prototype · questions are a starter set</p>
+        <p>prototype · questions are a starter set</p>
       </footer>
     </div>
   )
