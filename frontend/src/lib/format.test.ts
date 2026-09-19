@@ -5,6 +5,8 @@ import {
   formatDateTime,
   formatDuration,
   initials,
+  levelProgress,
+  oreTier,
   percent,
   pluralise,
 } from './format'
@@ -85,5 +87,49 @@ describe('formatDateTime', () => {
   it('returns a dash for missing or unparseable values', () => {
     expect(formatDateTime(undefined)).toBe('—')
     expect(formatDateTime('not-a-date')).toBe('—')
+  })
+})
+
+describe('levelProgress', () => {
+  it('starts at level 1 with no points', () => {
+    expect(levelProgress(0)).toEqual({ level: 1, intoLevel: 0, needed: 100, percent: 0 })
+  })
+
+  it('levels up exactly on the boundary, not just after it', () => {
+    expect(levelProgress(99).level).toBe(1)
+    expect(levelProgress(99).percent).toBe(99)
+    expect(levelProgress(100)).toEqual({ level: 2, intoLevel: 0, needed: 100, percent: 0 })
+  })
+
+  it('reports progress within a level', () => {
+    expect(levelProgress(250)).toEqual({ level: 3, intoLevel: 50, needed: 100, percent: 50 })
+  })
+
+  it('copes with values that cannot happen without throwing', () => {
+    expect(levelProgress(-10).level).toBe(1)
+    expect(levelProgress(Number.NaN).level).toBe(1)
+    expect(levelProgress(10.7).intoLevel).toBe(10)
+  })
+})
+
+describe('oreTier', () => {
+  it('maps difficulty 1 to 5 onto ascending ores', () => {
+    expect([1, 2, 3, 4, 5].map((d) => oreTier(d).name)).toEqual([
+      'Coal',
+      'Iron',
+      'Gold',
+      'Emerald',
+      'Diamond',
+    ])
+  })
+
+  it('gives each tier a distinct colour', () => {
+    const swatches = [1, 2, 3, 4, 5].map((d) => oreTier(d).swatch)
+    expect(new Set(swatches).size).toBe(5)
+  })
+
+  it('falls back rather than failing for a difficulty outside the range', () => {
+    expect(oreTier(9).name).toBe('Level 9')
+    expect(oreTier(0).swatch).toBeTruthy()
   })
 })

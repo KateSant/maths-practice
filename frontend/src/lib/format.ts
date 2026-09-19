@@ -75,3 +75,55 @@ export function initials(name: string): string {
   const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? '') : ''
   return (first + last).toUpperCase()
 }
+
+/** Points needed per level in the themed XP bar. A placeholder curve, not a considered one. */
+export const POINTS_PER_LEVEL = 100
+
+export interface LevelProgress {
+  level: number
+  intoLevel: number
+  needed: number
+  percent: number
+}
+
+/** Turns the points a student already has into a level and progress towards the next. */
+export function levelProgress(points: number): LevelProgress {
+  const safePoints = Math.max(0, Math.floor(Number.isFinite(points) ? points : 0))
+  const intoLevel = safePoints % POINTS_PER_LEVEL
+  return {
+    level: Math.floor(safePoints / POINTS_PER_LEVEL) + 1,
+    intoLevel,
+    needed: POINTS_PER_LEVEL,
+    percent: Math.round((intoLevel / POINTS_PER_LEVEL) * 100),
+  }
+}
+
+export interface OreTier {
+  name: string
+  swatch: string
+}
+
+/**
+ * Maps a question's difficulty (1-5, already in the database) onto the five classic ores
+ * in ascending rarity. Nothing new has to be stored for this, and it gives the content a
+ * vocabulary: "this topic is iron-level".
+ *
+ * Colours approximate the ore's flecks in the game. They are drawn as a swatch beside
+ * readable text rather than as text colour, so contrast never depends on them.
+ */
+export function oreTier(difficulty: number): OreTier {
+  switch (difficulty) {
+    case 1:
+      return { name: 'Coal', swatch: '#2b2b2b' }
+    case 2:
+      return { name: 'Iron', swatch: '#d8af93' }
+    case 3:
+      return { name: 'Gold', swatch: '#fcee4b' }
+    case 4:
+      return { name: 'Emerald', swatch: '#17dd62' }
+    case 5:
+      return { name: 'Diamond', swatch: '#4aedd9' }
+    default:
+      return { name: `Level ${difficulty}`, swatch: '#a79f8f' }
+  }
+}
