@@ -44,6 +44,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug the OIDC subject claim
+        # TEMPORARY. Prints the claims GitHub actually sends so the trust policy can
+        # be matched to reality rather than to documentation. Only the token payload
+        # is decoded, never the token itself. Remove once the policy is correct.
+        run: |
+          token=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" | jq -r '.value')
+          echo "$token" | cut -d. -f2 | python3 -c "
+          import sys, base64, json
+          s = sys.stdin.read().strip()
+          s += '=' * (-len(s) % 4)
+          claims = json.loads(base64.urlsafe_b64decode(s))
+          for k in ('sub', 'aud', 'iss', 'ref', 'repository', 'repository_owner', 'event_name'):
+              print(f'  {k:18} = {claims.get(k)!r}')
+          "
+
       - name: Assume the CI role
         uses: aws-actions/configure-aws-credentials@v4
         with:
