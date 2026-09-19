@@ -51,6 +51,10 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:sqlite:/data/realmaths.db?foreign_keys=on&journal_mode=WAL&busy_timeout=5000
       REALMATHS_JWT_SECRET: ${REALMATHS_JWT_SECRET:?set REALMATHS_JWT_SECRET}
+      # Required, not optional. A blank client ID does not fail: the API starts, the
+      # button renders, Google returns a credential, and only the final verification
+      # step reports "not configured". Refusing to boot is far easier to diagnose.
+      REALMATHS_GOOGLE_CLIENT_ID: ${REALMATHS_GOOGLE_CLIENT_ID:?set REALMATHS_GOOGLE_CLIENT_ID}
       REALMATHS_CORS_ALLOWED_ORIGINS: ${SITE_ADDRESS}
       # Leave headroom for the kernel and Docker on a small instance.
       JAVA_TOOL_OPTIONS: -XX:MaxRAMPercentage=60

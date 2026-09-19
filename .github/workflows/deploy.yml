@@ -239,15 +239,16 @@ jobs:
           GHCR_USER: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SITE_ADDRESS: ${{ vars.SITE_DOMAIN }}
+          GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
         run: |
           # GITHUB_TOKEN is scoped to this run and expires with it, so the host is
           # never left holding a long-lived registry credential: it logs in, pulls,
           # and logs out again. The token is briefly visible in the remote process
           # list, which is an accepted tradeoff for not storing a PAT on the box.
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes "$DEPLOY_USER@$DEPLOY_HOST" \
-            bash -s -- "$GHCR_TOKEN" "$IMAGE_TAG" "$IMAGE_BASE" "$GHCR_USER" "$SITE_ADDRESS" <<'REMOTE'
+            bash -s -- "$GHCR_TOKEN" "$IMAGE_TAG" "$IMAGE_BASE" "$GHCR_USER" "$SITE_ADDRESS" "$GOOGLE_CLIENT_ID" <<'REMOTE'
           set -euo pipefail
-          TOKEN="$1"; TAG="$2"; BASE="$3"; USERNAME="$4"; SITE="$5"
+          TOKEN="$1"; TAG="$2"; BASE="$3"; USERNAME="$4"; SITE="$5"; CLIENT_ID="$6"
           cd /srv/realmaths
 
           echo "$TOKEN" | docker login ghcr.io -u "$USERNAME" --password-stdin
@@ -257,6 +258,16 @@ jobs:
           # a variable change. Keeping it in step here means the repository variable
           # is the single source of truth for the address.
           sed -i "s|^SITE_ADDRESS=.*|SITE_ADDRESS=$SITE|" .env
+
+          # Upsert, NOT sed. sed does nothing at all when the key is absent, so a newly
+          # introduced setting can go missing permanently and only surface at run time.
+          # That is precisely how REALMATHS_GOOGLE_CLIENT_ID first shipped, and it
+          # presented as sign-in announcing itself unconfigured long after a green deploy.
+          if grep -q '^REALMATHS_GOOGLE_CLIENT_ID=' .env; then
+            sed -i "s|^REALMATHS_GOOGLE_CLIENT_ID=.*|REALMATHS_GOOGLE_CLIENT_ID=$CLIENT_ID|" .env
+          else
+            echo "REALMATHS_GOOGLE_CLIENT_ID=$CLIENT_ID" >> .env
+          fi
 
           # Exported so they override the values in the host's .env file. Compose
           # gives shell environment precedence over .env.
@@ -306,11 +317,36 @@ jobs:
             return 1
           }
 
+          # The POST equivalent. Some failures are only visible by exercising an endpoint
+          # rather than fetching it: a misconfigured Google client ID answers GETs normally.
+          wait_for_post() {
+            local url="$1" want="$2" label="$3" body="$4" attempts="${5:-12}"
+            local code="000"
+            for attempt in $(seq 1 "$attempts"); do
+              code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 -X POST \
+                -H 'Content-Type: application/json' -d "$body" "$url" 2>/dev/null || echo 000)
+              if [ "$code" = "$want" ]; then
+                echo "  $label -> $code (attempt $attempt)"
+                return 0
+              fi
+              sleep 5
+            done
+            echo "  $label -> expected $want but kept seeing $code"
+            return 1
+          }
+
           # /api is proxied through to the API, which must refuse an anonymous
           # request with 401. A 200 (stale SPA served) or 502 (API unreachable) both
           # fail here, so this catches a broken deploy rather than a broken container.
           wait_for "$SITE/" 200 "GET /"
           wait_for "$SITE/api/topics" 401 "GET /api/topics"
+
+          # A junk token must be refused with 401, meaning the API tried to verify it and
+          # said no. A 503 means the client ID never reached the container, which is a
+          # silent failure otherwise: the button renders, Google issues a credential, and
+          # only the last hop fails. This check exists because that shipped once.
+          wait_for_post "$SITE/api/auth/google" 401 "POST /api/auth/google (junk token)" \
+            '{"idToken":"deploy-smoke-test"}'
           echo "Deploy verified."
 
       - name: Revoke this runner's SSH access
