@@ -106,15 +106,18 @@ Done in the Google Cloud project **Real Maths**:
 - [x] Project created
 - [x] Google Auth Platform wizard completed: app name *Real Maths*, audience **External**
 - [x] Publishing status **Testing**, owner added as a test user
-- [x] OAuth client created, type *Web application*, JavaScript origin `http://localhost:5174`,
-      no redirect URIs
-- [ ] **Add the maths teacher's Gmail as a test user** — required before she can sign in during a
-      demo, and the most likely thing to be forgotten. While status is *Testing*, any account not
-      on the test-user list is blocked outright.
-- [ ] Add `https://<prod-domain>` to the same client's JavaScript origins before the first deploy
+- [x] OAuth client created, type *Web application*, no redirect URIs
+- [x] JavaScript origins: `http://localhost:5174` and `https://maths.thinktalkbuild.com`
 - [x] Client ID captured:
       `570846584369-dm7ev6ff9gil8h3krc9a37ur47uvt149.apps.googleusercontent.com`
       (the `570846584369` prefix is the Cloud project number — also public)
+- [x] Sign-in verified live with an account that is on **no** test-user list
+- [ ] Optional: verify `thinktalkbuild.com` and publish the app — not required, see §7
+
+**The test-user list turned out not to matter.** Publishing status is still *Testing*, the
+Console still warns that only listed accounts can sign in, and sign-in nevertheless works for
+anyone. An app requesting only basic identity scopes is exempt from that restriction. So
+there is no allowlist step before a demo.
 
 Config keys it has to land in, and they must match — the backend rejects a token whose `aud` is not
 this value:
@@ -355,6 +358,21 @@ Two bugs surfaced while building, both worth recording:
    logging a stack trace at ERROR for every mistyped URL. Fixed in the exception handler,
    with an assertion in `AuthWiringTest`.
 
+A third was found only by signing in on the live site, after a green deploy:
+
+3. **The API container never received the client ID.** The web bundle had it — the button
+   rendered and Google issued a credential — so every token was refused at the last hop with
+   "Google sign-in is not configured on this server." Two causes: `docker-compose.prod.yml`
+   had no `REALMATHS_GOOGLE_CLIENT_ID`, and the deploy step only `sed`-replaced keys already
+   present in the host's `.env`, so `sed` silently did nothing for a key that was absent.
+   Now upserted (replace if present, append if not) and set as a *required* variable, so a
+   future omission fails the container start rather than half-working sign-in.
+
+   The lesson is about the smoke test, not the config: it only fetched URLs, and GETs answer
+   normally with a blank client ID. It now POSTs a junk token to `/api/auth/google` and
+   requires 401 ("tried to verify and refused") rather than 503 ("not configured"), which is
+   the difference a green deploy was hiding.
+
 ### Verified
 
 - `V3` applies to an **existing** database (v2 → v3) — the real deployment path, not just a
@@ -364,22 +382,41 @@ Two bugs surfaced while building, both worth recording:
 - A junk Google token is rejected with 401, and a valid Google token cannot be used as a
   `Bearer` credential (only one `JwtDecoder` bean exists, asserted).
 
-### Not yet verified
+### Verified in the browser
 
-**A real Google sign-in has never been performed.** Everything up to and including parsing
-Google's response is covered, but the first round trip through Google's live JWKS endpoint,
-and the button rendering in a real browser, is untested. That needs a browser session and a
-Google account on the test-user list.
-
+Sign-in works end to end on `https://maths.thinktalkbuild.com` with a real Google account,
+including the live round trip to Google's JWKS endpoint and the rendered button. Spot-check
+it again after any change to the verifier's claim handling, since that path is the one the
+unit tests cannot fully stand in for.
 ### Still needs doing
 
-- **`VITE_GOOGLE_CLIENT_ID` in the CI build.** `frontend/Dockerfile` now takes it as an
-  `ARG`, but `.github/workflows/deploy.yml` does not pass it yet — that file belongs to the
-  infra workstream, so it was left alone. Without it the deployed sign-in page shows the
-  "not configured" message and only the guest path works.
-- **The production origin in Google** — add `https://<domain>` to the client's authorised
-  JavaScript origins before the first deploy.
-- **The teacher's Gmail as a test user.**
+Nothing blocking. All three items originally listed here are resolved:
+
+- ~~`VITE_GOOGLE_CLIENT_ID` in the CI build~~ — added, and now smoke-tested, since a
+  missing client ID was invisible to the old checks.
+- ~~The production origin in Google~~ — added; sign-in verified live on the real domain.
+- ~~The teacher's Gmail on the test-user list~~ — **not needed, and this was the open
+  question this document kept hedging on.** Publishing status stays *Testing* and sign-in
+  still works for an account that is on no list, because an app requesting only basic
+  identity scopes is exempt from the trusted-list restriction. Confirmed empirically by
+  signing in with an account that was never added.
+
+So there is no allowlist step before a demo: send the link and it works. The tradeoff
+worth remembering is that **the exemption is attached to the scopes we request.** The
+day we ask for anything beyond `openid`, `email` and `profile` — Google Classroom being the
+plausible future case — the app falls back under the restriction and the test-user list
+bites again, now with 100-user cap. Publishing removes that tripwire, and is worth doing
+before real students rather than during. It needs the `thinktalkbuild.com` TXT
+verification, Branding links, and a privacy-policy contact address that actually resolves.
+
+Two smaller notes:
+
+- **Anyone with a Google account can sign in.** Fine, and probably what you want, but there
+  is no invite gate. If access ever needs restricting to one school, `realmaths.google.
+  allowed-domains` checks the `hd` claim and costs no code.
+- **Every sign-in creates a real account in the production database.** Signing in as a
+  friend or relative leaves a user row behind; harmless, but the database now has real
+  accounts in it rather than only seed data.
 
 ## 8. Open questions
 
