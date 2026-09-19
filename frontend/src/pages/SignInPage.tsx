@@ -161,10 +161,18 @@ export function SignInPage() {
             <span className="h-px flex-1 bg-slate-200" />
           </div>
           <div className="text-center">
-            <Button variant="secondary" size="lg" className="w-full" disabled={busy} onClick={() => void run(continueAsGuest, mode)}>
-              Continue as a guest
+            <Button
+              variant="secondary"
+              size="lg"
+              className="w-full"
+              disabled={busy}
+              onClick={() => void run(continueAsGuest, mode)}
+            >
+              Try it as a guest student
             </Button>
-            <p className="mt-2 text-xs text-slate-400">A throwaway account. Progress is not kept.</p>
+            <p className="mt-2 text-xs text-slate-400">
+              A throwaway student account. Progress is not kept.
+            </p>
           </div>
         </>
       ) : null}

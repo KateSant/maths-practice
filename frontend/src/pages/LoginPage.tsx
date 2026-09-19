@@ -1,7 +1,10 @@
-import { Link, Navigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { ApiRequestError } from '../api/client'
 import { useAuth } from '../auth/AuthContext'
 import { SIGN_IN_ROLES } from '../auth/roles'
 import { AuthShell } from '../components/AuthShell'
+import { Button } from '../components/ui'
 
 /**
  * Step one: who is signing in.
@@ -12,14 +15,37 @@ import { AuthShell } from '../components/AuthShell'
  *
  * The choice cannot be a permission and is not treated as one: it decides which sign-in page and
  * which landing page, and nothing else. See `auth/roles.ts`.
+ *
+ * Guest sign-in sits here as well as on the student step, because somebody who just wants a look
+ * should not have to choose a role first. It is labelled as a *student* guest, since a guest
+ * account has no Google identity and so can never be a teacher.
  */
 export function LoginPage() {
-  const { profile, restoring } = useAuth()
+  const { continueAsGuest, profile, restoring } = useAuth()
+  const navigate = useNavigate()
+  const [busy, setBusy] = useState(false)
+  const [message, setMessage] = useState('')
 
   // Someone already signed in has no business here, but wait for the session to be checked first
   // or a refresh would flash this page before the profile arrives.
   if (!restoring && profile) {
     return <Navigate to="/" replace />
+  }
+
+  const startGuestSession = async () => {
+    setMessage('')
+    setBusy(true)
+    try {
+      await continueAsGuest()
+      // A guest is a student, so there is no landing decision to make here.
+      navigate('/', { replace: true })
+    } catch (error) {
+      setMessage(
+        error instanceof ApiRequestError ? error.message : 'Could not start a guest session.',
+      )
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -43,6 +69,33 @@ export function LoginPage() {
           </Link>
         ))}
       </div>
+
+      <div className="my-7 flex items-center gap-3 text-xs text-slate-400">
+        <span className="h-px flex-1 bg-slate-200" />
+        or
+        <span className="h-px flex-1 bg-slate-200" />
+      </div>
+
+      <div className="text-center">
+        <Button
+          variant="secondary"
+          size="lg"
+          className="w-full"
+          disabled={busy}
+          onClick={() => void startGuestSession()}
+        >
+          {busy ? 'Please wait…' : 'Try it as a guest student'}
+        </Button>
+        <p className="mt-2 text-xs text-slate-400">
+          A throwaway student account. Progress is not kept.
+        </p>
+      </div>
+
+      {message ? (
+        <p role="alert" className="mt-4 rounded-xl bg-rose-50 px-3 py-2 text-center text-sm text-rose-700">
+          {message}
+        </p>
+      ) : null}
     </AuthShell>
   )
 }
