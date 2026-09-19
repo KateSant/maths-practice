@@ -6,7 +6,11 @@ provider "aws" {
 # A generated pair would put its private half into Terraform state, which lives in
 # S3; supplying only the public key keeps the private half on your machine alone.
 resource "aws_lightsail_key_pair" "app" {
-  name       = var.instance_name
+  # Must not collide with the instance name. Lightsail keeps key pairs and instances
+  # in the same per-region namespace, so using var.instance_name here made the
+  # instance fail with "Some names are already in use". A plan cannot catch this;
+  # it only appears at apply time.
+  name       = "${var.instance_name}-key"
   public_key = var.ssh_public_key
 }
 

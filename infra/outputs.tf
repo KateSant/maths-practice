@@ -20,10 +20,12 @@ output "next_steps" {
        or Caddy cannot complete the ACME challenge and you get no certificate:
          ${var.domain_name}  A  ${aws_lightsail_static_ip.app.ip_address}
 
-    2. Bootstrap the host once (installs Docker, writes /srv/realmaths/.env):
-         SITE_ADDRESS=https://${var.domain_name} \
-           ssh -i ~/.ssh/realmaths-deploy ubuntu@${aws_lightsail_static_ip.app.ip_address} \
-           'bash -s' < scripts/bootstrap-host.sh
+    2. Bootstrap the host once (installs Docker, writes /srv/realmaths/.env).
+       SITE_ADDRESS must be set inside the remote command, not on the local side
+       of the pipe: a plain VAR=value prefix applies to ssh itself, so the script
+       would never see it.
+         ssh -i ~/.ssh/realmaths-deploy ubuntu@${aws_lightsail_static_ip.app.ip_address} \
+           "SITE_ADDRESS=https://${var.domain_name} bash -s" < scripts/bootstrap-host.sh
 
     3. Pin the host key so the deploy cannot be redirected:
          ssh-keyscan -H ${aws_lightsail_static_ip.app.ip_address}
