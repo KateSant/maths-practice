@@ -38,6 +38,11 @@ sudo systemctl enable --now docker >/dev/null
 
 echo "==> Preparing $APP_DIR"
 sudo mkdir -p "$APP_DIR"
+# The deploy workflow runs as this user: it scps the compose file and Caddyfile in,
+# and reads .env. Root-owned files here do not fail at bootstrap time, they fail as
+# "Permission denied" on the first deploy, which is a much more confusing place.
+sudo chown "$USER:$USER" "$APP_DIR"
+echo "    owned by $USER"
 
 # The signing secret must survive re-runs: rotating it silently invalidates every
 # issued token and logs all users out.
@@ -63,8 +68,9 @@ REALMATHS_JWT_SECRET=$SECRET
 IMAGE_API=ghcr.io/CHANGEME/real-maths/api:latest
 IMAGE_WEB=ghcr.io/CHANGEME/real-maths/web:latest
 EOF
+sudo chown "$USER:$USER" "$APP_DIR/.env"
 sudo chmod 600 "$APP_DIR/.env"
-echo "    wrote $APP_DIR/.env (mode 600)"
+echo "    wrote $APP_DIR/.env (mode 600, owned by $USER)"
 
 cat <<'EOF'
 
