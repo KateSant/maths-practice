@@ -6,9 +6,14 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    // 5173, not an arbitrary port: it is the authorised JavaScript origin registered on the
-    // Google OAuth client, and Google sign-in fails from anywhere else.
-    port: 5173,
+    // 5174 because that is the origin registered under "Authorised JavaScript origins" on the
+    // Google OAuth client - see docs/google-signin.md. Google refuses sign-in from any other
+    // origin, and the button renders either way, so the only symptom is a console error after
+    // a click:
+    //     [GSI_LOGGER]: The given origin is not allowed for the given client ID.
+    // That is easy to misread as an app bug. If this port ever changes, add the new origin in
+    // the Google Cloud Console as well, or register both.
+    port: 5174,
     // Fail loudly rather than silently moving to 5174 when the port is taken. A different
     // port still serves the app, so the only symptom would be Google sign-in refusing to
     // work, which is a miserable thing to debug.

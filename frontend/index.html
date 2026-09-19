@@ -5,31 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#4f46e5" />
     <title>Real Maths &middot; maths practice</title>
-
-    <!-- The display face for the Minecraft-style theme. Only ever applied to chrome
-         (brand, buttons, labels), never to question or answer text: a pixel font at
-         paragraph length is genuinely hard to read, and reading the question is the
-         whole task. Note this is a request to Google; self-hosting the woff2 under
-         /public/fonts would remove that third-party call if it ever matters. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-      rel="stylesheet"
-    />
-
-    <script>
-      // Runs before first paint, so someone who picked the themed look does not see a
-      // flash of the default one. Kept inline and dependency-free for that reason; the
-      // React provider reads the same key afterwards.
-      try {
-        if (localStorage.getItem('realmaths.theme') === 'minecraft') {
-          document.documentElement.dataset.theme = 'minecraft'
-        }
-      } catch (e) {
-        // Private mode or storage disabled: fall back to the default theme silently.
-      }
-    </script>
   </head>
   <body>
     <div id="root"></div>

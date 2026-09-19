@@ -4,11 +4,7 @@ import { ApiRequestError, api } from '../api/client'
 import type { AnswerResult, QuizSession } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { Badge, Button, Card, ProgressBar, Spinner, buttonClasses } from '../components/ui'
-import { OreBadge } from '../components/OreBadge'
-import { AdvancementToast } from '../components/AdvancementToast'
-import { BlockCharacter } from '../components/BlockCharacter'
-import { difficultyLabel, oreTier } from '../lib/format'
-import { useTheme } from '../theme/ThemeContext'
+import { difficultyLabel } from '../lib/format'
 
 const DEFAULT_QUESTIONS = 5
 const MAX_QUESTIONS = 20
@@ -35,7 +31,6 @@ export function QuizPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { refresh } = useAuth()
-  const { isMinecraft } = useTheme()
 
   const topicSlug = searchParams.get('topic')
   const requestedCount = Number(searchParams.get('count') ?? DEFAULT_QUESTIONS)
@@ -53,10 +48,6 @@ export function QuizPage() {
   const [submitting, setSubmitting] = useState(false)
   const [finishing, setFinishing] = useState(false)
   const [askedAt, setAskedAt] = useState(() => Date.now())
-
-  // The themed reward popup. Held here rather than in a component of its own so it can be
-  // triggered from the answer that caused it, and cleared by the toast's own timer.
-  const [advancement, setAdvancement] = useState<{ name: string; detail: string } | null>(null)
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
 
@@ -98,17 +89,6 @@ export function QuizPage() {
       try {
         const answered = await api.submitAnswer(session.sessionId, question.id, optionId, Date.now() - askedAt)
         setResult(answered)
-
-        if (isMinecraft && answered.correct) {
-          // Named after the ore for this question's difficulty, so a hard question yields a
-          // rarer reward: "Diamond mined" means more than "Coal mined".
-          setAdvancement({
-            name: `${oreTier(question.difficulty).name} mined`,
-            detail: `+${answered.pointsAwarded} XP${
-              answered.currentStreak > 1 ? ` · ${answered.currentStreak} in a row` : ''
-            }`,
-          })
-        }
       } catch (caught) {
         setSelectedId(null)
         setError(caught instanceof ApiRequestError ? caught.message : 'Could not submit that answer.')
@@ -216,14 +196,6 @@ export function QuizPage() {
 
   return (
     <div className="mx-auto max-w-3xl animate-rise">
-      {advancement ? (
-        <AdvancementToast
-          name={advancement.name}
-          detail={advancement.detail}
-          onDismiss={() => setAdvancement(null)}
-        />
-      ) : null}
-
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-wide text-slate-400">{session.topicName}</p>
@@ -232,11 +204,7 @@ export function QuizPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {isMinecraft ? (
-            <OreBadge difficulty={question.difficulty} />
-          ) : (
-            <Badge tone="indigo">{difficultyLabel(question.difficulty)}</Badge>
-          )}
+          <Badge tone="indigo">{difficultyLabel(question.difficulty)}</Badge>
           {result ? <Badge tone="emerald">{result.correctSoFar}/{result.answeredSoFar} correct</Badge> : null}
         </div>
       </div>
@@ -282,39 +250,17 @@ export function QuizPage() {
               result.correct ? 'bg-emerald-50 text-emerald-900' : 'bg-rose-50 text-rose-900'
             }`}
           >
-            <div className="flex items-center gap-3">
-              {isMinecraft ? (
-                // The character reacts, which is the point of having one: a face that
-                // responds to what you just did reads as a game rather than as a form.
-                <BlockCharacter
-                  variant="full"
-                  size={30}
-                  className="shrink-0"
-                  expression={result.correct ? 'happy' : 'sad'}
-                  label={
-                    result.correct
-                      ? 'Your character looks pleased'
-                      : 'Your character looks disappointed'
-                  }
-                />
-              ) : (
-                <span aria-hidden="true">{result.correct ? '🎉' : '💡'}</span>
-              )}
-
-              <div>
-                <p className="font-semibold">
-                  {result.correct ? `Correct! +${result.pointsAwarded} points` : 'Not quite'}
-                </p>
-                {result.correct && result.currentStreak > 1 ? (
-                  <p className="mt-1 text-sm font-medium opacity-90">
-                    🔥 {result.currentStreak} in a row
-                  </p>
-                ) : null}
-              </div>
-            </div>
-
+            <p className="flex items-center gap-2 font-semibold">
+              <span aria-hidden="true">{result.correct ? '🎉' : '💡'}</span>
+              {result.correct ? `Correct! +${result.pointsAwarded} points` : 'Not quite'}
+            </p>
             {result.explanation ? (
-              <p className="mt-2 text-sm leading-relaxed opacity-90">{result.explanation}</p>
+              <p className="mt-1.5 text-sm leading-relaxed opacity-90">{result.explanation}</p>
+            ) : null}
+            {result.correct && result.currentStreak > 1 ? (
+              <p className="mt-2 text-sm font-medium opacity-90">
+                🔥 {result.currentStreak} in a row
+              </p>
             ) : null}
           </div>
         ) : null}
