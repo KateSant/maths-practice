@@ -1,0 +1,84 @@
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from '../auth/AuthContext'
+import { initials } from '../lib/format'
+import { Button } from './ui'
+
+function navLinkClass({ isActive }: { isActive: boolean }): string {
+  return [
+    'rounded-lg px-3 py-2 text-sm font-medium transition',
+    isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+  ].join(' ')
+}
+
+export function AppLayout() {
+  const { profile, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleSignOut = () => {
+    logout()
+    navigate('/login', { replace: true })
+  }
+
+  return (
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-10 border-b border-slate-200/70 bg-white/80 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 sm:px-6">
+          <Link to="/" className="flex items-center gap-2 font-bold text-slate-900">
+            <span className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/30">
+              ∑
+            </span>
+            <span className="hidden sm:inline">Real Maths</span>
+          </Link>
+
+          <nav className="ml-2 flex items-center gap-1">
+            <NavLink to="/" end className={navLinkClass}>
+              Practice
+            </NavLink>
+            <NavLink to="/profile" className={navLinkClass}>
+              Profile
+            </NavLink>
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2 sm:gap-3">
+            {profile ? (
+              <>
+                <span
+                  className="hidden items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700 sm:inline-flex"
+                  title="Points earned"
+                >
+                  <span aria-hidden="true">★</span>
+                  <span className="tabular-nums">{profile.user.points}</span>
+                </span>
+                <span
+                  className="hidden items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-700 sm:inline-flex"
+                  title="Current streak of correct answers"
+                >
+                  <span aria-hidden="true">🔥</span>
+                  <span className="tabular-nums">{profile.user.currentStreak}</span>
+                </span>
+                <Link
+                  to="/profile"
+                  className="grid h-9 w-9 place-items-center rounded-full bg-slate-900 text-xs font-bold text-white"
+                  title={profile.user.displayName}
+                >
+                  {initials(profile.user.displayName)}
+                </Link>
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  Sign out
+                </Button>
+              </>
+            ) : null}
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
+        <Outlet />
+      </main>
+
+      <footer className="mx-auto max-w-5xl px-4 pb-10 pt-4 text-center text-xs text-slate-400 sm:px-6">
+        Real Maths prototype · questions are a starter set
+      </footer>
+    </div>
+  )
+}

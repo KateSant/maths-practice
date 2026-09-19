@@ -1,0 +1,2 @@
+# Keeps the directory in git so the app's default SQLite path (./data/realmaths.db)
+# always has somewhere to live - sqlite-jdbc will not create missing directories.

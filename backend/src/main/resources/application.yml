@@ -1,0 +1,58 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: realmaths-api
+  datasource:
+    # SQLite keeps the whole database in one file: no server, no container, nothing
+    # to connect to. Note the two pragmas, both of which matter:
+    #   foreign_keys=on  - SQLite ignores foreign key constraints unless asked,
+    #                      which would silently drop our ON DELETE CASCADE behaviour
+    #   journal_mode=WAL - lets readers work while the single writer is writing
+    #   busy_timeout     - wait rather than immediately failing on a locked database
+    url: ${SPRING_DATASOURCE_URL:jdbc:sqlite:./data/realmaths.db?foreign_keys=on&journal_mode=WAL&busy_timeout=5000}
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      # SQLite serialises writes, so a large pool only creates lock contention.
+      maximum-pool-size: 5
+      pool-name: realmaths-pool
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      # Flyway owns the schema. See SchemaMigrationTest for the guarantees that
+      # Hibernate's community SQLite dialect cannot reliably validate for us.
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jackson:
+    default-property-inclusion: non_null
+
+realmaths:
+  jwt:
+    # Dev default only. Override with REALMATHS_JWT_SECRET in every real environment.
+    secret: ${REALMATHS_JWT_SECRET:dev-only-secret-change-me-0123456789abcdefghijklmnopqrstuvwxyz}
+    issuer: realmaths
+    ttl: PT12H
+  cors:
+    allowed-origins: ${REALMATHS_CORS_ALLOWED_ORIGINS:http://localhost:5174,http://localhost:5173}
+  quiz:
+    default-question-count: 5
+    max-question-count: 20
+    points-per-correct-answer: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    org.flywaydb: info
