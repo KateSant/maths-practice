@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { ApiRequestError } from '../api/client'
-import type { Profile } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { isGoogleConfigured, renderGoogleButton } from '../auth/google'
 import { Button } from '../components/ui'
@@ -36,13 +35,16 @@ export function LoginPage() {
   const leaving = useRef(false)
 
   const run = useCallback(
-    async (action: () => Promise<Profile>) => {
+    async (action: () => Promise<unknown>) => {
       setMessage('')
       setBusy(true)
       try {
-        const who = await action()
+        await action()
         leaving.current = true
-        navigate(who.user.role === 'ADMIN' ? '/admin/questions' : '/', { replace: true })
+        // Everyone lands on the home page. An administrator is not sent to the question bank:
+        // that is one of two things a teacher might want, and choosing for them is the same
+        // mistake as asking them to choose before signing in. The home page offers both.
+        navigate('/', { replace: true })
       } catch (error) {
         setMessage(
           error instanceof ApiRequestError ? error.message : 'Something went wrong. Please try again.',
@@ -105,9 +107,9 @@ export function LoginPage() {
           )}
         </div>
 
-        {/* Signposting, not a choice. Teachers land in the question bank on their own. */}
+        {/* Signposting, not a choice. A teacher sees both options once they are signed in. */}
         <p className="mt-4 text-xs text-slate-400">
-          Teachers: signing in takes you straight to the question bank.
+          Teachers: sign in to add and edit the questions.
         </p>
 
         {message ? (
