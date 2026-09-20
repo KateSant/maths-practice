@@ -21,9 +21,9 @@ export function AuthShell({ children }: { children: ReactNode }) {
         <HomeMark />
       </div>
       <div className="w-full max-w-md animate-rise">
-        <div className="flex flex-col items-center">
-          <p className="text-center text-lg font-bold tracking-tight text-slate-900">{APP_FULL_NAME}</p>
-          <p className="text-center text-sm text-slate-500">{APP_DESCRIPTOR}</p>
+        <div className="flex flex-col items-center rounded-xl bg-indigo-600 px-6 py-3 text-center shadow-sm shadow-indigo-600/30">
+          <p className="text-lg font-bold tracking-tight text-white">{APP_FULL_NAME}</p>
+          <p className="text-sm text-indigo-100">{APP_DESCRIPTOR}</p>
         </div>
         {children}
       </div>
