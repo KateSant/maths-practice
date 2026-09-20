@@ -1,13 +1,12 @@
 # Maths practice app
 
-Multiple-choice maths practice with server-side marking, worked explanations, points and streaks,
-and per-topic progress. There is also a teacher-facing question bank, so the content can be edited
-without a deploy. Finishing a set also pays out **play time**, which is spent in a small mining
-game at the top of the results page.
+Multiple-choice maths practice with server-side marking and per-topic progress, plus a
+teacher-facing question bank that needs no deploy to edit. Finishing a set pays out play time,
+gamified as a small mining game on the results page.
 
 ---
 
-## What it does for the student
+## The core user experience and value
 
 The loop is: pick a topic, answer a short set, get marked, read why. The marking is diagnostic
 rather than just right or wrong.
