@@ -23,6 +23,7 @@ question, so both answer types are reachable on first run, and all 33 are filed 
 | `docs/deferred.md` | What was deliberately not done, and why. |
 | `docs/google-signin.md` | The whole sign-in design, what to configure in Google Cloud, and the two bugs that only showed up in production. |
 | `docs/content-admin-architecture.md` | The question bank's design: lifecycle, publish gate, and the decisions behind them. |
+| `content/misconceptions.json` | The misconception register: the error vocabulary every wrong option is written against, and the source of what a student is told. |
 
 ---
 
@@ -33,7 +34,7 @@ question, so both answer types are reachable on first run, and all 33 are filed 
 | Backend | Spring Boot 3.5, Java 21, Spring Data JPA, Spring Security, JWT |
 | Database | SQLite, one file, no server. Schema by Flyway |
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, React Router |
-| Tests | JUnit 5 + Mockito (**148**) · Vitest (**93**) |
+| Tests | JUnit 5 + Mockito (**155**) · Vitest (**104**) |
 | Deploy | GitHub Actions → GHCR → one Lightsail instance, Caddy in front |
 
 ---
@@ -147,6 +148,17 @@ backend/src/main/resources/db/migration/
   V6__multi_select_questions.sql  tick-all questions; answer selections move to their own table
   V7__retire_duplicate_primes_question.sql  retires the first primes question, now duplicated by V6
   V8__year_group.sql        questions filed by school year 7-13, and the year a session was dealt
+  V9__answer_option_misconception_code.sql  each wrong option names the error it catches
+  V10__retire_prototype_question_bank.sql   retires round one's bank before the rebuild loads
+  V11__load_question_bank.sql               the rebuilt bank: 180 questions across 12 topics
+  V12__correct_the_questions_with_two_right_answers.sql  three items with a second defensible answer
+  V13__answer_option_feedback.sql           the sentence a student reads, per wrong option
+  V14__retag_mislabelled_options.sql        codes that did not name their error, corrected
+
+content/
+  bank/                 the written bank, one file per topic: prompts, options, codes, messages
+  misconceptions.json   the register: every error a wrong option may name, with its source
+  render.py             validates the bank, and prints it as markdown for reading
 
 frontend/src/
   api/         typed client; admin.ts holds the admin endpoints and their types
@@ -281,7 +293,47 @@ a bulk publish and any future importer all pass through that one gate.
 **Nothing is ever hard-deleted.** `quiz_answers` cascades on delete, so deleting a question would
 take students' answer history with it. Retiring is the only removal on offer.
 
-`origin` records where a question came from: `SEED` for the 33 starter questions, or `AUTHORED`.
+`origin` records where a question came from: `SEED` for the bank loaded from `content/bank`, or
+`AUTHORED` for one a teacher wrote.
+
+### A wrong answer names an error, and says what the student thought
+
+Topics hold questions; questions offer answer options; a wrong option carries two things. A
+`misconception_code` names the error it was written to catch, and `feedback` is the sentence the
+student reads when they pick it. What the student is told hangs on the **option**, not on the code,
+because the option is what knows which misreading was actually made: on "what is the value of the 2
+in 5.320?", 0.2 and 0.002 are different errors that catch the same code. Across the bank that is 508
+wrong options and 508 messages, each written to that option.
+
+The vocabulary is `content/misconceptions.json`, the register: 131 rows, each with the code, its
+topic, the sentence a **teacher** reads, an example, and a source — quoted from the DfE/NCETM
+guidance, or recorded as standard subject knowledge where the guidance is silent. It is a content
+file rather than a table: only the code is stored against an option, and `render.py --check` refuses
+a bank whose option names a code the register does not have. Nothing in the register reaches a
+student; the register is how a teacher and the bank agree on what an error is called.
+
+```mermaid
+erDiagram
+    TOPIC ||--o{ QUESTION : "holds"
+    QUESTION ||--|{ ANSWER_OPTION : "offers A-F"
+    ANSWER_OPTION }o--o| MISCONCEPTION : "names, if wrong"
+
+    ANSWER_OPTION {
+        string text
+        boolean correct
+        string feedback "the sentence the student reads"
+    }
+
+    MISCONCEPTION {
+        string code PK "content/misconceptions.json"
+        string misconception "the sentence a teacher reads"
+        string source "quoted, or subject knowledge"
+    }
+```
+
+Saving is still loose — a draft may be half-written — but publishing an option that names an error
+without saying what the student thought is refused in `QuestionValidator`, so a distractor cannot go
+live naming a problem and explaining nothing.
 
 ### A question is answered one of two ways
 
