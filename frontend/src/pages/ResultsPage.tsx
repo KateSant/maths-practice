@@ -12,10 +12,12 @@ interface ResultsLocationState {
   summary?: SessionSummary
 }
 
-export function ResultsPage() {
+/** `previewSummary` is only used by the development-only preview route, which renders this
+ *  page with fixture data instead of a real session. */
+export function ResultsPage({ previewSummary }: { previewSummary?: SessionSummary } = {}) {
   const { sessionId } = useParams<{ sessionId: string }>()
   const location = useLocation()
-  const handedOver = (location.state as ResultsLocationState | null)?.summary
+  const handedOver = (location.state as ResultsLocationState | null)?.summary ?? previewSummary
   const id = Number(sessionId)
 
   const [summary, setSummary] = useState<SessionSummary | null>(handedOver ?? null)
@@ -115,6 +117,24 @@ export function ResultsPage() {
           <LevelMeter level={summary.level} />
         </div>
       </Card>
+      {/* The reward for finishing: one ore per correct answer, to walk to and mine. Placed
+          directly beneath the graduation card and above the question review, so it is among the
+          first things after the score - at the bottom of a long list of answers it was easy to
+          miss entirely. Shown even for a zero score, where the
+          patch has a single ore - a reward that only appears to the successful is not much of a
+          reward, and for a demo it should always be visible.
+
+          This is the real thing rather than a preview, so the level is metered against the play
+          time the questions paid out: `live` runs the heartbeat, and running out points back at the
+          questions, which is the loop the whole mechanic is built around. The development preview
+          passes fixture data instead, and plays untimed. */}
+      <MiningReward
+        correctCount={summary.correctCount}
+        questionCount={summary.questionCount}
+        playSecondsEarned={summary.playSecondsEarned}
+        live={!previewSummary}
+        retryHref={retryHref}
+      />
 
       <section>
         <h2 className="text-lg font-semibold text-slate-900">Question review</h2>
@@ -165,11 +185,6 @@ export function ResultsPage() {
           ))}
         </div>
       </section>
-
-      {/* The reward for finishing: one ore per correct answer, to walk to and mine. Shown even
-          for a zero score, where the patch has a single ore - a reward that only appears to
-          the successful is not much of a reward, and for a demo it should always be visible. */}
-      <MiningReward correctCount={summary.correctCount} questionCount={summary.questionCount} />
 
       <div className="flex flex-wrap justify-center gap-3 pb-4">
         <Link to={retryHref} className={buttonClasses('primary', 'lg')}>

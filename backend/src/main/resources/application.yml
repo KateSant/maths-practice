@@ -48,6 +48,15 @@ realmaths:
     default-question-count: 5
     max-question-count: 20
     points-per-correct-answer: 10
+  game:
+    # The reward level is paid for with maths. Rates are deliberately generous: this is a
+    # carrot, and a student who answers five questions right should get a decent turn.
+    seconds-per-correct-answer: 20
+    perfect-bonus-seconds: 60
+    # Ceiling on what one heartbeat gap can cost, so abandoning the tab is not a wipe-out.
+    # Must be at least the client's heartbeat interval (10s), or every beat would be clipped.
+    max-heartbeat-gap-seconds: 30
+
   google:
     # Public identifier, not a secret: it ships in the browser bundle and is used to
     # check the ID token's aud claim, so it must match VITE_GOOGLE_CLIENT_ID. Blank

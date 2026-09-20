@@ -21,9 +21,12 @@ public record SessionSummary(
         int level,
         /** The level this set was aimed at, so the two can be compared and the move shown. */
         int setLevel,
+        /** Seconds of play time this score was worth. */
+        int playSecondsEarned,
         List<QuestionReview> review) {
 
-    public static SessionSummary from(QuizSession session, List<QuizAnswer> answers, int level, int setLevel) {
+    public static SessionSummary from(
+            QuizSession session, List<QuizAnswer> answers, int level, int setLevel, int playSecondsEarned) {
         return new SessionSummary(
                 session.getId(),
                 session.getTopic() == null ? null : session.getTopic().getSlug(),
@@ -37,6 +40,7 @@ public record SessionSummary(
                 session.getCompletedAt(),
                 level,
                 setLevel,
+                playSecondsEarned,
                 answers.stream().map(QuestionReview::from).toList());
     }
 }

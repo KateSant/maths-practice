@@ -2,6 +2,7 @@ package com.realmaths.quiz;
 
 import com.realmaths.common.ApiException;
 import com.realmaths.config.RealMathsProperties;
+import com.realmaths.game.GameService;
 import com.realmaths.question.AnswerOption;
 import com.realmaths.question.DifficultyBand;
 import com.realmaths.question.Question;
@@ -29,6 +30,7 @@ public class QuizService {
     private final QuestionCatalogService catalogService;
     private final UserRepository userRepository;
     private final RealMathsProperties properties;
+    private final GameService gameService;
     private final Clock clock;
 
     public QuizService(
@@ -37,12 +39,14 @@ public class QuizService {
             QuestionCatalogService catalogService,
             UserRepository userRepository,
             RealMathsProperties properties,
+            GameService gameService,
             Clock clock) {
         this.sessionRepository = sessionRepository;
         this.answerRepository = answerRepository;
         this.catalogService = catalogService;
         this.userRepository = userRepository;
         this.properties = properties;
+        this.gameService = gameService;
         this.clock = clock;
     }
 
@@ -108,12 +112,16 @@ public class QuizService {
         return toResult(session, answer);
     }
 
-    /** Finishing twice is harmless: the first completion time is kept. */
+    /** Finishing twice is harmless: the first completion time is kept, and play time is paid once. */
     @Transactional
     public SessionSummary completeSession(Long userId, Long sessionId) {
         QuizSession session = requireSession(userId, sessionId);
         if (!session.isCompleted()) {
             session.complete(clock.instant());
+            // Paying out on completion rather than per answer means an abandoned quiz earns
+            // nothing, and the "you earned X" on the results page is the whole amount at once.
+            session.getUser()
+                    .awardPlaySeconds(gameService.earnedFor(session.getCorrectCount(), session.getQuestionCount()));
         }
         return summaryOf(session, userId);
     }
@@ -170,7 +178,16 @@ public class QuizService {
                 session,
                 answerRepository.findDetailedBySessionId(session.getId()),
                 targetLevelFor(userId, topicId, null),
-                targetLevelFor(userId, topicId, session.getId()));
+                targetLevelFor(userId, topicId, session.getId()),
+                playSecondsFor(session));
+    }
+
+    /**
+     * Play time is recomputed rather than stored on the session: it is a function of the score and
+     * the current rates, and the balance on the account is what actually gets spent.
+     */
+    private int playSecondsFor(QuizSession session) {
+        return gameService.earnedFor(session.getCorrectCount(), session.getQuestionCount());
     }
 
     private AnswerResult toResult(QuizSession session, QuizAnswer answer) {

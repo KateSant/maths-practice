@@ -2,7 +2,8 @@
 
 Multiple-choice maths practice with server-side marking, worked explanations, points and streaks,
 and per-topic progress. There is also a teacher-facing question bank, so the content can be edited
-without a deploy.
+without a deploy. Finishing a set also pays out **play time**, which is spent in a small mining
+game at the top of the results page.
 
 **The product has no name yet**, so the interface deliberately shows none. That is why the
 repository is `real-maths`, the Java package is `com.realmaths`, the database is
@@ -31,7 +32,7 @@ replaced by a real teacher's content through the admin screens.
 | Backend | Spring Boot 3.5, Java 21, Spring Data JPA, Spring Security, JWT |
 | Database | SQLite, one file, no server. Schema by Flyway |
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, React Router |
-| Tests | JUnit 5 + Mockito (**88**) · Vitest (**19**) |
+| Tests | JUnit 5 + Mockito (**103**) · Vitest (**75**) |
 | Deploy | GitHub Actions → GHCR → one Lightsail instance, Caddy in front |
 
 ---
@@ -81,8 +82,8 @@ docker compose up --build     # API + SQLite volume, on port 8081
 ## Tests
 
 ```bash
-cd backend  && mvn test       # 88 tests
-cd frontend && npm test       # 19 tests
+cd backend  && mvn test       # 103 tests
+cd frontend && npm test       # 75 tests
 cd frontend && npm run build  # runs tsc --noEmit as well, so type errors fail the build
 ```
 
@@ -95,7 +96,8 @@ Two tests are worth knowing about because they cover things nothing else can:
   `JwtDecoder` bean. See the note on Google's decoder below.
 
 There are no component tests: the frontend suite has no DOM environment. Logic worth asserting
-lives in plain functions (`auth/roles.ts`, `lib/format.ts`) so it can be tested there.
+lives in plain functions (`auth/roles.ts`, `lib/format.ts`, `lib/playtime.ts`, `lib/platformer.ts`)
+so it can be tested there.
 
 ---
 
@@ -107,6 +109,7 @@ backend/src/main/java/com/realmaths/
   auth/       Google sign-in and guest accounts, JWT issuing, principal resolution
   common/     error shape, exception handling, score maths
   config/     security, JWT, properties
+  game/       play-time ledger: what a set pays, what a heartbeat costs
   profile/    profile and per-topic statistics
   question/   topics, questions, options, catalog queries
   quiz/       sessions, answers, grading, points and streaks
@@ -118,13 +121,15 @@ backend/src/main/resources/db/migration/
   V2__seed_questions.sql    starter question bank
   V3__google_sign_in.sql    drops passwords, adds user_identities
   V4__question_lifecycle.sql  status replaces active, adds origin
+  V5__play_time.sql         earned play time and its heartbeat
 
 frontend/src/
   api/         typed client; admin.ts holds the admin endpoints and their types
   auth/        auth context, token storage, route guards, sign-in roles
-  components/  shared primitives and layout
+  components/  shared primitives and layout, and the mining reward
   pages/       the student pages, plus pages/admin/ for the question bank
-  lib/         formatting and the product-name constant
+  lib/         formatting, the product-name constant, the platformer world and its physics,
+               and the play-time clock
 ```
 
 ---
@@ -146,6 +151,8 @@ Authenticated requests use `Authorization: Bearer <token>`. The token is ours, i
 | GET | `/api/me` | Profile with statistics |
 | PATCH | `/api/me` | Change display name |
 | GET | `/api/me/history` | Completed quizzes |
+| GET | `/api/game` | Play-time balance, without spending it |
+| POST | `/api/game/heartbeat` | "Still playing": bills the time since the last call |
 | GET | `/api/admin/questions` | Paged question list. Filters: `topicId`, `status`, `difficulty`, `origin`, `q` |
 | POST | `/api/admin/questions` | Create a draft |
 | GET | `/api/admin/questions/{id}` | One question, **with the answer key** |
@@ -231,6 +238,21 @@ take students' answer history with it. Retiring is the only removal on offer.
 `quiz_answers` is unique on `(session_id, question_id)`, so a retried submission returns the
 original grade instead of awarding points twice. Every session lookup filters on the authenticated
 user id, so guessing another student's session id returns 404.
+
+### Play time is metered by the server, not the client
+
+Finishing a set awards seconds of play time to the account: a flat rate per correct answer, plus a
+bonus for a clean sweep. The mining game spends them. The client never says how long it has been
+playing — it sends `POST /api/game/heartbeat` meaning "still here", and the server bills the
+wall-clock gap since the previous call against the stored balance. Time can therefore only be spent
+if it was actually earned, and editing the bundle cannot mint more of it.
+
+Two rules keep that from being punishing. The gap is capped by
+`realmaths.game.max-heartbeat-gap-seconds`, so closing the tab and returning an hour later costs at
+most the cap rather than the whole balance. And the clock stops at zero, so the break before the
+next set is not charged against the time that set is about to earn. `GameServiceTest` covers the
+rules; on the client, `lib/playtime.ts` does the ticking between heartbeats, and every response
+overwrites its guess, so the countdown on screen is never the authority.
 
 ### The database enforces the invariants
 

@@ -4,6 +4,8 @@ import { RequireAuth } from './auth/RequireAuth'
 import { RequireRole } from './auth/RequireRole'
 import { AppLayout } from './components/AppLayout'
 import { Spinner } from './components/ui'
+import { DevDigPage } from './pages/DevDigPage'
+import { DevResultsPage } from './pages/DevResultsPage'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
 import { SignInPage } from './pages/SignInPage'
@@ -49,6 +51,10 @@ export function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/login/:role" element={<SignInPage />} />
 
+      {/* Dev-only, and deliberately outside the auth guard: the mining reward on its own,
+          no session and no sign-in. Dropped entirely from a production build. */}
+      {import.meta.env.DEV ? <Route path="/dev/dig" element={<DevDigPage />} /> : null}
+
       {/* Everything below shares the app chrome and needs a signed-in user. */}
       <Route
         element={
@@ -60,6 +66,9 @@ export function App() {
         <Route index element={<HomePage />} />
         <Route path="quiz" element={<QuizPage />} />
         <Route path="results/:sessionId" element={<ResultsPage />} />
+        {/* Dev-only: a results page with fixture data, so the layout can be seen without
+            answering a quiz first. Dropped entirely from a production build. */}
+        {import.meta.env.DEV ? <Route path="dev/results" element={<DevResultsPage />} /> : null}
         <Route path="profile" element={<ProfilePage />} />
 
         <Route

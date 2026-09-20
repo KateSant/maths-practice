@@ -3,6 +3,7 @@ import type {
   AnswerResult,
   ApiError,
   AuthResponse,
+  GameStatus,
   HistoryItem,
   Profile,
   QuizSession,
@@ -128,4 +129,14 @@ export const api = {
     apiRequest<SessionSummary>(`/quiz/sessions/${sessionId}/complete`, { method: 'POST' }),
 
   session: (sessionId: number) => apiRequest<SessionSummary>(`/quiz/sessions/${sessionId}`),
+
+  /** The play-time balance, without spending any of it. */
+  gameStatus: () => apiRequest<GameStatus>('/game'),
+
+  /**
+   * "Still playing." The client never says how long it has played - the server bills the
+   * wall-clock time since the previous call - so this can be sent as often as the countdown
+   * needs refreshing without the student being able to mint time by lying.
+   */
+  gameHeartbeat: () => apiRequest<GameStatus>('/game/heartbeat', { method: 'POST' }),
 }

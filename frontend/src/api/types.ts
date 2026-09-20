@@ -9,6 +9,8 @@ export interface User {
   points: number
   currentStreak: number
   bestStreak: number
+  /** Unspent seconds of reward-game time. */
+  playSeconds: number
   createdAt: string
 }
 
@@ -87,7 +89,17 @@ export interface SessionSummary {
   level: number
   /** The level this set was aimed at, so the two can be compared. */
   setLevel: number
+  /** Seconds of reward-game time this score was worth. */
+  playSecondsEarned: number
   review: QuestionReview[]
+}
+
+/** Where a student's play time stands, plus the rates that earned it. */
+export interface GameStatus {
+  secondsRemaining: number
+  secondsPerCorrectAnswer: number
+  perfectBonusSeconds: number
+  maxSessionSeconds: number
 }
 
 export interface TopicStats {

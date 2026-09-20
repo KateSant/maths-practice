@@ -43,6 +43,18 @@ public class User {
     @Column(name = "best_streak", nullable = false)
     private int bestStreak;
 
+    /** Unspent seconds of time in the reward game. Earned by finishing quizzes, spent by playing. */
+    @Column(name = "play_seconds", nullable = false)
+    private int playSeconds;
+
+    /**
+     * When the game last reported in, or null when nobody is playing. The balance is only ever
+     * spent against this: the server bills the elapsed wall-clock time, so the client cannot award
+     * itself anything - it can only tell us it is still there.
+     */
+    @Column(name = "play_heartbeat_at")
+    private Instant playHeartbeatAt;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();
 
@@ -102,6 +114,39 @@ public class User {
 
     public int getBestStreak() {
         return bestStreak;
+    }
+
+    /**
+     * Adds time earned by finishing a quiz. Called once per completed session: completing the same
+     * quiz twice must not pay out twice.
+     */
+    public void awardPlaySeconds(int seconds) {
+        if (seconds > 0) {
+            this.playSeconds += seconds;
+        }
+    }
+
+    public int getPlaySeconds() {
+        return playSeconds;
+    }
+
+    /** Spends up to {@code seconds} of play time, returning how much was actually spent. */
+    public int spendPlaySeconds(int seconds) {
+        int spent = Math.min(Math.max(seconds, 0), playSeconds);
+        this.playSeconds -= spent;
+        return spent;
+    }
+
+    public Instant getPlayHeartbeatAt() {
+        return playHeartbeatAt;
+    }
+
+    /**
+     * Records that the game is (or is no longer) in play. Passing null stops the clock, which is
+     * what makes the next session start from a fresh heartbeat rather than billing the break.
+     */
+    public void setPlayHeartbeatAt(Instant at) {
+        this.playHeartbeatAt = at;
     }
 
     public Instant getCreatedAt() {

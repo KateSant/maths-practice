@@ -11,6 +11,8 @@ public record UserResponse(
         int points,
         int currentStreak,
         int bestStreak,
+        /** Unspent seconds of reward-game time. */
+        int playSeconds,
         Instant createdAt) {
 
     public static UserResponse from(User user) {
@@ -22,6 +24,7 @@ public record UserResponse(
                 user.getPoints(),
                 user.getCurrentStreak(),
                 user.getBestStreak(),
+                user.getPlaySeconds(),
                 user.getCreatedAt());
     }
 }
