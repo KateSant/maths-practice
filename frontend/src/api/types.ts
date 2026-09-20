@@ -7,8 +7,9 @@ export interface User {
   displayName: string
   role: string
   points: number
-  currentStreak: number
-  bestStreak: number
+  /** Weeks practised in a row; zero once a whole week has gone by with nothing. */
+  streakWeeks: number
+  bestStreakWeeks: number
   createdAt: string
 }
 

@@ -92,10 +92,13 @@ export function AppLayout() {
                     </span>
                     <span
                       className="hidden items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-700 sm:inline-flex"
-                      title="Current streak of correct answers"
+                      title="Weeks practised in a row"
                     >
                       <span aria-hidden="true">🔥</span>
-                      <span className="tabular-nums">{profile.user.currentStreak}</span>
+                      <span className="tabular-nums">{profile.user.streakWeeks}</span>
+                      <span className="font-normal">
+                        {profile.user.streakWeeks === 1 ? 'week' : 'weeks'}
+                      </span>
                     </span>
                   </>
                 ) : null}

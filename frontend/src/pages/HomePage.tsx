@@ -71,9 +71,9 @@ export function HomePage() {
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <StatTile label="Points" value={profile?.user.points ?? 0} accent="text-amber-600" />
           <StatTile
-            label="Streak"
-            value={profile?.user.currentStreak ?? 0}
-            hint={`Best ${profile?.user.bestStreak ?? 0}`}
+            label="Weeks running"
+            value={profile?.user.streakWeeks ?? 0}
+            hint={`Best ${profile?.user.bestStreakWeeks ?? 0}`}
             accent="text-orange-600"
           />
           <StatTile

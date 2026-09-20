@@ -11,6 +11,8 @@ import com.realmaths.quiz.QuizAnswerRepository;
 import com.realmaths.quiz.QuizSessionRepository;
 import com.realmaths.user.User;
 import com.realmaths.user.UserRepository;
+import com.realmaths.user.WeeklyStreak;
+import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,21 +25,24 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final QuizAnswerRepository answerRepository;
     private final QuizSessionRepository sessionRepository;
+    private final Clock clock;
 
     public ProfileService(
             UserRepository userRepository,
             QuizAnswerRepository answerRepository,
-            QuizSessionRepository sessionRepository) {
+            QuizSessionRepository sessionRepository,
+            Clock clock) {
         this.userRepository = userRepository;
         this.answerRepository = answerRepository;
         this.sessionRepository = sessionRepository;
+        this.clock = clock;
     }
 
     @Transactional(readOnly = true)
     public ProfileView getProfile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> ApiException.notFound("Account not found."));
-        return new ProfileView(UserResponse.from(user), buildStats(userId));
+        return new ProfileView(UserResponse.from(user, WeeklyStreak.today(clock)), buildStats(userId));
     }
 
     @Transactional
@@ -45,7 +50,7 @@ public class ProfileService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> ApiException.notFound("Account not found."));
         user.setDisplayName(displayName.trim());
-        return new ProfileView(UserResponse.from(user), buildStats(userId));
+        return new ProfileView(UserResponse.from(user, WeeklyStreak.today(clock)), buildStats(userId));
     }
 
     private StatsView buildStats(Long userId) {

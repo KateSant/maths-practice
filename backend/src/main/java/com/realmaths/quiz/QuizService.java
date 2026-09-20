@@ -15,6 +15,7 @@ import com.realmaths.quiz.dto.StartQuizRequest;
 import com.realmaths.quiz.dto.SubmitAnswerRequest;
 import com.realmaths.user.User;
 import com.realmaths.user.UserRepository;
+import com.realmaths.user.WeeklyStreak;
 import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
@@ -114,6 +115,9 @@ public class QuizService {
         QuizSession session = requireSession(userId, sessionId);
         if (!session.isCompleted()) {
             session.complete(clock.instant());
+            // Stamped on finishing, not on starting: a set someone opened and abandoned is not
+            // practice, and finishing the same set twice is guarded by the isCompleted check above.
+            session.getUser().recordPractisedWeek(WeeklyStreak.currentWeekStart(clock));
         }
         return summaryOf(session, userId);
     }

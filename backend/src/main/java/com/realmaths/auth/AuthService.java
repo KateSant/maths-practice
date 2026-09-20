@@ -7,6 +7,7 @@ import com.realmaths.user.User;
 import com.realmaths.user.UserIdentity;
 import com.realmaths.user.UserIdentityRepository;
 import com.realmaths.user.UserRepository;
+import com.realmaths.user.WeeklyStreak;
 import java.time.Clock;
 import java.util.Locale;
 import java.util.UUID;
@@ -116,6 +117,6 @@ public class AuthService {
 
     private AuthResponse respondWith(User user) {
         JwtService.IssuedToken issued = jwtService.issueFor(user);
-        return new AuthResponse(issued.token(), issued.expiresAt(), UserResponse.from(user));
+        return new AuthResponse(issued.token(), issued.expiresAt(), UserResponse.from(user, WeeklyStreak.today(clock)));
     }
 }

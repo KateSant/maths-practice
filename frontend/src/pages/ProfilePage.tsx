@@ -90,7 +90,12 @@ export function ProfilePage() {
 
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <StatTile label="Points" value={user.points} accent="text-amber-600" />
-        <StatTile label="Current streak" value={user.currentStreak} hint={`Best ${user.bestStreak}`} accent="text-orange-600" />
+        <StatTile
+          label="Weeks in a row"
+          value={user.streakWeeks}
+          hint={`Best ${user.bestStreakWeeks}`}
+          accent="text-orange-600"
+        />
         <StatTile label="Questions answered" value={stats.totalAnswered} hint={`${stats.totalCorrect} correct`} />
       </section>
 
