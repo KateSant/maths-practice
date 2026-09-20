@@ -13,21 +13,11 @@ import { QuestionCard, type OptionState } from '../../components/QuestionCard'
 import type { AnswerType } from '../../api/types'
 import { AdminHeader, OriginBadge, StatusBadge } from './adminUi'
 import { MisconceptionPicker } from './MisconceptionPicker'
-import { misconception } from '../../lib/misconceptions'
 import { DIFFICULTY_BANDS, difficultyLabel } from '../../lib/format'
 import { DEFAULT_YEAR_GROUP, YEAR_GROUPS, yearGroupLabel } from '../../lib/yearGroups'
 import { fieldClass } from './AdminQuestionListPage'
 
 const MAX_OPTIONS = 6
-
-const ANSWER_TYPES: { value: AnswerType; label: string; help: string }[] = [
-  { value: 'SINGLE_CHOICE', label: 'One correct answer', help: 'The student picks one option.' },
-  {
-    value: 'MULTI_SELECT',
-    label: 'Tick all that apply',
-    help: 'The student ticks any number of options and submits them together.',
-  },
-]
 
 interface DraftOption {
   /** Client-side only. New options have no id yet, and index keys would break on removal. */
@@ -69,10 +59,6 @@ export function AdminQuestionEditorPage() {
   const [options, setOptions] = useState<DraftOption[]>(() => [newOption(), newOption()])
   const [status, setStatus] = useState<QuestionStatus>('DRAFT')
   const [origin, setOrigin] = useState<AdminQuestionDetail['origin']>('AUTHORED')
-  // The right-hand column shows the student's question by default. The diagnosis view is the
-  // same options read as evidence instead of as a test, which is the one thing the preview
-  // cannot show a teacher while they are writing the question.
-  const [previewMode, setPreviewMode] = useState<'student' | 'diagnosis'>('student')
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -252,26 +238,6 @@ export function AdminQuestionEditorPage() {
     )
   }
 
-  /**
-   * Switching to a single choice has to drop any extra right answers, because the server will not
-   * store two - the database trigger refuses it. Doing it here rather than letting the save come
-   * back with an error keeps the editor from holding a state it cannot save.
-   */
-  const changeAnswerType = (next: AnswerType) => {
-    setAnswerType(next)
-    if (next === 'SINGLE_CHOICE') {
-      setOptions((current) => {
-        const firstCorrect = current.findIndex((option) => option.correct)
-        return current.map((option, index) => ({
-          ...option,
-          correct: index === firstCorrect,
-          // Only the surviving answer is cleared; the rest are wrong now and may take a code.
-          misconceptionCode: index === firstCorrect ? '' : option.misconceptionCode,
-        }))
-      })
-    }
-  }
-
   const removeOption = (index: number) => {
     setOptions((current) => current.filter((_, at) => at !== index))
   }
@@ -325,8 +291,8 @@ export function AdminQuestionEditorPage() {
         </p>
       ) : null}
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="space-y-5">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-2">
+        <div className="min-w-0 space-y-5">
           <Card className="p-5">
             <div className="grid gap-4 sm:grid-cols-3">
               <label className="block">
@@ -380,25 +346,6 @@ export function AdminQuestionEditorPage() {
             </div>
 
             <label className="mt-4 block">
-              <span className="mb-1.5 block text-sm font-medium text-slate-700">How is it answered?</span>
-              <select
-                value={answerType}
-                onChange={(event) => changeAnswerType(event.target.value as AnswerType)}
-                className={fieldClass(fieldErrors['answerType'])}
-              >
-                {ANSWER_TYPES.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </select>
-              <span className="mt-1 block text-xs text-slate-400">
-                {ANSWER_TYPES.find((type) => type.value === answerType)?.help}
-              </span>
-              <FieldError message={fieldErrors['answerType']} />
-            </label>
-
-            <label className="mt-4 block">
               <span className="mb-1.5 block text-sm font-medium text-slate-700">Question</span>
               <textarea
                 value={prompt}
@@ -410,19 +357,6 @@ export function AdminQuestionEditorPage() {
               <FieldError message={fieldErrors['prompt']} />
             </label>
 
-            <label className="mt-4 block">
-              <span className="mb-1.5 block text-sm font-medium text-slate-700">
-                Explanation <span className="font-normal text-slate-400">(shown after answering)</span>
-              </span>
-              <textarea
-                value={explanation}
-                onChange={(event) => setExplanation(event.target.value)}
-                rows={3}
-                placeholder="Multiplication is done before addition: 6 × 4 = 24, then 15 + 24 = 39."
-                className={fieldClass(fieldErrors['explanation'])}
-              />
-              <FieldError message={fieldErrors['explanation']} />
-            </label>
           </Card>
 
           <Card className="p-5">
@@ -439,22 +373,29 @@ export function AdminQuestionEditorPage() {
             <div className="mt-3 space-y-3">
               {options.map((option, index) => (
                 <div key={option.key} className="flex items-start gap-3">
-                  <input
-                    type={answerType === 'MULTI_SELECT' ? 'checkbox' : 'radio'}
-                    name="correct-option"
-                    checked={option.correct}
-                    onChange={() => toggleCorrect(index)}
+                  <button
+                    type="button"
+                    // The letter is the state and the control in one: green means this is the
+                    // answer. There is no separate checkbox, because the teacher is setting the
+                    // key rather than answering, and no tick/cross mark to decode.
+                    aria-pressed={option.correct}
+                    onClick={() => toggleCorrect(index)}
+                    title={option.correct ? 'The correct answer - click to unmark it' : 'Mark as the correct answer'}
                     aria-label={
-                      answerType === 'MULTI_SELECT'
-                        ? `Mark option ${String.fromCharCode(65 + index)} as correct`
-                        : `Mark option ${String.fromCharCode(65 + index)} as the correct answer`
+                      `Option ${String.fromCharCode(65 + index)}, ` +
+                      (option.correct ? 'the correct answer' : 'mark as the correct answer')
                     }
-                    className="mt-3 h-4 w-4 shrink-0 accent-emerald-600"
-                  />
-                  <span className="mt-2.5 w-5 shrink-0 text-sm font-bold text-slate-500">
+                    className={[
+                      'mt-1.5 grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-lg text-sm font-bold transition',
+                      option.correct
+                        ? 'bg-emerald-600 text-white'
+                        : 'border border-slate-200 bg-white text-slate-500 hover:border-emerald-400 hover:text-emerald-600',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30',
+                    ].join(' ')}
+                  >
                     {String.fromCharCode(65 + index)}
-                  </span>
-                  <div className="flex-1">
+                  </button>
+                  <div className="min-w-0 flex-1">
                     <input
                       type="text"
                       value={option.text}
@@ -496,6 +437,22 @@ export function AdminQuestionEditorPage() {
             </Button>
           </Card>
 
+          <Card className="p-5">
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-slate-700">
+                Explanation <span className="font-normal text-slate-400">(shown after answering)</span>
+              </span>
+              <textarea
+                value={explanation}
+                onChange={(event) => setExplanation(event.target.value)}
+                rows={3}
+                placeholder="Multiplication is done before addition: 6 × 4 = 24, then 15 + 24 = 39."
+                className={fieldClass(fieldErrors['explanation'])}
+              />
+              <FieldError message={fieldErrors['explanation']} />
+            </label>
+          </Card>
+
           <div className="flex flex-wrap items-center gap-3">
             <Button onClick={() => void save()} disabled={saving}>
               {saving ? 'Working…' : 'Save draft'}
@@ -511,50 +468,27 @@ export function AdminQuestionEditorPage() {
           </div>
         </div>
 
-        <div className="lg:sticky lg:top-20 lg:self-start">
-          <div
-            className="mb-3 inline-flex rounded-lg bg-slate-100 p-0.5"
-            role="group"
-            aria-label="What the preview shows"
+        <div className="min-w-0 lg:sticky lg:top-20 lg:self-start">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+            Preview — what a student sees
+          </p>
+          <QuestionCard
+            prompt={prompt || 'Your question will appear here'}
+            options={previewOptions}
+            variant={answerType === 'MULTI_SELECT' ? 'multi' : 'single'}
+            stateFor={stateForPreview}
           >
-            {(['student', 'diagnosis'] as const).map((mode) => (
-              <button
-                key={mode}
-                type="button"
-                onClick={() => setPreviewMode(mode)}
-                aria-pressed={previewMode === mode}
-                className={`rounded-md px-3 py-1 text-xs font-medium transition ${
-                  previewMode === mode ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                }`}
-              >
-                {mode === 'student' ? 'Student view' : 'What it diagnoses'}
-              </button>
-            ))}
-          </div>
-
-          {previewMode === 'student' ? (
-            <>
-              <QuestionCard
-                prompt={prompt || 'Your question will appear here'}
-                options={previewOptions}
-                variant={answerType === 'MULTI_SELECT' ? 'multi' : 'single'}
-                stateFor={stateForPreview}
-              >
-                {explanation ? (
-                  <div className="mt-6 rounded-xl bg-emerald-50 px-5 py-4 text-emerald-900">
-                    <p className="font-semibold">Explanation</p>
-                    <p className="mt-1.5 text-sm leading-relaxed opacity-90">{explanation}</p>
-                  </div>
-                ) : null}
-              </QuestionCard>
-              <p className="mt-3 text-xs text-slate-400">
-                This preview is the same component the practice questions use, so it cannot drift from
-                what students actually see.
-              </p>
-            </>
-          ) : (
-            <DiagnosisPanel options={options} />
-          )}
+            {explanation ? (
+              <div className="mt-6 rounded-xl bg-emerald-50 px-5 py-4 text-emerald-900">
+                <p className="font-semibold">Explanation</p>
+                <p className="mt-1.5 text-sm leading-relaxed opacity-90">{explanation}</p>
+              </div>
+            ) : null}
+          </QuestionCard>
+          <p className="mt-3 text-xs text-slate-400">
+            This preview is the same component the practice questions use, so it cannot drift from what
+            students actually see.
+          </p>
         </div>
       </div>
     </div>
@@ -564,58 +498,4 @@ export function AdminQuestionEditorPage() {
 function FieldError({ message }: { message?: string }) {
   if (!message) return null
   return <span className="mt-1 block text-xs text-rose-600">{message}</span>
-}
-
-/**
- * The same question read as evidence: for each wrong option, the error it was written to catch.
- *
- * Derived from the draft rather than from the saved question, so it fills in as the teacher tags
- * an option. The point is to see the diagnosis while writing the item, not after saving it.
- */
-function DiagnosisPanel({ options }: { options: DraftOption[] }) {
-  return (
-    <Card className="p-6 sm:p-8">
-      <p className="text-sm font-semibold text-slate-900">What a wrong answer tells you</p>
-      <p className="mt-1 text-xs text-slate-500">
-        A wrong pick is read as a named error, not only as a mistake.
-      </p>
-
-      <ul className="mt-4 space-y-4">
-        {options.map((option, index) => {
-          const label = String.fromCharCode(65 + index)
-          const entry = misconception(option.misconceptionCode)
-          return (
-            <li key={option.key} className="flex gap-3">
-              <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-md bg-slate-100 text-xs font-bold text-slate-600">
-                {label}
-              </span>
-              <div className="min-w-0">
-                <p className={`text-sm ${option.correct ? 'font-medium text-emerald-800' : 'text-slate-800'}`}>
-                  {option.text || <span className="italic text-slate-400">Empty option</span>}
-                </p>
-                {option.correct ? (
-                  <p className="mt-0.5 text-xs font-medium text-emerald-700">Correct answer</p>
-                ) : entry ? (
-                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
-                    {entry.misconception}
-                    <span className="ml-1 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-500">
-                      {entry.code}
-                    </span>
-                  </p>
-                ) : option.misconceptionCode ? (
-                  <p className="mt-0.5 text-xs text-amber-700">
-                    “{option.misconceptionCode}” is not in the register.
-                  </p>
-                ) : (
-                  <p className="mt-0.5 text-xs text-amber-700">
-                    Not diagnosed — pick what this catches so a wrong pick means something.
-                  </p>
-                )}
-              </div>
-            </li>
-          )
-        })}
-      </ul>
-    </Card>
-  )
 }
