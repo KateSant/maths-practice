@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ApiRequestError, api } from '../api/client'
 import type { Topic } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
@@ -101,8 +102,7 @@ export function HomePage() {
       <section>
         <h2 className="text-lg font-semibold text-slate-900">Topics</h2>
         <p className="mt-0.5 text-sm text-slate-500">
-          A short set from the topic, aimed at the level you are working at. Change the year group in
-          the header at any time.
+          A short set from the topic, aimed at the level you are working at.
         </p>
 
         {error ? (
@@ -113,8 +113,7 @@ export function HomePage() {
 
         {topics && topics.length === 0 ? (
           <p className="mt-4 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
-            Nothing is published for {yearGroupLabel(yearGroup)} yet. Try another year group — you can
-            change it at any time.
+            Nothing is published for {yearGroupLabel(yearGroup)} yet. Try another year group.
           </p>
         ) : null}
 
@@ -132,6 +131,14 @@ export function HomePage() {
           </div>
         ) : null}
       </section>
+
+      {/* The one place a student is told what this is. Kept to the foot of the page so it never
+          competes with the topics, which are the reason they are here. */}
+      <p className="text-center text-sm">
+        <Link to="/about" className="font-medium text-slate-500 hover:text-indigo-600">
+          Mistakes are good
+        </Link>
+      </p>
     </div>
   )
 }

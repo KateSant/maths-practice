@@ -32,6 +32,15 @@ const AdminTopicsPage = lazy(() =>
 )
 
 /**
+ * The provenance page is loaded on demand for the same reason, and one more: it reads the
+ * misconception register to show real entries and live counts, and an eager import would pull
+ * that register into the main bundle for every student.
+ */
+const AboutPage = lazy(() =>
+  import('./pages/AboutPage').then((module) => ({ default: module.AboutPage })),
+)
+
+/**
  * Belt and braces around every admin route: the role check decides whether to render, and the
  * Suspense boundary covers the chunk still being fetched. The real boundary is the API, which
  * refuses /api/admin/** without the role — this only avoids rendering a page full of errors.
@@ -51,6 +60,18 @@ export function App() {
           the URL, so the second step survives a refresh and the back button works. */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/login/:role" element={<SignInPage />} />
+
+      {/* Public, and outside the auth guard on purpose: the people who want to check where the
+          questions come from are the ones who have not signed in yet. Lazy, so the register it
+          reads is not fetched until somebody actually opens it. */}
+      <Route
+        path="/about"
+        element={
+          <Suspense fallback={<Spinner label="Loading…" />}>
+            <AboutPage />
+          </Suspense>
+        }
+      />
 
       {/* Dev-only, and deliberately outside the auth guard: the mining reward on its own,
           no session and no sign-in. Dropped entirely from a production build. */}

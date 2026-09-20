@@ -1,12 +1,16 @@
 /**
- * The product has no name yet, so the interface shows none.
+ * The product's name.
  *
- * There is deliberately nothing here to render as a wordmark. The only words the app still needs
- * are for the browser tab, which cannot be empty, and those are a description rather than a name
- * — inventing a placeholder would just put an invented name on screen, which is the thing being
- * avoided.
- *
- * When a name is chosen, it goes in two places: this constant, and the header wordmark in
- * `components/AppLayout.tsx`, which is currently just the mark.
+ * **Mistakes are Good!** is the name, and the exclamation is part of it — it is a claim, not a
+ * category. **Maths practice.** is what it is. The badge in the header carries the **M** alone — a
+ * monogram, not a wordmark: "MaG" read as a typo at that size, and the point of a mark is that it
+ * needs no reading. The name and the descriptor are spelled out wherever there is room, which is
+ * also the only way anyone learns what the M stands for.
  */
-export const APP_TITLE = 'Maths practice'
+export const APP_MARK = 'M'
+
+export const APP_FULL_NAME = 'Mistakes are Good!'
+
+export const APP_DESCRIPTOR = 'Maths practice.'
+
+export const APP_TITLE = `${APP_FULL_NAME} ${APP_DESCRIPTOR}`

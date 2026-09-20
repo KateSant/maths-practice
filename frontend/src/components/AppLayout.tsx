@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
+import { APP_FULL_NAME, APP_MARK } from '../lib/branding'
 import { initials } from '../lib/format'
 import { PrototypeBadge } from './PrototypeBadge'
 import { YearGroupSelect } from './YearGroupSelect'
@@ -42,15 +43,15 @@ export function AppLayout() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-200/70 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 sm:px-6">
-          {/* The mark stands alone while the product has no name, so the link needs an
-              accessible name of its own rather than announcing the sigma. */}
+          {/* The M is the mark: a monogram needs no glyph beside it. Purple is the brand's colour,
+              kept to the logo and nowhere else. */}
           <Link
             to={inAdmin ? '/admin/questions' : '/'}
-            aria-label="Home"
-            title="Home"
-            className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/30"
+            aria-label={`${APP_FULL_NAME} home`}
+            title={APP_FULL_NAME}
+            className="grid h-8 w-8 place-items-center rounded-lg bg-purple-600 text-sm font-bold text-white shadow-sm shadow-purple-600/30"
           >
-            <span aria-hidden="true">∑</span>
+            {APP_MARK}
           </Link>
 
           <nav className="ml-2 flex items-center gap-1">
