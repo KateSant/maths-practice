@@ -13,8 +13,14 @@ output "ssh_command" {
   value       = "ssh -i <path-to-private-key> ubuntu@${aws_lightsail_static_ip.app.ip_address}"
 }
 
+locals {
+  # domain_name carries its scheme for Caddy's benefit, so it cannot be pasted into a DNS
+  # record as written. Anything below that needs a bare hostname trims it here.
+  hostname = trimprefix(trimprefix(var.domain_name, "https://"), "http://")
+}
+
 output "deploy_target" {
-  description = "Repository variable SITE_ADDRESS, then the https:// prefix, for the deploy workflow's smoke test."
+  description = "Repository variable SITE_DOMAIN: the full site address including its scheme, which is what the deploy workflow curls."
   value       = var.domain_name
 }
 
@@ -23,14 +29,15 @@ output "next_steps" {
   value       = <<-EOT
     1. Point DNS at the instance. Wait for it to resolve before the first deploy,
        or Caddy cannot complete the ACME challenge and you get no certificate:
-         ${var.domain_name}  A  ${aws_lightsail_static_ip.app.ip_address}
+         ${local.hostname}  A  ${aws_lightsail_static_ip.app.ip_address}
 
     2. Bootstrap the host once (installs Docker, writes /srv/realmaths/.env).
        SITE_ADDRESS must be set inside the remote command, not on the local side
        of the pipe: a plain VAR=value prefix applies to ssh itself, so the script
-       would never see it.
+       would never see it. domain_name already includes the scheme, which is what
+       bootstrap-host.sh expects, so it is passed through rather than prefixed.
          ssh -i ~/.ssh/realmaths-deploy ubuntu@${aws_lightsail_static_ip.app.ip_address} \
-           "SITE_ADDRESS=https://${var.domain_name} bash -s" < scripts/bootstrap-host.sh
+           "SITE_ADDRESS=${var.domain_name} bash -s" < scripts/bootstrap-host.sh
 
     3. Pin the host key so the deploy cannot be redirected:
          ssh-keyscan -H ${aws_lightsail_static_ip.app.ip_address}

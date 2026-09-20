@@ -290,7 +290,7 @@ Now add these in GitHub: Settings > Secrets and variables > Actions
     TF_STATE_BUCKET           $STATE_BUCKET
     AWS_REGION                $AWS_REGION
     AWS_AVAILABILITY_ZONE     <verify: aws lightsail get-regions --include-availability-zones --region $AWS_REGION>
-    SITE_DOMAIN               <your hostname, no https:// prefix>
+    SITE_DOMAIN               <the full site address, scheme included, e.g. https://realmaths.example.com>
     SSH_PUBLIC_KEY            <contents of ~/.ssh/realmaths-deploy.pub>
     SSH_CIDR                  <your address, from: curl -4 ifconfig.me>
 
