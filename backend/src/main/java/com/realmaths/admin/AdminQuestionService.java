@@ -149,7 +149,8 @@ public class AdminQuestionService {
             // Labels are derived from position, never accepted from the client, so the two
             // cannot end up disagreeing.
             String label = String.valueOf((char) ('A' + index));
-            question.addOption(label, submitted.get(index).text(), submitted.get(index).correct());
+            question.addOption(
+                    label, submitted.get(index).text(), submitted.get(index).correct(), codeOrNull(submitted.get(index)));
         }
     }
 
@@ -168,6 +169,15 @@ public class AdminQuestionService {
     /** An empty search box means "no filter", not "match the empty string". */
     private static String blankToNull(String value) {
         return value == null || value.isBlank() ? null : value.trim();
+    }
+
+    /**
+     * A misconception code that is absent or blank means "this option catches nothing", which is
+     * what a correct option and an undiagnosed distractor both are. Storing "" rather than null
+     * would make the two indistinguishable in a query that counts what is diagnosed.
+     */
+    private static String codeOrNull(SaveQuestionRequest.OptionDraft draft) {
+        return blankToNull(draft.misconceptionCode());
     }
 
     /**

@@ -2,6 +2,7 @@ package com.realmaths.admin.dto;
 
 import com.realmaths.question.AnswerType;
 import com.realmaths.question.YearGroups;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -43,8 +44,17 @@ public record SaveQuestionRequest(
                 Integer yearGroup,
         AnswerType answerType,
         @Size(max = 6, message = "A question can have at most six options.")
+                // @Valid is load-bearing: without it the constraints inside OptionDraft (the 500
+                // character option text and the 60 character misconception code) are declared but
+                // never evaluated, because a List does not cascade on its own.
+                @Valid
                 List<OptionDraft> options) {
 
     public record OptionDraft(
-            @Size(max = 500, message = "Options are limited to 500 characters.") String text, boolean correct) {}
+            @Size(max = 500, message = "Options are limited to 500 characters.") String text,
+            boolean correct,
+            // The misconception code this option catches, or null. The 60-character ceiling matches
+            // the answer_options.misconception_code column, so a code that fits the register cannot
+            // be rejected by the database.
+            @Size(max = 60, message = "Misconception codes are limited to 60 characters.") String misconceptionCode) {}
 }

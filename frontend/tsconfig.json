@@ -4,6 +4,9 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "bundler",
+    // The misconception register is imported from content/ at the repository root, so JSON
+    // modules must be typed. Without this the import in src/lib/misconceptions.ts fails tsc.
+    "resolveJsonModule": true,
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,

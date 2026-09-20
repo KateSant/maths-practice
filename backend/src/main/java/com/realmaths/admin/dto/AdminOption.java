@@ -9,9 +9,14 @@ import com.realmaths.question.AnswerOption;
  * {@link com.realmaths.question.dto.AnswerOptionView}, which has no correctness field at all,
  * and grading happens on the server. The separation is by package so that it stays visible.
  */
-public record AdminOption(Long id, String label, String text, boolean correct) {
+public record AdminOption(Long id, String label, String text, boolean correct, String misconceptionCode) {
 
     public static AdminOption from(AnswerOption option) {
-        return new AdminOption(option.getId(), option.getLabel(), option.getText(), option.isCorrect());
+        return new AdminOption(
+                option.getId(),
+                option.getLabel(),
+                option.getText(),
+                option.isCorrect(),
+                option.getMisconceptionCode());
     }
 }

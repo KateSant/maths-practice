@@ -99,7 +99,17 @@ public class Question {
     }
 
     public void addOption(String label, String text, boolean correct) {
-        options.add(new AnswerOption(this, options.size() + 1, label, text, correct));
+        addOption(label, text, correct, null);
+    }
+
+    /**
+     * Adds an option, optionally naming the misconception a wrong one was written to catch.
+     *
+     * <p>A correct option has no code: there is no error to catch, and the loader stores null
+     * for it. Callers that do not care about diagnosis use the three-argument form.
+     */
+    public void addOption(String label, String text, boolean correct, String misconceptionCode) {
+        options.add(new AnswerOption(this, options.size() + 1, label, text, correct, misconceptionCode));
     }
 
     /**

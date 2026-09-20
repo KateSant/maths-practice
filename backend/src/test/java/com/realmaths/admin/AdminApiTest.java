@@ -273,6 +273,85 @@ class AdminApiTest {
                 .andExpect(jsonPath("$.fieldErrors.topicId").exists());
     }
 
+    // ---------------------------------------------------- misconception codes (V9) ---
+
+    /**
+     * A wrong option's misconception code survives the round trip through save and reload.
+     *
+     * <p>The code is the bank's diagnostic value: it is what lets the teacher be told that a wrong
+     * pick means "adds the numerators and the denominators" rather than only that it was wrong. It
+     * is stored per option, so an edit - which replaces the whole option set - must rebuild the tag
+     * with it rather than dropping it as unrecognised metadata. A correct option carries none, and
+     * an absent one is omitted from the JSON rather than sent as an empty string.
+     */
+    @Test
+    void aMisconceptionCodeSurvivesSavingAndReloading() throws Exception {
+        String admin = adminToken();
+        String marker = "misconception" + System.nanoTime();
+
+        long id = idOf(mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(questionWithCodes(
+                                marker + " what is 1/2 + 1/3?",
+                                new String[] {"2/5", "5/6"},
+                                new String[] {"FRAC-ADD-ACROSS", null})))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.options[0].misconceptionCode").value("FRAC-ADD-ACROSS"))
+                // A correct option catches nothing, so the field is absent rather than empty.
+                .andExpect(jsonPath("$.options[1].misconceptionCode").doesNotExist())
+                .andReturn());
+
+        // An edit replaces the option set. The tag has to be rebuilt with it.
+        mockMvc.perform(put("/api/admin/questions/" + id)
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(questionWithCodes(
+                                marker + " what is 2/5 + 1/5?",
+                                new String[] {"3/10", "3/5"},
+                                new String[] {"FRAC-ADD-DENOM", null})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.options[0].misconceptionCode").value("FRAC-ADD-DENOM"));
+
+        mockMvc.perform(get("/api/admin/questions/" + id).header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.options[0].misconceptionCode").value("FRAC-ADD-DENOM"));
+    }
+
+    /**
+     * A code that is not in the register is stored, not refused.
+     *
+     * <p>Deliberate, and the same decision the schema makes: the register is content
+     * (content/misconceptions.json), revised in the repository, so a code retired there must not
+     * make an old question unsavable. The editor only offers registered codes, and the teacher's
+     * diagnosis panel names an unrecognised one, which is where a bad code should be caught.
+     */
+    @Test
+    void anUnknownMisconceptionCodeIsStoredRatherThanRejected() throws Exception {
+        String admin = adminToken();
+
+        mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(questionWithCodes(
+                                "unknown code " + System.nanoTime(),
+                                new String[] {"a", "b"},
+                                new String[] {"NOT-A-REAL-CODE", null})))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.options[0].misconceptionCode").value("NOT-A-REAL-CODE"));
+
+        // An empty string is "catches nothing", and is stored as absent rather than as "".
+        mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(questionWithCodes(
+                                "blank code " + System.nanoTime(),
+                                new String[] {"a", "b"},
+                                new String[] {"   ", null})))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.options[0].misconceptionCode").doesNotExist());
+    }
+
     // ------------------------------------------------- tick all that apply (V6) ---
 
     /**
@@ -495,6 +574,30 @@ class AdminApiTest {
 
     private static boolean contains(int[] indexes, int value) {
         return java.util.Arrays.stream(indexes).anyMatch(index -> index == value);
+    }
+
+    /**
+     * A single-choice question whose options each carry an optional misconception code. Index 1 is
+     * the correct option, so index 0 is the distractor that normally carries a code; a null entry
+     * omits the field entirely, which is what a correct option and an undiagnosed distractor both
+     * look like.
+     */
+    private static String questionWithCodes(String prompt, String[] options, String[] codes) {
+        StringBuilder json = new StringBuilder("""
+                {"topicId":1,"prompt":"%s","explanation":"Because.","difficulty":2,"options":[
+                """.formatted(prompt));
+        for (int index = 0; index < options.length; index++) {
+            if (index > 0) {
+                json.append(',');
+            }
+            String code = codes[index];
+            json.append("{\"text\":\"%s\",\"correct\":%s%s}"
+                    .formatted(
+                            options[index],
+                            index == 1,
+                            code == null ? "" : ",\"misconceptionCode\":\"" + code + "\""));
+        }
+        return json.append("]}").toString();
     }
 
     private long idOf(MvcResult result) throws Exception {

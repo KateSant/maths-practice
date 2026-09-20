@@ -42,16 +42,35 @@ public class AnswerOption {
     @Column(name = "is_correct", nullable = false)
     private boolean correct;
 
+    /**
+     * The error this wrong option was written to catch, as a code from
+     * {@code content/misconceptions.json} ("FRAC-ADD-ACROSS", "PV-COLUMN-NAME", ...).
+     *
+     * <p>Nullable and unconstrained, deliberately. A correct option catches nothing, most
+     * questions a teacher writes carry no code at all, and the register is content rather than
+     * schema - it is revised in the repository, so a retired code must not leave a constraint
+     * behind. The column is populated by the bank migration (V9) and read back as the teacher's
+     * explanation of what a wrong pick means.
+     */
+    @Column(name = "misconception_code", length = 60)
+    private String misconceptionCode;
+
     protected AnswerOption() {
         // for JPA
     }
 
     public AnswerOption(Question question, int position, String label, String text, boolean correct) {
+        this(question, position, label, text, correct, null);
+    }
+
+    public AnswerOption(
+            Question question, int position, String label, String text, boolean correct, String misconceptionCode) {
         this.question = question;
         this.position = position;
         this.label = label;
         this.text = text;
         this.correct = correct;
+        this.misconceptionCode = misconceptionCode;
     }
 
     public Long getId() {
@@ -76,5 +95,10 @@ public class AnswerOption {
 
     public boolean isCorrect() {
         return correct;
+    }
+
+    /** The misconception code this option catches, or null when it catches none. */
+    public String getMisconceptionCode() {
+        return misconceptionCode;
     }
 }

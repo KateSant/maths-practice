@@ -28,6 +28,13 @@ export default defineConfig({
     proxy: {
       '/api': { target: 'http://localhost:8081', changeOrigin: true },
     },
+    // The misconception register is content, shared with the bank tooling at the repository
+    // root, so it sits outside the Vite root. The build resolves it regardless; the dev server
+    // refuses to serve files outside the workspace unless told to. Allowing the whole repository
+    // would expose backend/data/*.db, so this names the one directory that is needed.
+    fs: {
+      allow: ['.', '../content'],
+    },
   },
   test: {
     // The current tests cover pure logic, so no DOM environment is needed.

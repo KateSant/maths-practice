@@ -80,6 +80,12 @@ class QuizApiTest {
             assertThat(option.has("correct"))
                     .as("a student's view of an option carries no correctness at all")
                     .isFalse();
+            // The misconception code names the error a distractor catches, which is a teacher's
+            // instrument. It is on the option in the database, so this is the guard that it stays
+            // out of the student's payload rather than riding along with the text.
+            assertThat(option.has("misconceptionCode"))
+                    .as("a student's view of an option carries no misconception code")
+                    .isFalse();
         }
     }
 

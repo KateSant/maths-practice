@@ -21,6 +21,8 @@ export interface AdminOption {
   label: string
   text: string
   correct: boolean
+  /** The misconception code this wrong option catches, or null/absent when it catches none. */
+  misconceptionCode?: string | null
 }
 
 export interface AdminQuestionSummary {
@@ -63,6 +65,8 @@ export interface PageResponse<T> {
 export interface QuestionOptionDraft {
   text: string
   correct: boolean
+  /** The misconception this option catches. Null for a correct option, and for an undiagnosed distractor. */
+  misconceptionCode?: string | null
 }
 
 export interface SaveQuestionRequest {
