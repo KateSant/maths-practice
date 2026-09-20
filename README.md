@@ -1,33 +1,16 @@
 # Maths practice app
 
-Multiple-choice maths practice with server-side marking and per-topic progress, plus a
-teacher-facing question bank that needs no deploy to edit. Finishing a set pays out play time,
-gamified as a small mining game on the results page.
+Multiple-choice maths practice for secondary school students, plus a teacher-facing editable
+question bank. Finishing a set is gamified with a Minecraft-themed mining game.
 
 ---
 
 ## The core user experience and value
 
-The loop is: pick a topic, answer a short set, get marked, read why. The marking is diagnostic
-rather than just right or wrong.
-
-- **Pick a year group and a topic.** Year groups run 7–13 and are the student's choice, remembered
-  in `localStorage`; a topic, or mixed practice, picks the set.
-- **The set is pitched at their level.** Before dealing, the server picks a difficulty band from
-  the student's last ten answers, so the questions move with them. The bands are labelled in school
-  words — *Emerging, Developing, Secure, Mastery* — and the results say whether the next set moves
-  up, eases off or stays.
-- **Two ways to answer.** Single choice, or tick-all where every option has to be judged. Both are
-  marked on the server, so the answer key is never in the page.
-- **A wrong answer says what the student probably thought.** Each wrong option carries a sentence
-  written for that option, not a generic "incorrect", drawn from the misconception register
-  ([`content/misconceptions.json`](content/misconceptions.json)). Every distractor exists to catch a
-  documented error, so getting it wrong is the teaching moment — the point of the bank.
-- **Finishing pays out.** A score, points, and the streak of correct answers in a row (current
-  and best), plus **play time** spent in the mining game on the results page.
-- **The review.** Every question with the answer chosen, the correct answer, and the explanation.
-- **Progress over time.** Each topic card shows accuracy and the level reached; the profile page
-  gathers the statistics.
+The student answers short sets of questions pitched at their level, covering the DfE's Year 7–8 Key
+Stage 3 units. Each wrong answer names the misconception behind it, drawn from the register
+([`content/misconceptions.json`](content/misconceptions.json)), rather than just "incorrect".
+Finishing pays points, a streak and play time.
 
 ---
 
