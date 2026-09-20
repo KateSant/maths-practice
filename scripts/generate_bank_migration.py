@@ -78,9 +78,9 @@ def header(version, topics):
 -- edit the JSON and generate the next migration.
 --
 -- Insert-only. Nothing here updates or deletes a question, an option or a topic's questions, so
--- applying it can never overwrite a question a teacher has edited. It runs after
--- V10__retire_prototype_question_bank.sql, which clears the prototype bank out of the way;
--- running the sweep after this migration would retire this bank too.
+-- applying it can never overwrite a question a teacher has edited. It runs after the retire
+-- migration that immediately precedes it, which clears the previous bank out of the way; running
+-- the sweep after this migration would retire this bank too.
 --
 -- Every wrong option carries the misconception code it was written to catch, in
 -- answer_options.misconception_code (V9). There are {wrong} of them. The register that defines the
@@ -177,8 +177,9 @@ def main():
     chunks = [header(args.version, topics), topic_rows(topics), repurpose_fractions(topics)]
     chunks.append(
         "\n-- The id of the question just inserted, one row at a time. Cleared before each capture, so\n"
-        "-- the subquery below can only ever match one row.\n"
-        "create temp table seed_question (id integer);\n"
+        "-- the subquery below can only ever match one row. `if not exists` because an earlier load\n"
+        "-- migration in the same Flyway run leaves its own temp table on the connection.\n"
+        "create temp table if not exists seed_question (id integer);\n"
     )
     for topic in topics:
         for question in topic["questions"]:

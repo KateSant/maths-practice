@@ -127,11 +127,16 @@ student error, it is decoration and is rewritten.
 
 ### 3.1 Making it engaging
 
+**Engaging is the requirement.** This bank is for 11–13 year olds in a classroom, not a compliance
+artefact. An item a student will not willingly do, or will not learn from getting wrong, has failed
+however well it covers a misconception or scores on a check. Everything below is a requirement, not
+a preference.
+
 The register is a device for diagnosing, not a plan for a bank. Writing from it — one item per
 misconception, each hit two or three times — produces coverage, and if nothing else is required it
 also produces uniformity. The first pass at this bank came out **74% archetypes A and B**, with
 **77 of 89 tick-alls sharing one stem** and **only 12 items in any real context**. Every check
-passed. It was boring. So this is a requirement, not a preference.
+passed. It was boring.
 
 - **Write the task first.** Decide what the student is asked to *do* — work out, estimate, order,
   compare, classify, find the mistake, find a counter-example, explain — then choose the wrong
@@ -141,17 +146,50 @@ passed. It was boring. So this is a requirement, not a preference.
   thing, at least four of the eight archetypes appear, and A and B together are at most half of it.
   Across the bank, A and B are at most half and D–H at least a quarter.
 - **Make the options things to work on, not sentences to judge.** Prefer values, expressions,
-  calculations, points or results, so the student does the maths on each one. Claim-sorting is right
-  for definitions and over-generalisations, but it is not the default shape.
+  calculations, points or results, so the student does the maths on each one. Claim-sorting (a
+  tick-all) is the strongest instrument for a conceptual error, but it is **all-or-nothing** and the
+  most tiring shape to answer, because every option has to be judged and a partial grip scores
+  nothing. Keep tick-all items to about **one in ten**, and no more than two in a topic; use a
+  single-choice non-example (*"which is not…"*) wherever one pass will do.
 - **Use context, and more than one per topic.** The bridge item is not the only place a real
   situation belongs: money, measurement, time, temperature, recipes, sport, coordinates. A topic of
-  pure abstraction reads as a worksheet of tricks.
+  pure abstraction reads as a worksheet of tricks. But a bit is enough — a handful of real situations
+  across a topic, not one bolted onto every item. Context is a garnish, not a quota: a forced
+  situation (a ticket price that exists only to make you multiply) is worse than a clean abstract
+  question, and getting one on every item is its own kind of monotony.
 - **Use different representations.** A table, a described number line, a pair of coordinates, a
   ratio, a word problem, an equation. Text only, so describe them — but change them.
-- **Vary the stem.** An identical stem more than a handful of times across 200 items is a tic.
-  "Tick every …" is one stem among many, not the house style.
-- **Keep the difficulty in the reasoning, not the reading.** Unless reading is what is being
-  assessed, the words should be easy and the maths should be the hard part.
+- **Vary the stem.** Repeated wording is a tic, and it is the **opening** that gives it away, not
+  only an identical full prompt. No phrase should open more than a handful of items. Round two's
+  first pass made all 36 tick-alls open *"Tick every …"* — a new tic in the same shape as round
+  one's — and over-correcting then pushed 17 items into *"Which of these …"*. Mix the constructions:
+  *Which …*, *Find the …*, *One of these is not …*, *Three of these are …*, *Work out …*, *A number
+  has …*. Check it: `python3 content/render.py --stats` reports the commonest three-word openings
+  and the tick-all share, so neither mistake can be made silently again.
+- **Write in plain language a Year 7 would recognise.** The words are not the test. Say *"Tick every
+  number that is equal to 0.1."*, *"Write 43 872 in hundreds."*, *"Which number has a 2 in the
+  hundredths column?"* — not *"Each set labels one place-value column four ways. Which set all name
+  the same column?"*, which asks an 11-year-old to parse an abstract sentence before doing any
+  mathematics. Keep prompts short and direct (*What is …*, *Work out …*, *Which …*, *Tick every …*),
+  prefer the concrete to the abstract, and keep the difficulty in the mathematics. Use everyday words
+  where the term is not the thing being taught: *the same as*, not *equivalent*; *digits after the
+  point* unless *decimal places* is the point of the item. A prompt that has to be read twice to be
+  understood is rewritten, however good the mathematics behind it. The
+  prototype's 33 seed questions
+  (`backend/src/main/resources/db/migration/V2__seed_questions.sql`) are the register to copy for
+  tone, whatever one thinks of their content.
+- **No tortured grammar.** One clause, one question, and **no negated comparisons**. Negating a
+  category is fine — *"Which is not a factor of 30?"* is a legitimate non-example (archetype E) —
+  but negating a comparison makes the reader untangle English before doing any mathematics:
+  *"Which fraction is not smaller than 1/5?"* has to be *"Which fraction is bigger than 1/5?"*.
+  The same goes for stacked negatives and for a question wrapped in a relative clause. If a prompt
+  has to be *parsed* rather than read, it is rewritten.
+- **No trick questions.** Test the mathematics, not the notation. An item whose whole difficulty is
+  an unusual form — *"Write 10⁻¹ as a decimal."* — is a riddle, not a task: no one asks a Year 7 to
+  convert a negative power of ten in isolation, so such an item measures whether the notation has
+  been seen, not whether the mathematics is understood. If a form is worth testing (a fraction
+  heading on a place-value chart, a decimal to convert), put it where students actually meet it, as
+  one part of a real task.
 - **Take the tasks from the guidance.** The DfE/NCETM units carry worked examples and *sample
   questions* for each significant key idea, alongside the misconception passages. Those are the
   intended tasks for the year; start from them and attach the distractors, rather than inventing
@@ -271,7 +309,8 @@ class.
 2. Every distractor maps to a named misconception, and that is the most likely reason it is picked.
 3. Numbers chosen to expose the misconception, not to be tidy.
 4. Explanation names the likely error, not just the correct method.
-5. Language fits Y7/8; reading load does not exceed mathematical load.
+5. Plain language a Year 7 would use, and reading load below mathematical load (§3.1). A prompt that
+   has to be read twice to be understood is rewritten.
 6. No giveaways (longest-option-is-right, "all of the above", grammar mismatches, prompt echo).
 7. Tick-all: true claims unambiguously true for all stated values; false claims unambiguously false.
 8. Second read for subject accuracy and for the misconception claim itself.

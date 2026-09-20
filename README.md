@@ -81,6 +81,11 @@ target if you need to point at a different API.
 The database is created at `backend/data/realmaths.db` on first run, with the schema and starter
 questions applied by Flyway. To reset it, delete that file and any `-wal`/`-shm` siblings.
 
+**A reset drops every account, and with it any role.** Flyway carries schema and seed content, not
+users: your row is created by signing in, so after a reset you sign in again and come back as
+`STUDENT`. Promote yourself again with `./scripts/make-admin.sh <your email>` (see *Roles, and how to
+grant ADMIN* below).
+
 ### Docker
 
 ```bash

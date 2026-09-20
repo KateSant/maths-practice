@@ -1,0 +1,24 @@
+-- Retire round one's bank, now that the rebuilt bank lands in V13.
+--
+-- V11 loaded round one's 200 questions as origin = 'SEED'. That bank was rejected as monotone
+-- (specs/question-bank-probing-misconceptions.md section 6: 74% archetypes A and B, one stem on 77
+-- of 89 tick-alls, 12 items in any real context). Round two rebuilt every topic task-first from the
+-- DfE/NCETM guidance, with sourced register rows and plain language, so round one goes.
+--
+-- Retired, not deleted. `quiz_answers.question_id` cascades on delete, so a DELETE would take every
+-- recorded answer with it and rewrite history that has already been shown to a student - the same
+-- reasoning that makes Retire the only removal on offer in the admin screens. `status = 'RETIRED'`
+-- is enough to take the questions out of circulation: the catalog queries filter on
+-- `status = 'PUBLISHED'`, so they stop being served, while every answer and completed review still
+-- resolves.
+--
+-- SEED is the right predicate and the reason `origin` exists. It marks exactly the rows a migration
+-- inserted, so this one statement retires the whole of round one, however many migrations
+-- contributed to it. Questions a teacher has written (origin = 'AUTHORED') are untouched, and so
+-- are their answers.
+--
+-- This runs before V13 inserts the rebuilt bank. Seeding and retiring are separate acts
+-- (specs/how-to-seed-the-question-bank.md): this migration only ever retires, and V13 only ever
+-- inserts. Running the sweep after V13 would retire the new bank too, which is why the order
+-- matters and why the two are separate migrations rather than one.
+update questions set status = 'RETIRED' where origin = 'SEED';

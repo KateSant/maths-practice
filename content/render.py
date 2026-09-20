@@ -4,9 +4,13 @@
     python3 content/render.py --check      # fail loudly on any structural problem
     python3 content/render.py              # print the whole bank as markdown
     python3 content/render.py --topic fractions
+    python3 content/render.py --stats      # the anti-monotony measures of spec §3.1, as a report
 
 Checks are about the shape of an item and the register, not about the mathematics; the subject
-check is the second read described in specs/question-bank-probing-misconceptions.md.
+check is the second read described in specs/question-bank-probing-misconceptions.md. --stats is
+likewise a report, not a gate: it measures the bank against §3.1 so a reviewer can see the mix
+without reading all of it. The proposition test is a heuristic (word count and signal words), so
+treat the share as a rough instrument and read the items for the rest.
 """
 
 from __future__ import annotations
@@ -15,6 +19,7 @@ import argparse
 import glob
 import json
 import os
+import re
 import sys
 from collections import Counter, defaultdict
 
@@ -31,6 +36,34 @@ ARCHETYPES = {
     "G": "method / form match",
     "H": "always / sometimes / never",
 }
+
+# Words that mark an option as something to judge rather than something to work on (§3.1).
+CLAIM_WORDS = {
+    "always", "never", "sometimes", "true", "false", "because", "equals", "equal",
+    "gives", "give", "makes", "make", "means", "mean", "will", "would", "must",
+}
+
+
+def is_proposition(text):
+    """A rough reading of "is this option a statement to judge, not a value to work on?"
+
+    The giveaway cases a reader would name by eye: a sentence with a verb in it, a comparison
+    with < or >, an equation with a letter in it, or a full stop. A bare number, expression or
+    tuple of values is not a proposition. This is an instrument, not a definition.
+    """
+    words = [word.strip(".,;:!?()") for word in text.split()]
+    alpha = [word for word in words if any(character.isalpha() for character in word)]
+    lowered = {word.lower() for word in words}
+    # A symbolic answer such as "x = 3" or "y = 3x + 1" is something to work on, not prose to judge.
+    if re.match(r"^[A-Za-z]\s*=", text.strip()):
+        return False
+    if lowered & CLAIM_WORDS or len(alpha) >= 4:
+        return True
+    if "<" in text or ">" in text:
+        return True
+    if "=" in text and alpha:
+        return True
+    return text.strip().endswith(".")
 
 
 def load_register():
@@ -167,9 +200,77 @@ def render(topic_filter=None):
     return "\n".join(lines)
 
 
+def stats():
+    """Report the bank against §3.1, so monotony is visible without reading every item."""
+    topics = load_topics()
+    lines = [
+        "anti-monotony report (spec §3.1) - a report, not a gate",
+        "",
+        f"{'topic':32}{'n':>4}{'A+B':>7}  {'archetypes':22}{'bands 1-4':18}{'tick-all opts':>14}{'propositional':>15}",
+    ]
+    bank_archetypes = Counter()
+    bank_prompts = Counter()
+    bank_prop = bank_opts = 0
+    tick_sizes = []
+    for _, topic in topics:
+        questions = topic["questions"]
+        archetypes = Counter(q["archetype"] for q in questions)
+        bands = Counter(q["band"] for q in questions)
+        sizes = [len(q["options"]) for q in questions if q["answerType"] == "MULTI_SELECT"]
+        props = sum(1 for q in questions for o in q["options"] if is_proposition(o["text"]))
+        opts = sum(len(q["options"]) for q in questions)
+        tick_sizes += sizes
+        bank_prop += props
+        bank_opts += opts
+        for q in questions:
+            bank_archetypes[q["archetype"]] += 1
+            bank_prompts[q["prompt"]] += 1
+        spread = "".join(f"{a}:{archetypes[a]} " for a in sorted(ARCHETYPES) if archetypes[a])
+        bandspread = " ".join(f"{b}:{bands[b]}" for b in sorted(bands))
+        tick = f"{min(sizes)}-{max(sizes)} ({sum(sizes)/len(sizes):.1f})" if sizes else "-"
+        share = f"{props}/{opts} {100*props/opts:.0f}%" if opts else "-"
+        lines.append(
+            f"{topic['slug']:32}{len(questions):>4}{archetypes['A']+archetypes['B']:>7}  "
+            f"{spread:22}{bandspread:18}{tick:>14}{share:>15}"
+        )
+    total = sum(bank_archetypes.values())
+    atob = bank_archetypes["A"] + bank_archetypes["B"]
+    dtoh = total - atob
+    lines += [
+        "",
+        f"bank: {total} items, A+B {atob} ({100*atob/total:.0f}%, §3.1 wants at most half), "
+        f"D-H {dtoh} ({100*dtoh/total:.0f}%, wants at least a quarter)",
+        "bank archetypes: " + " ".join(f"{a}:{bank_archetypes[a]}" for a in sorted(ARCHETYPES)),
+        f"propositions: {bank_prop}/{bank_opts} options ({100*bank_prop/bank_opts:.0f}%) - lower is better",
+    ]
+    tick_items = sum(
+        1 for _, topic in topics for q in topic["questions"] if q["answerType"] == "MULTI_SELECT"
+    )
+    lines.append(
+        f"tick-all items: {tick_items}/{total} ({100*tick_items/total:.0f}%) - the all-or-nothing "
+        "shape; §3.1 wants about one in ten, no more than two in a topic"
+    )
+    lines.append(f"tick-all options: {min(tick_sizes)}-{max(tick_sizes)}, mean {sum(tick_sizes)/len(tick_sizes):.1f}")
+    repeats = [(count, prompt) for prompt, count in bank_prompts.most_common() if count > 1]
+    lines.append(f"reused prompts: {len(repeats)}")
+    for count, prompt in repeats[:10]:
+        lines.append(f"  {count}x  {prompt[:96]}")
+    openings = Counter(
+        " ".join(q["prompt"].split()[:3])
+        for _, topic in topics
+        for q in topic["questions"]
+    )
+    lines.append(
+        "commonest openings (first three words): "
+        + ", ".join(f'{count}x "{text}"' for text, count in openings.most_common(6))
+    )
+    return "\n".join(lines)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="validate only, print a summary")
+    parser.add_argument("--stats", action="store_true", help="print the anti-monotony report of §3.1")
     parser.add_argument("--topic", help="limit the rendering to one topic slug")
     args = parser.parse_args()
 
@@ -190,6 +291,10 @@ def main():
         print("band:     " + "  ".join(f"{b}:{bands[b]}" for b in sorted(bands)))
         print("type:     " + "  ".join(f"{t}:{types[t]}" for t in sorted(types)))
         print("archetype:" + "".join(f"  {a}:{archetypes[a]}" for a in sorted(archetypes)))
+        return 0
+
+    if args.stats:
+        print(stats())
         return 0
 
     print(render(args.topic))

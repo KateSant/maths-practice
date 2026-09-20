@@ -5,40 +5,8 @@
   "dfeUnit": "Sequences (Y8)",
   "description": "Term-to-term rules and the nth term, including decreasing and geometric sequences.",
   "yearGroup": 8,
-  "planned": 16,
+  "planned": 15,
   "questions": [
-    {
-      "key": "seq-tick-arithmetic-4-7",
-      "band": 3,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "For the sequence 4, 7, 10, 13, … tick every statement that is true.",
-      "options": [
-        {
-          "text": "The nth term is 3n + 1",
-          "correct": true
-        },
-        {
-          "text": "The nth term is n + 3",
-          "correct": false,
-          "catches": "SEQ-TERM-TO-NTH"
-        },
-        {
-          "text": "The 10th term is 31",
-          "correct": true
-        },
-        {
-          "text": "The 10th term is 34",
-          "correct": false,
-          "catches": "SEQ-OFF-BY-ONE"
-        },
-        {
-          "text": "67 is a term of the sequence",
-          "correct": true
-        }
-      ],
-      "explanation": "The terms go up by 3, so the nth term starts 3n; at n = 1 that gives 3, so add 1 to get 3n + 1. Using the term-to-term rule as the formula gives n + 3, which gives 4, 5, 6 rather than 4, 7, 10. The 10th term is 3 × 10 + 1 = 31; 34 comes from adding 3 ten times to 4 instead of starting at n = 1. 67 = 3n + 1 gives n = 22, so 67 is in the sequence."
-    },
     {
       "key": "seq-nth-term-5-9",
       "band": 2,
@@ -51,7 +19,7 @@
           "correct": true
         },
         {
-          "text": "4n",
+          "text": "4n − 1",
           "correct": false,
           "catches": "SEQ-OFF-BY-ONE"
         },
@@ -61,12 +29,12 @@
           "catches": "SEQ-TERM-TO-NTH"
         },
         {
-          "text": "4n + 5",
+          "text": "5n",
           "correct": false,
           "catches": "SEQ-OFF-BY-ONE"
         }
       ],
-      "explanation": "The terms increase by 4, so the formula starts 4n. At n = 1 that gives 4, but the first term is 5, so add 1: 4n + 1. Writing 4n gives 4, 8, 12. n + 4 gives 5, 6, 7, which follows the first term only. 4n + 5 gives 9, 13, 17 and misses the first term."
+      "explanation": "The terms increase by 4, so the nth term starts with 4n. For n = 1 that gives 4, but the first term is 5, so add 1: 4n + 1. 4n − 1 starts at 3, n + 4 uses the term-to-term rule as the formula, and 5n starts at 5 but increases by 5."
     },
     {
       "key": "seq-nth-term-2-5",
@@ -80,9 +48,9 @@
           "correct": true
         },
         {
-          "text": "n + 3",
+          "text": "3n + 2",
           "correct": false,
-          "catches": "SEQ-TERM-TO-NTH"
+          "catches": "SEQ-OFF-BY-ONE"
         },
         {
           "text": "3n",
@@ -90,44 +58,70 @@
           "catches": "SEQ-OFF-BY-ONE"
         },
         {
-          "text": "3n + 2",
+          "text": "n + 3",
           "correct": false,
-          "catches": "SEQ-OFF-BY-ONE"
+          "catches": "SEQ-TERM-TO-NTH"
         }
       ],
-      "explanation": "The common difference is 3, so the formula is 3n plus or minus a number. At n = 1, 3n = 3 and the first term is 2, so subtract 1: 3n − 1. n + 3 gives 4, 5, 6, which is the rule rather than the formula. 3n and 3n + 2 miss the first term by one step in each direction."
+      "explanation": "Increasing by 3 means the nth term contains 3n. With n = 1, 3n is 3, but the first term is 2, so subtract 1: 3n − 1. 3n + 2 starts at 5, and 3n starts at 3. n + 3 gives 4, 5, 6, …, which increases by 1, not 3."
     },
     {
-      "key": "seq-tick-geometric",
+      "key": "seq-error-nth-term",
       "band": 3,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "Tick every statement that is true.",
+      "archetype": "D",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Dan says the nth term of 4, 7, 10, 13, … is n + 3. What has he done?",
       "options": [
         {
-          "text": "5, 10, 20, 40, … doubles each time",
+          "text": "Used the term-to-term rule as the nth term",
           "correct": true
         },
         {
-          "text": "5, 10, 20, 40, … has nth term 5n",
+          "text": "Used the wrong common difference",
+          "correct": false,
+          "catches": "SEQ-OFF-BY-ONE"
+        },
+        {
+          "text": "Found the 10th term twice the 5th term",
+          "correct": false,
+          "catches": "SEQ-TERM-DOUBLE"
+        },
+        {
+          "text": "Treated it as a geometric sequence",
           "correct": false,
           "catches": "SEQ-GEOMETRIC"
-        },
-        {
-          "text": "3, 6, 12, 24, … multiplies by 2 each time",
-          "correct": true
-        },
-        {
-          "text": "3, 6, 12, 24, … has nth term 3n",
-          "correct": false,
-          "catches": "SEQ-GEOMETRIC"
-        },
-        {
-          "text": "2, 4, 8, 16, … has nth term 2ⁿ",
-          "correct": true
         }
       ],
-      "explanation": "A sequence that doubles is not the times table: 5, 10, 20, 40 gives 5 × 2ⁿ⁻¹, and the linear formula 5n gives 5, 10, 15, 20. In the same way 3n gives 3, 6, 9, 12 for 3, 6, 12, 24. For 2, 4, 8, 16 the nth term is 2ⁿ, because the first term is 2¹, the second 2², and so on."
+      "explanation": "The common difference is 3, so the nth term is 3n + 1: it gives 4, 7, 10, 13. Dan has written the term-to-term rule \"add 3\" as \"n + 3\", which gives 4, 5, 6, 7, … — starting at 4 but increasing by 1. You can check by substituting n = 2."
+    },
+    {
+      "key": "seq-square-numbers",
+      "band": 2,
+      "archetype": "G",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "The sequence 1, 4, 9, 16, 25, … has which nth term?",
+      "options": [
+        {
+          "text": "n²",
+          "correct": true
+        },
+        {
+          "text": "2n",
+          "correct": false,
+          "catches": "SEQ-SQUARE"
+        },
+        {
+          "text": "n + 3",
+          "correct": false,
+          "catches": "SEQ-OFF-BY-ONE"
+        },
+        {
+          "text": "3n − 2",
+          "correct": false,
+          "catches": "SEQ-SQUARE"
+        }
+      ],
+      "explanation": "The terms are the square numbers: 1 × 1, 2 × 2, 3 × 3, so the nth term is n². 2n gives 2, 4, 6, 8, which is not the same sequence, and n + 3 gives 4, 5, 6, 7. The gaps between the terms increase, so no linear rule fits."
     },
     {
       "key": "seq-doubling-next-term",
@@ -148,134 +142,15 @@
         {
           "text": "60",
           "correct": false,
-          "catches": "SEQ-NOT-LINEAR"
+          "catches": "SEQ-GEOMETRIC"
         },
         {
-          "text": "70",
+          "text": "100",
           "correct": false,
-          "catches": "SEQ-NOT-LINEAR"
+          "catches": "SEQ-GEOMETRIC"
         }
       ],
-      "explanation": "Each term is double the one before, so 40 doubles to 80. 45 assumes each term goes up by 5, and 60 assumes it goes up by 20. 70 carries on the differences 5, 10, 20 with a further 30, which fits the first few terms but not the pattern. A sequence does not have to increase by the same amount every time, and here it does not."
-    },
-    {
-      "key": "seq-square-numbers",
-      "band": 2,
-      "archetype": "A",
-      "answerType": "SINGLE_CHOICE",
-      "prompt": "The sequence 1, 4, 9, 16, 25, … has which nth term?",
-      "options": [
-        {
-          "text": "n²",
-          "correct": true
-        },
-        {
-          "text": "2n",
-          "correct": false,
-          "catches": "SEQ-SQUARE"
-        },
-        {
-          "text": "2n − 1",
-          "correct": false,
-          "catches": "SEQ-SQUARE"
-        },
-        {
-          "text": "n² + 1",
-          "correct": false,
-          "catches": "SEQ-SQUARE"
-        }
-      ],
-      "explanation": "These are the square numbers: 1 = 1², 4 = 2², 9 = 3², 16 = 4². The differences between the terms grow (3, 5, 7), which is a sign of a square rule rather than a linear one. 2n gives the even numbers, 2n − 1 gives the odd numbers, and n² + 1 gives 2, 5, 10, which is one ahead of each term."
-    },
-    {
-      "key": "seq-tick-rules",
-      "band": 4,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "Tick every statement that is true.",
-      "options": [
-        {
-          "text": "1, 1, 2, 3, 5, 8, … is made by adding the two previous terms",
-          "correct": true
-        },
-        {
-          "text": "1, 1, 2, 3, 5, 8, … doubles each time",
-          "correct": false,
-          "catches": "SEQ-NOT-LINEAR"
-        },
-        {
-          "text": "2, 4, 6, 8, … increases by 2 each time",
-          "correct": true
-        },
-        {
-          "text": "1, 4, 7, 10, … increases by 3 each time",
-          "correct": true
-        },
-        {
-          "text": "Every sequence increases by the same amount each time",
-          "correct": false,
-          "catches": "SEQ-NOT-LINEAR"
-        }
-      ],
-      "explanation": "1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5 and so on, so the rule adds the two previous terms; doubling would give 1, 2, 4, 8. 2, 4, 6, 8 goes up by 2 and 1, 4, 7, 10 goes up by 3. Not every sequence is like that: a sequence only has to follow some rule, and doubling, squaring and adding the previous terms are all allowed."
-    },
-    {
-      "key": "seq-tenth-from-fifth",
-      "band": 3,
-      "archetype": "C",
-      "answerType": "SINGLE_CHOICE",
-      "prompt": "In a sequence the 5th term is 16 and the terms increase by 4 each time. What is the 10th term?",
-      "options": [
-        {
-          "text": "36",
-          "correct": true
-        },
-        {
-          "text": "32",
-          "correct": false,
-          "catches": "SEQ-TERM-DOUBLE"
-        },
-        {
-          "text": "40",
-          "correct": false,
-          "catches": "SEQ-OFF-BY-ONE"
-        },
-        {
-          "text": "20",
-          "correct": false,
-          "catches": "SEQ-OFF-BY-ONE"
-        }
-      ],
-      "explanation": "From the 5th term to the 10th is five steps, so add 5 × 4 = 20 to 16, giving 36. Doubling the 5th term gives 32, which assumes the 10th is twice the 5th. Adding 4 six times to 16 gives 40, one step too many. Adding a single 4 gives 20."
-    },
-    {
-      "key": "seq-is-100-a-term",
-      "band": 4,
-      "archetype": "F",
-      "answerType": "SINGLE_CHOICE",
-      "prompt": "Is 100 a term of the sequence 4, 7, 10, 13, …?",
-      "options": [
-        {
-          "text": "Yes, it is the 33rd term",
-          "correct": true
-        },
-        {
-          "text": "No, the sequence only contains odd numbers",
-          "correct": false,
-          "catches": "SEQ-IS-TERM"
-        },
-        {
-          "text": "Yes, it is the 25th term",
-          "correct": false,
-          "catches": "SEQ-OFF-BY-ONE"
-        },
-        {
-          "text": "No, the terms are all one less than a multiple of 3",
-          "correct": false,
-          "catches": "SEQ-IS-TERM"
-        }
-      ],
-      "explanation": "The nth term is 3n + 1. Solving 3n + 1 = 100 gives 3n = 99 and n = 33, so 100 is the 33rd term. The sequence alternates even and odd (4, 7, 10, 13), so it is not all odd; and the terms are one more than a multiple of 3 (4 = 3 + 1, 7 = 6 + 1), not one less. 25 × 4 = 100 is not how the sequence grows."
+      "explanation": "Each term is double the one before, so the next is 80. A sequence does not have to add the same amount each time. 45 adds 5 as if the gap were constant, 60 adds 20, and 100 multiplies by something other than 2."
     },
     {
       "key": "seq-decreasing-nth-term",
@@ -289,7 +164,12 @@
           "correct": true
         },
         {
-          "text": "3n + 23",
+          "text": "3n + 17",
+          "correct": false,
+          "catches": "SEQ-DECREASING"
+        },
+        {
+          "text": "3n − 20",
           "correct": false,
           "catches": "SEQ-DECREASING"
         },
@@ -297,78 +177,41 @@
           "text": "20 − 3n",
           "correct": false,
           "catches": "SEQ-OFF-BY-ONE"
-        },
-        {
-          "text": "3n − 23",
-          "correct": false,
-          "catches": "SEQ-DECREASING"
         }
       ],
-      "explanation": "The terms go down by 3, so the formula contains −3n. At n = 1, −3n = −3 and the first term is 20, so add 23: 23 − 3n. 3n + 23 increases instead of decreasing. 20 − 3n gives 17, 14, 11, missing the first term. 3n − 23 gives −20, −17, −14, which are negative."
+      "explanation": "The sequence decreases by 3, so the coefficient of n is −3, written as 23 − 3n: with n = 1 that gives 20, and n = 2 gives 17. A positive coefficient makes the sequence increase. 20 − 3n starts at 17, one step too low."
     },
     {
-      "key": "seq-tick-decreasing",
+      "key": "seq-is-100-a-term",
       "band": 4,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "Tick every statement that is true.",
-      "options": [
-        {
-          "text": "20, 17, 14, 11, … has nth term 23 − 3n",
-          "correct": true
-        },
-        {
-          "text": "20, 17, 14, 11, … has nth term 3n + 23",
-          "correct": false,
-          "catches": "SEQ-DECREASING"
-        },
-        {
-          "text": "100, 90, 80, … has nth term 110 − 10n",
-          "correct": true
-        },
-        {
-          "text": "100, 90, 80, … has nth term 10n + 100",
-          "correct": false,
-          "catches": "SEQ-DECREASING"
-        },
-        {
-          "text": "A sequence can decrease",
-          "correct": true
-        }
-      ],
-      "explanation": "For a decreasing sequence the coefficient of n is negative. 20, 17, 14 has −3n and needs +23 to start at 20; 100, 90, 80 has −10n and needs +110. Using +3n or +10n makes the sequence grow instead. There is no rule that a sequence must increase; it can go down or change direction."
-    },
-    {
-      "key": "seq-missing-term",
-      "band": 1,
-      "archetype": "A",
+      "archetype": "F",
       "answerType": "SINGLE_CHOICE",
-      "prompt": "A sequence is 4, 9, 14, __, 24, … What is the missing term?",
+      "prompt": "The nth term of a sequence is 3n + 1. Is 100 a term of this sequence?",
       "options": [
         {
-          "text": "19",
+          "text": "Yes, it is the 33rd term",
           "correct": true
         },
         {
-          "text": "18",
+          "text": "Yes, it is the 32nd term",
           "correct": false,
-          "catches": "SEQ-NOT-LINEAR"
+          "catches": "SEQ-OFF-BY-ONE"
         },
         {
-          "text": "20",
+          "text": "Yes, it is the 99th term",
           "correct": false,
-          "catches": "SEQ-NOT-LINEAR"
+          "catches": "SEQ-IS-TERM"
         },
         {
-          "text": "16",
+          "text": "No, it is not a term",
           "correct": false,
-          "catches": "SEQ-NOT-LINEAR"
+          "catches": "SEQ-IS-TERM"
         }
       ],
-      "explanation": "The terms increase by 5 each time, so the missing term is 14 + 5 = 19, and 19 + 5 = 24 checks it. 18, 20 and 16 do not fit the pattern: from 14, they would not leave a gap of 5 to the next term."
+      "explanation": "Solve 3n + 1 = 100: 3n = 99, so n = 33, a whole number, so 100 is the 33rd term. The 32nd term is 97 and the 34th is 103. A number is a term only when solving gives a whole-number n."
     },
     {
-      "key": "seq-fourth-term-formula",
+      "key": "seq-fourth-term-from-formula",
       "band": 3,
       "archetype": "C",
       "answerType": "SINGLE_CHOICE",
@@ -384,22 +227,80 @@
           "catches": "SEQ-OFF-BY-ONE"
         },
         {
-          "text": "3",
+          "text": "22",
           "correct": false,
           "catches": "SEQ-OFF-BY-ONE"
         },
         {
-          "text": "22",
+          "text": "3",
           "correct": false,
           "catches": "SEQ-OFF-BY-ONE"
         }
       ],
-      "explanation": "Substitute n = 4: 5 × 4 − 2 = 18. Writing 20 forgets to subtract the 2. 3 is the first term, from n = 1. 22 comes from adding the 2 instead of subtracting it."
+      "explanation": "Substitute n = 4: 5 × 4 − 2 = 18. Forgetting the − 2 gives 20, adding instead of subtracting gives 22, and multiplying 5 by 4 then subtracting 2 the wrong way gives 3. The formula gives the term directly for any n."
+    },
+    {
+      "key": "seq-tenth-from-fifth",
+      "band": 3,
+      "archetype": "C",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "A stack grows by 4 bricks each layer. The 5th layer has 16 bricks. How many bricks are in the 10th layer?",
+      "options": [
+        {
+          "text": "36",
+          "correct": true
+        },
+        {
+          "text": "32",
+          "correct": false,
+          "catches": "SEQ-TERM-DOUBLE"
+        },
+        {
+          "text": "20",
+          "correct": false,
+          "catches": "SEQ-OFF-BY-ONE"
+        },
+        {
+          "text": "56",
+          "correct": false,
+          "catches": "SEQ-TERM-DOUBLE"
+        }
+      ],
+      "explanation": "Five more layers, each 4 bricks bigger: 16 + 5 × 4 = 36. Doubling the 5th term gives 32, which assumes the 10th term is twice the 5th. That is only true in special sequences, and not here."
+    },
+    {
+      "key": "seq-missing-term",
+      "band": 1,
+      "archetype": "F",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "A sequence is 4, 9, 14, __, 24, … What is the missing term?",
+      "options": [
+        {
+          "text": "19",
+          "correct": true
+        },
+        {
+          "text": "18",
+          "correct": false,
+          "catches": "SEQ-OFF-BY-ONE"
+        },
+        {
+          "text": "20",
+          "correct": false,
+          "catches": "SEQ-OFF-BY-ONE"
+        },
+        {
+          "text": "15",
+          "correct": false,
+          "catches": "SEQ-OFF-BY-ONE"
+        }
+      ],
+      "explanation": "The terms increase by 5 each time, so the missing term is 14 + 5 = 19, and 19 + 5 = 24 matches the next term given. 18 and 20 do not fit the gap from 14 to 24."
     },
     {
       "key": "seq-bridge-tile-rows",
       "band": 2,
-      "archetype": "F",
+      "archetype": "A",
       "answerType": "SINGLE_CHOICE",
       "bridge": true,
       "prompt": "A tile pattern has 3 tiles in row 1, 5 tiles in row 2, 7 tiles in row 3, and so on. How many tiles are in row 10?",
@@ -409,83 +310,140 @@
           "correct": true
         },
         {
-          "text": "20",
-          "correct": false,
-          "catches": "SEQ-TERM-TO-NTH"
-        },
-        {
           "text": "23",
           "correct": false,
           "catches": "SEQ-OFF-BY-ONE"
         },
         {
-          "text": "19",
+          "text": "30",
+          "correct": false,
+          "catches": "SEQ-TERM-TO-NTH"
+        },
+        {
+          "text": "20",
           "correct": false,
           "catches": "SEQ-OFF-BY-ONE"
         }
       ],
-      "explanation": "Rows go up by 2, so the nth term is 2n + 1. For row 10 that is 2 × 10 + 1 = 21. Using only the doubling step, 2n, gives 20 without the extra 1. 23 uses 2n + 3 and 19 uses 2n − 1; each is one step out from the correct formula."
+      "explanation": "The rule is 2n + 1: row 1 has 3, row 2 has 5, row 3 has 7. For row 10, 2 × 10 + 1 = 21. Using the term-to-term rule \"add 2\" as 3 × 10 gives 30, and 2n alone gives 20."
     },
     {
-      "key": "seq-retention-terminology",
+      "key": "seq-tick-constant-difference",
+      "band": 3,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Which sequences increase by the same amount each time?",
+      "options": [
+        {
+          "text": "2, 5, 8, 11",
+          "correct": true
+        },
+        {
+          "text": "10, 20, 30, 40",
+          "correct": true
+        },
+        {
+          "text": "100, 90, 80, 70",
+          "correct": true
+        },
+        {
+          "text": "1, 2, 4, 8",
+          "correct": false,
+          "catches": "SEQ-NOT-LINEAR"
+        },
+        {
+          "text": "5, 10, 20, 40",
+          "correct": false,
+          "catches": "SEQ-GEOMETRIC"
+        }
+      ],
+      "explanation": "A constant difference means adding the same number each time. 2, 5, 8, 11 adds 3; 10, 20, 30, 40 adds 10; and 100, 90, 80, 70 adds −10, which is still constant. 1, 2, 4, 8 and 5, 10, 20, 40 double, so their gaps grow."
+    },
+    {
+      "key": "seq-not-nth-term-3n",
+      "band": 2,
+      "archetype": "E",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Find the sequence that does not have nth term 3n.",
+      "options": [
+        {
+          "text": "6, 9, 12, 15",
+          "correct": 1
+        },
+        {
+          "text": "3, 6, 9, 12",
+          "correct": 0,
+          "catches": "SEQ-OFF-BY-ONE"
+        },
+        {
+          "text": "0, 3, 6, 9",
+          "correct": 0,
+          "catches": "SEQ-OFF-BY-ONE"
+        },
+        {
+          "text": "3, 9, 27, 81",
+          "correct": 0,
+          "catches": "SEQ-GEOMETRIC"
+        }
+      ],
+      "explanation": "3n gives the multiples of 3 starting at n = 1: 3, 6, 9, 12. The sequence 6, 9, 12, 15 is 3n + 3 and 0, 3, 6, 9 is 3n − 3, each shifted one step. 3, 9, 27, 81 multiplies by 3 each time, which grows far faster."
+    },
+    {
+      "key": "seq-retention-terms-of-5n",
       "band": 1,
       "archetype": "B",
       "answerType": "MULTI_SELECT",
       "retention": true,
-      "prompt": "Tick every statement that is true.",
+      "prompt": "Tick the numbers that are terms of 5, 10, 15, 20, …",
       "options": [
         {
-          "text": "In 2, 4, 6, 8 the term-to-term rule is \"add 2\"",
+          "text": "25",
           "correct": true
         },
         {
-          "text": "The 1st term of 2, 4, 6, 8 is 2",
+          "text": "35",
           "correct": true
         },
         {
-          "text": "The 3rd term of 2, 4, 6, 8 is 6",
+          "text": "50",
           "correct": true
         },
         {
-          "text": "The 4th term of 2, 4, 6, 8 is 6",
+          "text": "12",
           "correct": false,
-          "catches": "SEQ-OFF-BY-ONE"
+          "catches": "SEQ-IS-TERM"
         },
         {
-          "text": "In 2, 4, 6, 8 each term is 2 more than the one before",
-          "correct": true
+          "text": "42",
+          "correct": false,
+          "catches": "SEQ-IS-TERM"
         }
       ],
-      "explanation": "Counting starts at the 1st term, which is 2. The terms are 2, 4, 6, 8, so the 3rd is 6 and the 4th is 8. Each term is 2 more than the one before, which is the term-to-term rule. Calling the 4th term 6 counts from zero and lands one place early."
+      "explanation": "The terms are the multiples of 5, so 25, 35 and 50 are all terms and the sequence carries on for ever. 12 and 42 are not multiples of 5, so they never appear."
     },
     {
-      "key": "seq-error-nth-term",
+      "key": "seq-sometimes-tenth-double-fifth",
       "band": 3,
-      "archetype": "D",
+      "archetype": "H",
       "answerType": "SINGLE_CHOICE",
-      "prompt": "Dan says the nth term of 4, 7, 10, 13, … is n + 3. What has he done?",
+      "prompt": "Is the 10th term of a sequence always twice the 5th term?",
       "options": [
         {
-          "text": "Used the term-to-term rule as the nth term",
+          "text": "Always",
+          "correct": false,
+          "catches": "SEQ-TERM-DOUBLE"
+        },
+        {
+          "text": "Sometimes",
           "correct": true
         },
         {
-          "text": "Started the formula at n = 0",
+          "text": "Never",
           "correct": false,
-          "catches": "SEQ-OFF-BY-ONE"
-        },
-        {
-          "text": "Subtracted 1 instead of adding 1",
-          "correct": false,
-          "catches": "SEQ-OFF-BY-ONE"
-        },
-        {
-          "text": "Multiplied the first term by n",
-          "correct": false,
-          "catches": "SEQ-OFF-BY-ONE"
+          "catches": "SEQ-TERM-DOUBLE"
         }
       ],
-      "explanation": "The term-to-term rule is 'add 3', which describes how to get from one term to the next; it is not the nth term. The nth term is 3n + 1, which gives 4, 7, 10, 13 when you substitute n = 1, 2, 3, 4. Starting at n = 0, subtracting instead of adding, or multiplying the first term by n would all give different sequences."
+      "explanation": "Sometimes. In 1, 2, 3, … the 5th term is 5 and the 10th is 10, so it holds. In 4, 7, 10, … the 5th term is 16 and the 10th is 31, so it does not. A property of one sequence is not a property of every sequence."
     }
   ]
 }

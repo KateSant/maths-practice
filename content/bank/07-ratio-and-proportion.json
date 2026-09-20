@@ -4,78 +4,9 @@
   "strand": "Number",
   "dfeUnit": "Multiplicative relationships: ratio & proportionality (Y7/Y8)",
   "description": "Ratio notation and sharing in a ratio, direct and inverse proportion.",
-  "yearGroup": 7,
-  "planned": 16,
+  "yearGroup": 8,
+  "planned": 15,
   "questions": [
-    {
-      "key": "ratio-tick-counters-4-3",
-      "band": 3,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "Red and blue counters are in the ratio 4:3. There are 20 red counters. Tick every statement that is true.",
-      "options": [
-        {
-          "text": "There are 15 blue counters",
-          "correct": true
-        },
-        {
-          "text": "There are 19 blue counters",
-          "correct": false,
-          "catches": "RATIO-ADDITIVE"
-        },
-        {
-          "text": "There are 35 counters altogether",
-          "correct": true
-        },
-        {
-          "text": "3/4 of the counters are blue",
-          "correct": false,
-          "catches": "RATIO-PART-WHOLE"
-        },
-        {
-          "text": "For every 4 red counters there are 3 blue counters",
-          "correct": true
-        }
-      ],
-      "explanation": "20 red means the ratio was scaled up 5 times, so the blue count is 3 × 5 = 15 and the total is 20 + 15 = 35. Taking 1 off 20 to get 19, or adding 4 and 3 to get 19, treats the ratio as a difference. The ratio compares red to blue, so the whole is 7 parts, and blue is 3/7 of the counters, not 3/4."
-    },
-    {
-      "key": "ratio-tick-simplify",
-      "band": 1,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "Tick every statement that is true.",
-      "options": [
-        {
-          "text": "4:6 simplifies to 2:3",
-          "correct": true
-        },
-        {
-          "text": "4:6 simplifies to 3:5",
-          "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
-        },
-        {
-          "text": "10:15 simplifies to 2:3",
-          "correct": true
-        },
-        {
-          "text": "10:15 simplifies to 9:14",
-          "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
-        },
-        {
-          "text": "6:9 simplifies to 2:3",
-          "correct": true
-        },
-        {
-          "text": "6:9 simplifies to 5:8",
-          "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
-        }
-      ],
-      "explanation": "A ratio is simplified by dividing both parts by the same number: 4:6 and 6:9 divide by 3, and 10:15 divides by 5, all giving 2:3. Taking 1 off each part, as in 4:6 to 3:5, changes the relationship instead of keeping it the same."
-    },
     {
       "key": "ratio-red-fraction",
       "band": 2,
@@ -103,39 +34,7 @@
           "catches": "RATIO-PART-WHOLE"
         }
       ],
-      "explanation": "The ratio 2:5 makes 7 parts altogether, 2 of them red, so red is 2/7 of the counters. 2/5 compares red with blue only, which is a part-to-part comparison. 5/7 is the fraction that is blue, and 5/2 puts the parts the wrong way round and is greater than one."
-    },
-    {
-      "key": "ratio-tick-class-3-4",
-      "band": 3,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "In a class the ratio of boys to girls is 3:4. Tick every statement that is true.",
-      "options": [
-        {
-          "text": "3/7 of the class are boys",
-          "correct": true
-        },
-        {
-          "text": "3/4 of the class are boys",
-          "correct": false,
-          "catches": "RATIO-PART-WHOLE"
-        },
-        {
-          "text": "The class is divided into 7 equal parts by the ratio",
-          "correct": true
-        },
-        {
-          "text": "4/7 of the class are girls",
-          "correct": true
-        },
-        {
-          "text": "The number of girls is 3/4 of the number of boys",
-          "correct": false,
-          "catches": "RATIO-PART-WHOLE"
-        }
-      ],
-      "explanation": "The ratio 3:4 gives 7 parts in total, so boys are 3/7 of the class and girls are 4/7. Writing 3/4 compares one group with the other rather than with the whole class. Since there are more girls than boys, the number of girls is 4/3 of the number of boys, not 3/4."
+      "explanation": "The ratio 2:5 compares red with blue, but the question asks about the whole box. There are 2 + 5 = 7 parts, of which 2 are red, so the fraction is 2/7. Writing 2/5 reads the ratio itself as a fraction of the whole, and 5/7 finds the blue fraction."
     },
     {
       "key": "ratio-recipe-rice",
@@ -149,65 +48,29 @@
           "correct": true
         },
         {
+          "text": "120 g",
+          "correct": false,
+          "catches": "RATIO-SCALE-ONE"
+        },
+        {
           "text": "600 g",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-ADDITIVE"
         },
         {
-          "text": "375 g",
-          "correct": false,
-          "catches": "RATIO-SCALE-ONE"
-        },
-        {
-          "text": "900 g",
+          "text": "306 g",
           "correct": false,
           "catches": "RATIO-ADDITIVE"
         }
       ],
-      "explanation": "Find the amount for one person first: 300 ÷ 4 = 75 g, then multiply by 10 to get 750 g. 600 g is only enough for 8 people. 375 g is 5 people's worth. 900 g is three times 300, which serves 12 people."
-    },
-    {
-      "key": "ratio-tick-proportion",
-      "band": 2,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "Tick every statement that is true.",
-      "options": [
-        {
-          "text": "If 3 pens cost £1.50, then 6 pens cost £3.00",
-          "correct": true
-        },
-        {
-          "text": "If 3 pens cost £1.50, then 6 pens cost £4.50",
-          "correct": false,
-          "catches": "RATIO-ADDITIVE"
-        },
-        {
-          "text": "If 5 kg of flour costs £4, then 10 kg costs £8",
-          "correct": true
-        },
-        {
-          "text": "If 5 kg of flour costs £4, then 15 kg costs £12",
-          "correct": true
-        },
-        {
-          "text": "If 2 workers build a wall in 6 hours, 4 workers build it in 12 hours",
-          "correct": false,
-          "catches": "RATIO-INVERSE"
-        },
-        {
-          "text": "A car going at a steady speed covers 120 miles in 3 hours, having covered 40 miles in 1 hour",
-          "correct": true
-        }
-      ],
-      "explanation": "When quantities are in direct proportion, doubling one doubles the other: twice the pens cost twice as much, and three times the flour costs three times as much. Adding £1.50 and £3.00 is not the point — £4.50 would price 9 pens. For workers and time the relationship is the other way round: more workers means less time, so 4 workers take 3 hours, not 12."
+      "explanation": "Scale by the same factor: 300 g for 4 people is 75 g each, and 10 × 75 = 750 g. Dividing instead of multiplying gives 120 g. 600 g adds 300 for the extra 6 people as if each extra person needed a whole recipe, and 306 g adds 6 g for 6 people."
     },
     {
       "key": "ratio-inverse-workers",
       "band": 2,
       "archetype": "C",
       "answerType": "SINGLE_CHOICE",
-      "prompt": "Six workers take 4 days to build a wall. How long would twelve workers take, working at the same rate?",
+      "prompt": "Six workers take 4 days to build a wall. How long would 12 workers take, working at the same rate?",
       "options": [
         {
           "text": "2 days",
@@ -219,61 +82,24 @@
           "catches": "RATIO-INVERSE"
         },
         {
-          "text": "4 days",
+          "text": "3 days",
           "correct": false,
           "catches": "RATIO-INVERSE"
         },
         {
-          "text": "72 days",
-          "correct": false,
-          "catches": "RATIO-INVERSE"
-        }
-      ],
-      "explanation": "Twice as many workers do the job in half the time, so 12 workers take 2 days. Doubling the time to 8 days treats this as direct proportion. Leaving it at 4 days ignores the extra workers, and 72 days multiplies the workers by the days instead of dividing."
-    },
-    {
-      "key": "ratio-tick-inverse",
-      "band": 4,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "Tick every statement that is true.",
-      "options": [
-        {
-          "text": "If 4 people take 9 hours, then 2 people take 18 hours",
-          "correct": true
-        },
-        {
-          "text": "If 4 people take 9 hours, then 2 people take 4.5 hours",
-          "correct": false,
-          "catches": "RATIO-INVERSE"
-        },
-        {
-          "text": "If 3 taps fill a tank in 20 minutes, then 6 taps fill it in 10 minutes",
-          "correct": true
-        },
-        {
-          "text": "If 3 taps fill a tank in 20 minutes, then 6 taps fill it in 40 minutes",
-          "correct": false,
-          "catches": "RATIO-INVERSE"
-        },
-        {
-          "text": "Doubling the number of machines halves the time taken",
-          "correct": true
-        },
-        {
-          "text": "More workers always means the job takes longer",
+          "text": "24 days",
           "correct": false,
           "catches": "RATIO-INVERSE"
         }
       ],
-      "explanation": "For a fixed job, workers and time are inversely proportional: halving the workers doubles the time (2 people take 18 hours), and doubling the machines halves the time (6 taps take 10 minutes). Treating these as direct proportion gives 4.5 hours and 40 minutes. More workers means less time, provided everyone works at the same rate."
+      "explanation": "Twice as many workers take half the time, so 12 workers take 2 days. Treating it as direct proportion gives 8 days: more workers means less time, not more. The total work is the same, so workers × days stays constant."
     },
     {
       "key": "ratio-share-sweets",
       "band": 1,
       "archetype": "A",
       "answerType": "SINGLE_CHOICE",
-      "prompt": "Sweets are shared between two children in the ratio 3:2. There are 30 sweets. How many does the child with the larger share get?",
+      "prompt": "Sweets are shared between two children in the ratio 3:2. There are 30 sweets. How many does the first child get?",
       "options": [
         {
           "text": "18",
@@ -285,17 +111,17 @@
           "catches": "RATIO-TOTAL-PARTS"
         },
         {
-          "text": "20",
+          "text": "15",
           "correct": false,
           "catches": "RATIO-TOTAL-PARTS"
         },
         {
-          "text": "15",
+          "text": "20",
           "correct": false,
-          "catches": "RATIO-TOTAL-PARTS"
+          "catches": "RATIO-ADDITIVE"
         }
       ],
-      "explanation": "The ratio 3:2 has 5 parts, so each part is 30 ÷ 5 = 6 sweets. The larger share is 3 parts, which is 18. 12 is the smaller share, so that swaps the children over. 20 comes from dividing 30 by 3 rather than by 5, and 15 splits the sweets evenly."
+      "explanation": "The ratio 3:2 gives 3 + 2 = 5 parts, and 30 ÷ 5 = 6 sweets in each part. The first child gets 3 × 6 = 18. 12 is the second child's share, 15 is half, and 20 treats the ratio as a difference."
     },
     {
       "key": "ratio-simplify-units",
@@ -314,17 +140,17 @@
           "catches": "RATIO-SIMPLIFY-ADD"
         },
         {
-          "text": "1:2",
+          "text": "1:20",
           "correct": false,
           "catches": "RATIO-SIMPLIFY-ADD"
         },
         {
-          "text": "2:1",
+          "text": "40:2",
           "correct": false,
           "catches": "RATIO-SIMPLIFY-ADD"
         }
       ],
-      "explanation": "Both parts must be in the same unit. 2 hours is 120 minutes, and 40:120 divides by 40 to give 1:3. Dividing 40 by 2 without converting gives 20:1, which compares different units. Reading 40 minutes as 0.4 of the second part, or as one hour, gives 1:2 or 2:1."
+      "explanation": "Write both in the same unit first: 40 minutes : 120 minutes. Divide both by 40 to get 1:3. Leaving the units different and dividing 40 by 2 gives 20:1, and 40:2 is not simplified at all."
     },
     {
       "key": "ratio-whole-to-part",
@@ -343,17 +169,17 @@
           "catches": "RATIO-PART-WHOLE"
         },
         {
-          "text": "5:3",
+          "text": "2:3",
           "correct": false,
           "catches": "RATIO-PART-WHOLE"
         },
         {
-          "text": "2:3",
+          "text": "5:3",
           "correct": false,
           "catches": "RATIO-PART-WHOLE"
         }
       ],
-      "explanation": "If 3/5 are red then 2/5 are blue, so red to blue is 3:2. The ratio 3:5 is red to the whole bag, not red to blue. 5:3 puts the whole before the blue part, and 2:3 reverses the order."
+      "explanation": "The fraction 3/5 is red out of the whole, so 2/5 is blue. Red to blue is therefore 3:2. 3:5 compares red with the whole rather than with blue, 2:3 reverses the order, and 5:3 reverses both."
     },
     {
       "key": "ratio-three-part-share",
@@ -377,82 +203,45 @@
           "catches": "RATIO-TOTAL-PARTS"
         },
         {
-          "text": "£100",
+          "text": "£24",
           "correct": false,
           "catches": "RATIO-TOTAL-PARTS"
         }
       ],
-      "explanation": "The ratio has 2 + 3 + 5 = 10 parts, so each part is £240 ÷ 10 = £24. The largest share is 5 parts, which is £120. £48 and £72 are the two smaller shares. £100 would come from dividing by 12 instead of 10, which is not the number of parts."
+      "explanation": "The parts are 2 + 3 + 5 = 10, so each part is £240 ÷ 10 = £24. The largest share is 5 parts: 5 × £24 = £120. £72 is 3 parts, £48 is 2 parts, and £24 is a single part."
     },
     {
-      "key": "ratio-tick-three-part",
-      "band": 4,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "prompt": "Tick every statement that is true.",
+      "key": "ratio-children-from-adults",
+      "band": 2,
+      "archetype": "F",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "The ratio of adults to children at a show is 5:3. There are 24 children. How many adults are there?",
       "options": [
         {
-          "text": "The ratio 1:2:3 has 6 parts",
+          "text": "40",
           "correct": true
         },
         {
-          "text": "In the ratio 1:2:3 the largest share is 3/5 of the total",
-          "correct": false,
-          "catches": "RATIO-PART-WHOLE"
-        },
-        {
-          "text": "£60 shared in the ratio 1:2:3 gives £10, £20 and £30",
-          "correct": true
-        },
-        {
-          "text": "£60 shared in the ratio 1:2:3 gives £15, £30 and £45",
-          "correct": false,
-          "catches": "RATIO-TOTAL-PARTS"
-        },
-        {
-          "text": "The ratio 1:2:3 is the same as 2:4:6",
-          "correct": true
-        },
-        {
-          "text": "The ratio 1:2:3 is the same as 1:2:4",
+          "text": "14.4",
           "correct": false,
           "catches": "RATIO-SCALE-ONE"
-        }
-      ],
-      "explanation": "The parts of 1:2:3 add to 6, so each part of £60 is £10 and the shares are £10, £20 and £30. The largest share is 3 out of 6 parts, which is 1/2 of the total, not 3/5. £15, £30 and £45 would need 8 parts. Multiplying every part by the same number keeps a ratio the same, so 1:2:3 = 2:4:6; changing only the last part does not."
-    },
-    {
-      "key": "ratio-adults-children",
-      "band": 2,
-      "archetype": "A",
-      "answerType": "SINGLE_CHOICE",
-      "prompt": "At a show the ratio of adults to children is 5:3. There are 40 adults. How many children are there?",
-      "options": [
+        },
         {
-          "text": "24",
-          "correct": true
+          "text": "45",
+          "correct": false,
+          "catches": "RATIO-SCALE-ONE"
         },
         {
           "text": "8",
           "correct": false,
           "catches": "RATIO-SCALE-ONE"
-        },
-        {
-          "text": "15",
-          "correct": false,
-          "catches": "RATIO-SCALE-ONE"
-        },
-        {
-          "text": "64",
-          "correct": false,
-          "catches": "RATIO-ADDITIVE"
         }
       ],
-      "explanation": "40 adults is 5 parts, so each part is 8 people, and children are 3 parts: 3 × 8 = 24. Stopping at 8 gives only one part. 15 is 5 × 3, which multiplies the two parts of the ratio together. 64 adds the adults to the children's share without working out the parts."
+      "explanation": "3 parts are 24 children, so each part is 24 ÷ 3 = 8. Adults are 5 parts: 5 × 8 = 40. Scaling by 5/3 or dividing by 5 gives the wrong part; 8 is the value of one part, not the number of adults."
     },
     {
       "key": "ratio-bridge-paint",
-      "band": 3,
+      "band": 2,
       "archetype": "A",
       "answerType": "SINGLE_CHOICE",
       "bridge": true,
@@ -463,7 +252,7 @@
           "correct": true
         },
         {
-          "text": "1200 ml",
+          "text": "1,500 ml",
           "correct": false,
           "catches": "RATIO-SCALE-ONE"
         },
@@ -473,49 +262,185 @@
           "catches": "RATIO-SCALE-ONE"
         },
         {
-          "text": "840 ml",
+          "text": "1,200 ml",
           "correct": false,
           "catches": "RATIO-ADDITIVE"
         }
       ],
-      "explanation": "600 ml is 5 parts, so each part is 120 ml, and red is 2 parts: 2 × 120 = 240 ml. 1200 ml doubles the white instead of finding the red, and 300 ml halves the white rather than using the ratio. 840 ml adds the two figures instead of scaling them."
+      "explanation": "5 parts of white are 600 ml, so one part is 600 ÷ 5 = 120 ml. Red is 2 parts: 2 × 120 = 240 ml. Multiplying by 5 or halving gives the wrong scaling, and 1,200 ml doubles the white instead of finding the red."
     },
     {
-      "key": "ratio-retention-fractions",
-      "band": 1,
-      "archetype": "B",
-      "answerType": "MULTI_SELECT",
-      "retention": true,
-      "prompt": "Tick every statement that is true.",
+      "key": "ratio-error-unequal-sharing",
+      "band": 4,
+      "archetype": "D",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Alice and Brenda share money in the ratio 4:3. Alice has £20. Bella halves £20 to get £10, halves again to get £5, and adds to get £15 for Brenda. What has gone wrong?",
       "options": [
         {
-          "text": "1/2 of 40 is 20",
+          "text": "She used adding and halving instead of scaling by 3/4",
           "correct": true
         },
         {
-          "text": "1/4 of 40 is 10",
-          "correct": true
-        },
-        {
-          "text": "3/4 of 40 is 30",
-          "correct": true
-        },
-        {
-          "text": "2/3 of 9 is 3",
+          "text": "She swapped the two parts of the ratio",
           "correct": false,
-          "catches": "FRAC-OF-AMOUNT"
+          "catches": "RATIO-SCALE-ONE"
         },
         {
-          "text": "1/5 of 45 is 9",
-          "correct": true
-        },
-        {
-          "text": "3/5 of 20 is 15",
+          "text": "She used the wrong total number of parts",
           "correct": false,
-          "catches": "FRAC-OF-AMOUNT"
+          "catches": "RATIO-TOTAL-PARTS"
+        },
+        {
+          "text": "She treated the ratio as inverse proportion",
+          "correct": false,
+          "catches": "RATIO-INVERSE"
         }
       ],
-      "explanation": "Divide by the denominator and multiply by the numerator: 1/2 of 40 is 20, 1/4 of 40 is 10, 3/4 of 40 is 30 and 1/5 of 45 is 9. 2/3 of 9 is 6, not 3 — 3 is only one third. 3/5 of 20 is 12, not 15: 20 ÷ 5 = 4 and 4 × 3 = 12."
+      "explanation": "4 parts are £20, so one part is £5, and Brenda's 3 parts are £15 — the answer happens to be right, but the method is not: halving and adding only works because the numbers are convenient. Scaling by 3/4 (£20 × 3/4 = £15) is the multiplicative method that works for any numbers."
+    },
+    {
+      "key": "ratio-tick-equivalent-2-3",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Which ratios are equivalent to 2:3?",
+      "options": [
+        {
+          "text": "4:6",
+          "correct": true
+        },
+        {
+          "text": "6:9",
+          "correct": true
+        },
+        {
+          "text": "10:15",
+          "correct": true
+        },
+        {
+          "text": "3:4",
+          "correct": false,
+          "catches": "RATIO-SIMPLIFY-ADD"
+        },
+        {
+          "text": "4:5",
+          "correct": false,
+          "catches": "RATIO-SIMPLIFY-ADD"
+        }
+      ],
+      "explanation": "Multiplying both parts by the same number keeps a ratio equivalent: 2:3 = 4:6 = 6:9 = 10:15. 3:4 and 4:5 come from adding 1 to each part, which changes the ratio."
+    },
+    {
+      "key": "ratio-which-calculation-children",
+      "band": 3,
+      "archetype": "G",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "The ratio of adults to children is 5:3. There are 40 adults. Which calculation gives the number of children?",
+      "options": [
+        {
+          "text": "40 ÷ 5 × 3",
+          "correct": true
+        },
+        {
+          "text": "40 ÷ 3 × 5",
+          "correct": false,
+          "catches": "RATIO-SCALE-ONE"
+        },
+        {
+          "text": "40 × 5/3",
+          "correct": false,
+          "catches": "RATIO-SCALE-ONE"
+        },
+        {
+          "text": "40 ÷ 8 × 3",
+          "correct": false,
+          "catches": "RATIO-TOTAL-PARTS"
+        }
+      ],
+      "explanation": "5 parts are 40 adults, so one part is 40 ÷ 5 = 8, and children are 3 parts: 8 × 3 = 24. Dividing by 3 first finds the wrong part, multiplying by 5/3 scales the wrong way, and dividing by 8 uses the total number of parts instead of the adults' parts."
+    },
+    {
+      "key": "ratio-retention-not-equivalent-1-2",
+      "band": 1,
+      "archetype": "E",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Spot the ratio that is not equivalent to 1:2.",
+      "options": [
+        {
+          "text": "2:3",
+          "correct": 1
+        },
+        {
+          "text": "2:4",
+          "correct": 0,
+          "catches": "RATIO-SIMPLIFY-ADD"
+        },
+        {
+          "text": "3:6",
+          "correct": 0,
+          "catches": "RATIO-SIMPLIFY-ADD"
+        },
+        {
+          "text": "5:10",
+          "correct": 0,
+          "catches": "RATIO-SIMPLIFY-ADD"
+        }
+      ],
+      "explanation": "1:2 means the second amount is double the first, and 2:4, 3:6 and 5:10 all keep that relationship. In 2:3 the second number is not twice the first.",
+      "retention": true
+    },
+    {
+      "key": "ratio-sometimes-both-double",
+      "band": 3,
+      "archetype": "H",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "If one quantity doubles, does the other quantity always double?",
+      "options": [
+        {
+          "text": "Always",
+          "correct": false,
+          "catches": "RATIO-INVERSE"
+        },
+        {
+          "text": "Sometimes",
+          "correct": true
+        },
+        {
+          "text": "Never",
+          "correct": false,
+          "catches": "RATIO-INVERSE"
+        }
+      ],
+      "explanation": "Sometimes. In direct proportion it does: twice the rice serves twice the people. But in inverse proportion it halves: twice the workers take half the time. You have to know whether the relationship is direct or inverse."
+    },
+    {
+      "key": "ratio-not-equivalent",
+      "band": 3,
+      "archetype": "E",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Which ratio is not equivalent to 3:4?",
+      "options": [
+        {
+          "text": "4:5",
+          "correct": true
+        },
+        {
+          "text": "6:8",
+          "correct": false,
+          "catches": "RATIO-SIMPLIFY-ADD"
+        },
+        {
+          "text": "9:12",
+          "correct": false,
+          "catches": "RATIO-SIMPLIFY-ADD"
+        },
+        {
+          "text": "15:20",
+          "correct": false,
+          "catches": "RATIO-SIMPLIFY-ADD"
+        }
+      ],
+      "explanation": "6:8, 9:12 and 15:20 are 3:4 multiplied by 2, 3 and 5. 4:5 comes from adding 1 to each part, which changes the ratio: in 3:4 the second part is 4/3 of the first, and 5/4 is not 4/3."
     }
   ]
 }
