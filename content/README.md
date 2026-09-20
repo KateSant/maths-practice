@@ -1,7 +1,7 @@
 # The question bank
 
 This directory holds the written bank: 200 diagnostic questions for Year 7/8 Number & Algebra,
-as specified in `specs/question-bank-plan.md`. It is **content**, not a loader. How it reaches a
+as specified in `specs/question-bank-probing-misconceptions.md`. It is **content**, not a loader. How it reaches a
 database — the admin API, a CSV import, or the seeder — is a separate decision and is deliberately
 not encoded here.
 
@@ -49,7 +49,7 @@ One file per topic. The file names a topic and lists its questions in a fixed or
 |---|---|
 | `key` | Stable identity, unique across the whole bank, ≤ 60 characters. Never a row id. |
 | `band` | Difficulty 1–4, the range the API enforces. |
-| `archetype` | A–H from `specs/question-bank-plan.md` §3. |
+| `archetype` | A–H from `specs/question-bank-probing-misconceptions.md` §3. |
 | `answerType` | `SINGLE_CHOICE` or `MULTI_SELECT` (tick-all). |
 | `prompt` | What the student reads. Plain text maths: `/` for fractions, `× − ÷ ² ³ √`. |
 | `options[].correct` | The key. Option labels A–F are derived from position, never stored. |

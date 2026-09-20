@@ -41,13 +41,112 @@ What staying in Flyway gives, for free:
 
 ## Adding questions
 
-One migration per batch: `V10` adds three questions, `V11` adds five. Each applies once, on every
+One migration per batch: three questions in one, five more in the next. Each applies once, on every
 database, in order. Several rounds of seeding are just several migrations, and re-running is not a
 thing that happens — which is why nothing needs to detect duplicates.
 
 The consequence to accept: **you cannot keep appending to one seed file and re-run it.** "Seed
 again" means "write another migration". If a single growing file that you run repeatedly is what you
 want, Flyway is the wrong tool.
+
+## Writing the loader
+
+Getting `content/bank/*.json` into a database. Written once, after the second read.
+
+### After the second read, not before
+
+An applied migration is frozen and content is never updated, so a loader that lands before the read
+finishes cannot absorb its corrections — they would have to be redone in the admin screens, item by
+item. The read is in progress as this is written and has already dropped a distractor that duplicated
+another's misconception and rewritten explanations across all twelve topics. That is precisely the
+kind of change the loader must not have to carry.
+
+### Generated, not hand-written
+
+200 questions is roughly 1,000 statements. Nobody writes that by hand, and `render.py` deliberately
+emits no SQL. So a generator sits beside it, reading the same JSON:
+
+```
+python3 content/to_sql.py > backend/src/main/resources/db/migration/V9__question_bank.sql
+```
+
+Commit the generator and the SQL it produced. The SQL is the record of what was loaded and is
+reviewed as such; the generator is what makes it reproducible when a topic is added later.
+Generating during the build is not an option — content is not part of the build.
+
+**One migration, not twelve.** Topic order does not matter, and twelve numbered files for one
+content drop is noise.
+
+### The version number
+
+`V8` is the highest applied anywhere, so this is `V9` — **unless** a database has the abandoned
+`seed_key` work applied. That was never pushed, but it recorded itself as `V9` on local machines, and
+an edited or deleted migration breaks that database at startup. Reset such a database rather than
+renumbering around it.
+
+### Topics first, and one of them already exists
+
+Questions reference a topic, so the twelve topics must exist first. Most are new. **`fractions` is
+not:** the prototype already has a topic with that slug, named "Fractions, Decimals & Percentages",
+and the plan wants that slug for "Fractions".
+
+Reuse the existing row and rename it. Its seven prototype questions are retired in the same drop, so
+the row is empty by the time the new questions arrive, and `fractions-decimals-percentages` is
+created fresh. That settles the collision without inventing a slug.
+
+Do **not** delete the topics the new bank does not use — `number`, `algebra`, `geometry`, `data`.
+`geometry` and `data` are exactly where the held geometry, measures, statistics and probability sets
+will land. Deleting a topic cascades to its questions and takes the answer history with it.
+
+### What each row needs
+
+| column | comes from |
+|---|---|
+| `topic_id` | the topic file's `slug`, looked up |
+| `prompt`, `explanation` | the question |
+| `difficulty` | the question's `band` |
+| `answer_type` | the question's `answerType` |
+| `year_group` | the **topic** file's `yearGroup` — see below |
+| `status` | `PUBLISHED`; the second read is the review, and the default is `DRAFT` |
+| `origin` | `IMPORTED` — see below |
+
+**`year_group` is the trap.** It is `NOT NULL default 7`, so forgetting it is not an error — it files
+the question as Year 7. **62 of the 200 are Year 8**, and they would become invisible to anyone
+practising at Year 8, which is what `V8`'s own comment warns about. The value lives on the topic, not
+the question; no question carries its own.
+
+**`origin` decides whether the new bank survives the sweep.** The prototype is retired with
+`update questions set status = 'RETIRED' where origin = 'SEED'`. Were the new bank also `SEED`, that
+statement would retire it too. `IMPORTED` keeps the two distinguishable, and then the sweep can run
+in either order. That value is currently unused; this is what it was for.
+
+**Do not add a `seed_key`.** It was designed, built, and dropped: Flyway's history already answers
+"has this been applied", and content is never updated, so nothing needs a second identity. The keys
+in the JSON files are for the files.
+
+**Do not store the misconception codes.** `cats`, `archetype` and the register are authoring
+metadata; the question-bank spec is explicit that the shorthand is not stored anywhere.
+
+### Order within the migration
+
+Insert a question, then its options, and let the options find the question by the temp-table idiom in
+*Two traps* below — never `last_insert_rowid()` and never a prompt lookup. The question has to exist
+first, because `answer_options_single_choice_insert` reads the parent's `answer_type`.
+
+### What to check afterwards
+
+The loader is silent when it works and silent when it half-works, so assert it:
+
+- 200 questions with `origin = 'IMPORTED'`
+- the twelve per-topic counts: 14, 18, 18, 16, 20, 18, 16, 18, 16, 18, 16, 12
+- 138 in `year_group` 7 and 62 in 8
+- 90 `MULTI_SELECT` and 110 `SINGLE_CHOICE`
+- every question has 2–6 options; every single choice exactly one correct; every tick-all at least one
+- the prototype bank is `RETIRED`, and its answers still resolve
+
+A migration test in the style of `SchemaMigrationTest` is the right home — it applies the real
+migrations and asserts the bank, so a missing topic or a mis-filed year group fails a test rather
+than reaching a teacher as an empty dropdown.
 
 ## Changing or retiring a seeded question
 
@@ -65,7 +164,8 @@ Everything the seeder ever wrote goes — **including anything a teacher has sin
 the intent: the prototype bank is being replaced, not absorbed. Her wording is not destroyed, only
 unpublished. The row survives, and it can be republished.
 
-This supersedes the assumption in `specs/question-bank-plan.md` §6 that the existing seed questions
+This supersedes the assumption in `specs/question-bank-probing-misconceptions.md` §6 that the existing
+seed questions
 are kept and folded into the new topics. **They are not kept.** That plan was counting on 32 free
 band-1/2 items, so its topic allocations may need raising to cover band-1/2 fluency itself.
 
@@ -135,4 +235,4 @@ rule says is never edited.
   unattended, and has to decide whether a row is still ours. Insert-only never updates, so there is
   nothing to decide.
 - **A content file as the source of truth** — that is bulk content management. The real bank arrives
-  through the admin API and the CSV import (`specs/question-bank-plan.md`), not through here.
+  through the admin API and the CSV import (`specs/question-bank-probing-misconceptions.md`), not through here.

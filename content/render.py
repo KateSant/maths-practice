@@ -6,7 +6,7 @@
     python3 content/render.py --topic fractions
 
 Checks are about the shape of an item and the register, not about the mathematics; the subject
-check is the second read described in specs/question-bank-plan.md.
+check is the second read described in specs/question-bank-probing-misconceptions.md.
 """
 
 from __future__ import annotations

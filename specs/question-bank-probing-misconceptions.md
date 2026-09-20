@@ -3,7 +3,8 @@
 **Goal:** 200 questions for Year 7/8 (ages ~11–13) across Number and Algebra, where the wrong options
 are diagnostic — a wrong answer points at *which* misconception a student holds.
 **Later:** geometry, measures, statistics and probability once image support exists; then Year 9, then GCSE.
-*(How items are seeded and loaded is decided in [`seeding.md`](seeding.md); this document is about
+*(How items are seeded and loaded is decided in
+[`how-to-seed-the-question-bank.md`](how-to-seed-the-question-bank.md); this document is about
 the content. `content/README.md` describes the written bank.)*
 
 ---
@@ -119,7 +120,7 @@ student error, it is decoration and is rewritten.
 
 ## 4. Misconception register
 
-The errors items are written against. The register is now **112 codes**, one per distinct error,
+The errors items are written against. The register is now **117 codes**, one per distinct error,
 and it is machine-readable at `content/misconceptions.json`: every wrong option in the bank carries
 a `catches` code from it, and `content/render.py` fails if any other code appears. The table below
 is the register as it stood when this spec was written — it is the seed of that file, not a second
@@ -294,7 +295,7 @@ y-axis at `(0, −2)`, not the origin. At `x = 4`, `y = 3 × 4 − 2 = 10`.
   check; fractions includes an equivalence check).
 - **The prototype's seed questions are not kept.** When this bank lands they are retired rather than
   folded into these topics — one statement, `update questions set status = 'RETIRED' where origin
-  = 'SEED'` (see `specs/seeding.md`). There are 32 live ones, not 33: the duplicate primes question
+  = 'SEED'` (see `specs/how-to-seed-the-question-bank.md`). There are 32 live ones, not 33: the duplicate primes question
   was already retired. Nothing here may rely on them, so each topic's allocation has to cover its own
   band-1/2 fluency.
 
@@ -313,16 +314,23 @@ y-axis at `(0, −2)`, not the origin. At `x = 4`, `y = 3 × 4 − 2 = 10`.
 topic; `content/README.md` describes the item shape and `content/render.py` validates and renders
 it. `python3 content/render.py --check` reports **200 questions across 12 topics**, bands
 38/67/59/36, and 90 tick-all items. Each topic carries one bridge item and one retention item, and
-each misconception family is met two or three times in different forms. What remains is the second
-read (subject accuracy and whether each distractor really is the most likely reason a student picks
-it), not more writing.
+each misconception family is met two or three times in different forms.
+
+The **second read is done**. Every item was re-read for subject accuracy, for whether it has
+exactly one defensible answer, and for whether the tagged misconception really is the most likely
+reason a student would pick that option. It found and fixed: one claim-sort option that was in fact
+true (`ratio-tick-class-3-4` E); two explanations whose arithmetic did not support the answer
+(`prop-prime-factor-90`, `grph-gradient-from-two-points`); several distractors whose tagged
+misconception did not explain why it would be chosen; and a handful of options that were merely
+wrong numbers rather than recognisable errors. The register gained five codes and broadened the
+descriptions of eight.
 
 | Phase | Work | Output |
 |---|---|---|
 | **0. Agree** | This spec: 12 topics, register, held set. | Sign-off. |
 | **1. Template** | `properties-of-number` end-to-end (18 items). | Written. |
 | **2. Roll out** | Remaining 11 topics, Number then Algebra. | Written; 200 questions. |
-| **3. Second read** | Subject accuracy and distractor plausibility, item by item. | Reviewed bank. |
+| **3. Second read** | Subject accuracy and distractor plausibility, item by item. | Done. |
 | **4. Next set** | Geometry/stats/probability, then Year 9, then GCSE. | Later. |
 
 ---
@@ -333,7 +341,8 @@ it), not more writing.
 2. Confirm geometry, measures, statistics and probability wait for image support?
 3. Tick-all stays all-or-nothing, with diagnosis carried by the content — confirmed and now in
 the bank.
-4. Who does the second read?
+4. The second read is done (see §6). Worth a third pass by someone who did not write the items, but
+it is no longer blocking.
 5. **Do the band-4 quadratic items stay?** `expanding-and-factorising` keeps three items on
 expanding double brackets and factorising monic quadratics (band 4), because §4 names
 `FAC-SUM-PRODUCT` as a misconception. The prototype bank's quadratics question is no longer a
