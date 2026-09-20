@@ -58,11 +58,20 @@ frontend one shows a "not configured for this build" message instead of the butt
 API's makes every sign-in fail with 503 *after* Google has already issued a token, which is a
 confusing place to discover it. The client ID is public, not a secret.
 
-**Ports matter and are not free choices.** `frontend/vite.config.ts` sets `5174` with `strictPort`,
-and `http://localhost:5174` is an authorised JavaScript origin on the Google OAuth client. Google
-refuses sign-in from any other origin, and the button renders regardless — the only symptom is a
-console error after a click. If you need a different port, pass `--port` on the command line rather
-than editing the file, and expect to register that origin too.
+**Stay on 5174. Do not change the port.** Changing it has broken sign-in more than once, and it
+keeps happening, so treat this as a rule rather than a preference.
+
+`http://localhost:5174` is the only origin registered as an authorised JavaScript origin on the
+Google OAuth client, so Google refuses sign-in from any other port. The button still renders and
+the only symptom is a console error after the click — which reads as a broken app rather than as a
+wrong port, and is why this is worth repeating. `frontend/vite.config.ts` sets `5174` with
+`strictPort`, and it should stay that way.
+
+If you genuinely need a second port — a second worktree running at the same time, say — pass
+`--port` on the command line rather than editing the file, and register that origin on the OAuth
+client as well (`docs/google-signin.md`). Without that registration Google sign-in cannot work on
+that port, and guest sign-in is the only way in. Nothing else depends on the port: the `/api`
+proxy, the tests and the build all work on any of them.
 
 The API proxies `/api` through Vite, so the browser sees one origin in development exactly as it
 does behind Caddy in production, and there is no CORS in either. `VITE_API_URL` overrides the proxy
@@ -395,8 +404,8 @@ Other things that have actually gone wrong, so worth checking first:
 |---|---|
 | "Google sign-in is not configured for this build" | `VITE_GOOGLE_CLIENT_ID` missing when the dev server started. Vite inlines it at startup; the API cannot supply it. |
 | "Google sign-in is not configured on this server" (503) | `REALMATHS_GOOGLE_CLIENT_ID` missing from the API. |
-| Sign-in silently does nothing on click | The page's origin is not registered on the OAuth client, or the dev server is on a different port than the config expects. |
-| Two dev servers fighting over 5174 | `strictPort` means the second one fails rather than moving. Use `--port`. |
+| Sign-in silently does nothing on click | The page's origin is not registered on the OAuth client, or the dev server is on a different port than the config expects. See the port rule under "Running it locally". |
+| Two dev servers fighting over 5174 | `strictPort` means the second one fails loudly rather than moving. A second worktree can use `--port 5173`, but Google sign-in will not work there until that origin is registered on the OAuth client. **Do not fix this by editing the port in `frontend/vite.config.ts`** — that is what breaks sign-in for everyone. |
 | An edited question 404s | It has no options yet, and a query used an inner join. Fixed, but a reminder that a draft may be empty. |
 | `{}` in a component | JSX syntax interpolating a value. It is not text on the page. |
 
