@@ -21,17 +21,20 @@
         {
           "text": "5",
           "correct": false,
-          "catches": "INT-SUB-ORDER"
+          "catches": "INT-SUB-ORDER",
+          "feedback": "You might have thought that 3 − 8 is 5, but that is 8 − 3. Taking 8 from 3 goes below zero, to −5."
         },
         {
           "text": "−11",
           "correct": false,
-          "catches": "INT-TWO-NEG"
+          "catches": "INT-TWO-NEG",
+          "feedback": "You might have thought that 3 − 8 is −11, but that adds the two numbers together. Moving 8 places left from 3 lands on −5."
         },
         {
           "text": "11",
           "correct": false,
-          "catches": "INT-TWO-NEG"
+          "catches": "INT-TWO-NEG",
+          "feedback": "You might have thought that 3 − 8 is 11, but taking 8 away cannot make the answer bigger."
         }
       ],
       "explanation": "Start at 3 and move 8 places left on a number line: 2, 1, 0, −1, … to −5. Taking 8 from 3 gives a negative answer. Swapping the numbers round gives 8 − 3 = 5, which is a different calculation."
@@ -50,17 +53,20 @@
         {
           "text": "1",
           "correct": false,
-          "catches": "INT-SUB-NEG"
+          "catches": "INT-SUB-NEG",
+          "feedback": "You might have thought that 4 − (−3) is 4 − 3, but taking away a negative moves you to the right: 4 + 3 = 7."
         },
         {
           "text": "−7",
           "correct": false,
-          "catches": "INT-SIGN-PRODUCT"
+          "catches": "INT-SIGN-PRODUCT",
+          "feedback": "You might have thought that the answer stays negative, but two minus signs together make a plus: 4 + 3 = 7."
         },
         {
           "text": "−1",
           "correct": false,
-          "catches": "INT-SUB-NEG"
+          "catches": "INT-SUB-NEG",
+          "feedback": "You might have thought that 4 − (−3) is −1, but that is 3 − 4. Taking away −3 is the same as adding 3."
         }
       ],
       "explanation": "Subtracting −3 moves 3 places to the right, the same as adding 3, so 4 − (−3) = 7. Treating the two minus signs as an ordinary subtraction gives 1. The answer is positive, not −7 or −1."
@@ -79,17 +85,20 @@
         {
           "text": "0.6",
           "correct": false,
-          "catches": "INT-DEC-POINT"
+          "catches": "INT-DEC-POINT",
+          "feedback": "You might have thought that 0.3 × 0.2 is 0.6, but both numbers have one decimal place, so the answer has two: 0.06."
         },
         {
           "text": "0.5",
           "correct": false,
-          "catches": "INT-DEC-ADD"
+          "catches": "INT-DEC-ADD",
+          "feedback": "You might have thought that this is an addition, but 0.5 is 0.3 + 0.2. Multiplying gives 0.06."
         },
         {
           "text": "0.006",
           "correct": false,
-          "catches": "INT-DEC-POINT"
+          "catches": "INT-DEC-POINT",
+          "feedback": "You might have thought that the answer has three decimal places, but 3 × 2 = 6 with two places is 0.06."
         }
       ],
       "explanation": "3 × 2 = 6, and both numbers have one decimal place, so the answer has two: 0.06. Adding the digits instead of multiplying gives 0.3 + 0.2 = 0.5. Writing 0.6 moves the point one place too few, and 0.006 one place too many."
@@ -108,17 +117,20 @@
         {
           "text": "Added instead of multiplied",
           "correct": false,
-          "catches": "INT-DEC-ADD"
+          "catches": "INT-DEC-ADD",
+          "feedback": "You might have thought that Priya added, but 0.4 + 0.5 = 0.9. Her 2.0 is 4 × 5 with the point misplaced."
         },
         {
           "text": "Divided instead of multiplied",
           "correct": false,
-          "catches": "INT-OP-CONFUSE"
+          "catches": "INT-OP-CONFUSE",
+          "feedback": "You might have thought that Priya divided, but 0.4 ÷ 0.5 = 0.8. Her 2.0 is 4 × 5 with the decimal places lost."
         },
         {
           "text": "Rounded the answer",
           "correct": false,
-          "catches": "INT-DEC-POINT"
+          "catches": "INT-DEC-POINT",
+          "feedback": "You might have thought that Priya rounded, but 0.4 × 0.5 = 0.2 exactly. Her 2.0 has the point in the wrong place."
         }
       ],
       "explanation": "4 × 5 = 20, and there are two decimal places altogether, so 0.4 × 0.5 = 0.20 = 0.2. Priya has found 20 and kept it as 2.0, losing the two decimal places. Adding would give 0.9, and dividing would give 0.8."
@@ -137,17 +149,20 @@
         {
           "text": "Multiplied 3 by 2²",
           "correct": false,
-          "catches": "INT-INDICES-ORDER"
+          "catches": "INT-INDICES-ORDER",
+          "feedback": "You might have thought that Amir multiplied 3 by 2², but that gives 12. His 25 came from squaring 5."
         },
         {
           "text": "Squared the 3 as well as the 2",
           "correct": false,
-          "catches": "INT-INDICES-ORDER"
+          "catches": "INT-INDICES-ORDER",
+          "feedback": "You might have thought that Amir squared the 3 as well, but 3² + 2 = 11. He squared the whole of 3 + 2."
         },
         {
           "text": "Subtracted instead of adding",
           "correct": false,
-          "catches": "INT-OP-CONFUSE"
+          "catches": "INT-OP-CONFUSE",
+          "feedback": "You might have thought that Amir subtracted, but 3 − 4 = −1. His 25 is a square, so he squared something."
         }
       ],
       "explanation": "The index applies only to the 2, so 3 + 2² = 3 + 4 = 7. Amir has added first and then squared the whole of 3 + 2. Multiplying 3 by 2² gives 12, and squaring the 3 gives 3² + 2 = 11."
@@ -166,17 +181,20 @@
         {
           "text": "84",
           "correct": false,
-          "catches": "INT-LEFT-RIGHT"
+          "catches": "INT-LEFT-RIGHT",
+          "feedback": "You might have thought that you work from left to right, but multiplication comes first: 6 × 4 = 24, then 15 + 24 = 39."
         },
         {
           "text": "54",
           "correct": false,
-          "catches": "INT-LEFT-RIGHT"
+          "catches": "INT-LEFT-RIGHT",
+          "feedback": "You might have thought that 54 is right, but that is 9 × 6. Here it is 15 + 24 = 39."
         },
         {
           "text": "29",
           "correct": false,
-          "catches": "INT-OP-CONFUSE"
+          "catches": "INT-OP-CONFUSE",
+          "feedback": "You might have thought that × 4 means + 4, but 6 × 4 = 24, so 15 + 24 = 39."
         }
       ],
       "explanation": "Multiplication is done before addition: 6 × 4 = 24, then 15 + 24 = 39. Working left to right gives (15 + 6) × 4 = 84. Adding 15 + 6 × 4 as 15 + 6 = 21 then × 4 is the same error."
@@ -203,12 +221,14 @@
         {
           "text": "−3 + 4",
           "correct": false,
-          "catches": "INT-TWO-NEG"
+          "catches": "INT-TWO-NEG",
+          "feedback": "You might have thought that −3 + 4 is negative, but it is 1 — there is more positive than negative."
         },
         {
           "text": "(−3) × (−4)",
           "correct": false,
-          "catches": "INT-SIGN-PRODUCT"
+          "catches": "INT-SIGN-PRODUCT",
+          "feedback": "You might have thought that (−3) × (−4) is negative, but a negative times a negative is positive: 12."
         }
       ],
       "explanation": "−3 × 4 = −12, −3 − 4 = −7 and 4 − 10 = −6, all negative. −3 + 4 = 1, which is positive: there is more positive than negative. (−3) × (−4) = 12, because a negative times a negative is positive."
@@ -227,12 +247,14 @@
         {
           "text": "6 ÷ 0.5",
           "correct": 0,
-          "catches": "INT-DIV-SMALLER"
+          "catches": "INT-DIV-SMALLER",
+          "feedback": "You might have thought that 6 ÷ 0.5 is less than 6, but dividing by a number below 1 makes the answer bigger: 12."
         },
         {
           "text": "6 ÷ 0.2",
           "correct": 0,
-          "catches": "INT-DIV-SMALLER"
+          "catches": "INT-DIV-SMALLER",
+          "feedback": "You might have thought that 6 ÷ 0.2 is less than 6, but it is 30 — the same effect, more so."
         }
       ],
       "explanation": "6 × 0.5 = 3, which is less than 6. 6 ÷ 0.5 = 12 and 6 ÷ 0.2 = 30 are both bigger, because dividing by a number less than one asks how many of them fit. Multiplication does not always make a number bigger."
@@ -251,17 +273,20 @@
         {
           "text": "−12",
           "correct": false,
-          "catches": "INT-SIGN-PRODUCT"
+          "catches": "INT-SIGN-PRODUCT",
+          "feedback": "You might have thought that the answer is −12, but a negative times a negative is positive: 12."
         },
         {
           "text": "−7",
           "correct": false,
-          "catches": "INT-OP-CONFUSE"
+          "catches": "INT-OP-CONFUSE",
+          "feedback": "You might have thought that −3 × −4 is −7, but that is −3 + −4. Multiplying gives 12."
         },
         {
           "text": "7",
           "correct": false,
-          "catches": "INT-OP-CONFUSE"
+          "catches": "INT-OP-CONFUSE",
+          "feedback": "You might have thought that −3 × −4 is 7, but that is 3 + 4. The product is 3 × 4 = 12."
         }
       ],
       "explanation": "A negative times a negative is positive, so −3 × −4 = 12. The two minus signs do not both survive: −12 keeps one of them. Adding the numbers instead gives −3 + −4 = −7."
@@ -280,17 +305,20 @@
         {
           "text": "6 × 0.5",
           "correct": false,
-          "catches": "INT-MULT-BIGGER"
+          "catches": "INT-MULT-BIGGER",
+          "feedback": "You might have thought that 6 × 0.5 gives 12, but multiplying by 0.5 halves the number: 3."
         },
         {
           "text": "6 + 0.5",
           "correct": false,
-          "catches": "INT-MULT-BIGGER"
+          "catches": "INT-MULT-BIGGER",
+          "feedback": "You might have thought that 6 + 0.5 gives 12, but it gives 6.5. Dividing by 0.5 gives 12."
         },
         {
           "text": "6 − 0.5",
           "correct": false,
-          "catches": "INT-MULT-BIGGER"
+          "catches": "INT-MULT-BIGGER",
+          "feedback": "You might have thought that 6 − 0.5 gives 12, but it gives 5.5. Ask how many halves are in 6."
         }
       ],
       "explanation": "6 ÷ 0.5 asks how many halves are in 6, which is 12. 6 × 0.5 halves the 6 to 3, and adding or subtracting 0.5 moves it only a little. Multiplication does not always make a number bigger."
@@ -310,17 +338,20 @@
         {
           "text": "11 °C",
           "correct": false,
-          "catches": "INT-SUB-NEG"
+          "catches": "INT-SUB-NEG",
+          "feedback": "You might have thought that the temperature rose both times, but it fell 6 °C at the end: −4 + 9 = 5, then 5 − 6 = −1."
         },
         {
           "text": "1 °C",
           "correct": false,
-          "catches": "INT-TWO-NEG"
+          "catches": "INT-TWO-NEG",
+          "feedback": "You might have thought that the answer is 1 °C, but the temperature ends below zero: −1 °C."
         },
         {
           "text": "−11 °C",
           "correct": false,
-          "catches": "INT-SUB-NEG"
+          "catches": "INT-SUB-NEG",
+          "feedback": "You might have thought that the whole calculation is negative, but take it in steps: −4 + 9 = 5, then 5 − 6 = −1."
         }
       ],
       "explanation": "−4 + 9 = 5, so it was 5 °C at noon. Then 5 − 6 = −1, so it was −1 °C at 9 pm. Adding 9 and 6 and ignoring the sign gives 11, and dropping the minus at the end gives 1."
@@ -339,17 +370,20 @@
         {
           "text": "5.11 m",
           "correct": false,
-          "catches": "INT-DEC-ALIGN"
+          "catches": "INT-DEC-ALIGN",
+          "feedback": "You might have thought that 7 + 4 = 11 gives 5.11, but those are tenths: 11 tenths is 1.1, so 5.7 + 0.4 = 6.1."
         },
         {
           "text": "6.11 m",
           "correct": false,
-          "catches": "INT-DEC-ALIGN"
+          "catches": "INT-DEC-ALIGN",
+          "feedback": "You might have thought that 6.11 is right, but it carries the 1 twice: 0.7 + 0.4 = 1.1, and 5 + 1.1 = 6.1."
         },
         {
           "text": "5.1 m",
           "correct": false,
-          "catches": "INT-DEC-ALIGN"
+          "catches": "INT-DEC-ALIGN",
+          "feedback": "You might have thought that 5.1 is right, but it drops the carry: 0.7 + 0.4 = 1.1, so the answer is 6.1."
         }
       ],
       "explanation": "Line up the decimal points: 5.7 + 0.4 means 5.7 + 0.4 = 6.1. Adding the digits after the point as 7 + 4 = 11 gives 5.11, which treats tenths as if they were ones. 6.11 carries the 1 as a whole as well, and 5.1 forgets it entirely."
@@ -381,7 +415,8 @@
         {
           "text": "12 − 3",
           "correct": false,
-          "catches": "INT-OP-CONFUSE"
+          "catches": "INT-OP-CONFUSE",
+          "feedback": "You might have thought that 12 − 3 gives 10, but it gives 9."
         }
       ],
       "explanation": "4 + 6 = 10, 15 − 5 = 10, 2 × 5 = 10 and 20 ÷ 2 = 10. 12 − 3 = 9, so it does not give 10 — check what each operation does, not just which numbers are used."
@@ -396,7 +431,8 @@
         {
           "text": "Always",
           "correct": false,
-          "catches": "INT-DIV-SMALLER"
+          "catches": "INT-DIV-SMALLER",
+          "feedback": "You might have thought that dividing always makes a number smaller, but 6 ÷ 0.5 = 12 is bigger."
         },
         {
           "text": "Sometimes",
@@ -405,7 +441,8 @@
         {
           "text": "Never",
           "correct": false,
-          "catches": "INT-DIV-SMALLER"
+          "catches": "INT-DIV-SMALLER",
+          "feedback": "You might have thought that dividing never makes it smaller, but 6 ÷ 2 = 3 is smaller than 6. So sometimes."
         }
       ],
       "explanation": "Sometimes. 6 ÷ 2 = 3 is smaller than 6, but 6 ÷ 0.5 = 12 is bigger, because dividing by a number less than one asks how many of them fit. Dividing by 1 leaves it the same."
@@ -424,17 +461,20 @@
         {
           "text": "−3 × −4",
           "correct": false,
-          "catches": "INT-SIGN-PRODUCT"
+          "catches": "INT-SIGN-PRODUCT",
+          "feedback": "You might have thought that −3 × −4 is not positive, but it is 12."
         },
         {
           "text": "4 − (−3)",
           "correct": false,
-          "catches": "INT-SUB-NEG"
+          "catches": "INT-SUB-NEG",
+          "feedback": "You might have thought that 4 − (−3) is not positive, but it is 7."
         },
         {
           "text": "4 + 3",
           "correct": false,
-          "catches": "INT-OP-CONFUSE"
+          "catches": "INT-OP-CONFUSE",
+          "feedback": "You might have thought that 4 + 3 is not positive, but it is 7. Only −3 × 4 is negative."
         }
       ],
       "explanation": "−3 × 4 = −12, which is negative. −3 × −4 = 12 and 4 − (−3) = 7 are both positive, and so is 4 + 3 = 7. A negative times a positive is negative; a negative times a negative is positive."

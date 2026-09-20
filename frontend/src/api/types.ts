@@ -72,12 +72,14 @@ export interface AnswerResult {
   correctOptionIds: number[]
   explanation?: string
   /**
-   * The register code of each wrong option the student actually chose, so the feedback can name
-   * their error rather than list every error the question catches. Empty when they answered
-   * correctly, and for a wrong option carrying no code. Only ever sent after they have committed,
-   * never in the question they see beforehand, where it would mark the wrong options for them.
+   * What the student's wrong picks caught, one entry per wrong option they chose.
+   *
+   * `feedback` is the message written for that option, which is what the student should read.
+   * `misconceptionCode` is the error class, whose register line stands in when an option carries no
+   * message of its own. Only ever sent after they have committed, never in the question they see
+   * beforehand, where it would mark the wrong options for them.
    */
-  misconceptionCodes?: string[]
+  caught?: { misconceptionCode?: string; feedback?: string }[]
   pointsAwarded: number
   totalPoints: number
   currentStreak: number

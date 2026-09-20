@@ -55,22 +55,46 @@ public class AnswerOption {
     @Column(name = "misconception_code", length = 60)
     private String misconceptionCode;
 
+    /**
+     * The message a student reads when they pick this wrong option, written with the question.
+     *
+     * <p>A misconception code names an error class, and one class can cover two options in the same
+     * question that are different misreadings - 0.2 (tenths) and 0.002 (thousandths) both catch
+     * PV-COLUMN-NAME. So the sentence that says "on the question you think you were asked, 0.2 is
+     * the right answer" belongs to the option. Nullable: a correct option explains nothing away,
+     * and a teacher's option may carry only a code, in which case the register's line stands in.
+     */
+    @Column(length = 500)
+    private String feedback;
+
     protected AnswerOption() {
         // for JPA
     }
 
     public AnswerOption(Question question, int position, String label, String text, boolean correct) {
-        this(question, position, label, text, correct, null);
+        this(question, position, label, text, correct, null, null);
     }
 
     public AnswerOption(
             Question question, int position, String label, String text, boolean correct, String misconceptionCode) {
+        this(question, position, label, text, correct, misconceptionCode, null);
+    }
+
+    public AnswerOption(
+            Question question,
+            int position,
+            String label,
+            String text,
+            boolean correct,
+            String misconceptionCode,
+            String feedback) {
         this.question = question;
         this.position = position;
         this.label = label;
         this.text = text;
         this.correct = correct;
         this.misconceptionCode = misconceptionCode;
+        this.feedback = feedback;
     }
 
     public Long getId() {
@@ -100,5 +124,10 @@ public class AnswerOption {
     /** The misconception code this option catches, or null when it catches none. */
     public String getMisconceptionCode() {
         return misconceptionCode;
+    }
+
+    /** The message a student reads for this option, or null when it carries none. */
+    public String getFeedback() {
+        return feedback;
     }
 }

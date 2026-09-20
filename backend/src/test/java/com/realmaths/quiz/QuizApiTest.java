@@ -92,16 +92,16 @@ class QuizApiTest {
     /**
      * The feedback names the error the student actually made.
      *
-     * <p>The register code of the wrong option they chose comes back with the result, so the quiz
-     * can tell them what they probably thought rather than list every error the question catches.
-     * It is safe by then: the correct options are revealed in the same payload. Nothing carries a
-     * code beforehand - that guard is
-     * {@link #aTickAllQuestionIsServedWithoutItsAnswerKey()}.
+     * <p>The result carries the register code (the error class, for the teacher) and the message
+     * written for the option they picked (for the student). Both belong here and nowhere earlier:
+     * the correct options are revealed in the same payload. Nothing carries either beforehand -
+     * that guard is {@link #aTickAllQuestionIsServedWithoutItsAnswerKey()}.
      */
     @Test
     void aWrongAnswerNamesTheErrorItCaught() throws Exception {
+        String message = "You went one past four. Two plus two is four.";
         String admin = adminToken();
-        long questionId = publishedQuestionCatching(admin, "PROP-ONE-IS-PRIME");
+        long questionId = publishedQuestionCatching(admin, "PROP-ONE-IS-PRIME", message);
         long[] options = optionIdsOf(admin, questionId);
 
         String student = studentToken();
@@ -112,20 +112,45 @@ class QuizApiTest {
         JsonNode wrong = answerOne(student, session.path("sessionId").asLong(), questionId, options[0]);
 
         assertThat(wrong.path("correct").asBoolean()).isFalse();
-        assertThat(wrong.path("misconceptionCodes").isArray())
-                .as("the result should carry the codes as a list")
-                .isTrue();
-        assertThat(wrong.path("misconceptionCodes")).hasSize(1);
-        assertThat(wrong.path("misconceptionCodes").get(0).asText())
-                .as("the error this option was written to catch")
+        assertThat(wrong.path("caught")).hasSize(1);
+        assertThat(wrong.path("caught").get(0).path("misconceptionCode").asText())
+                .as("the error class, for the teacher")
                 .isEqualTo("PROP-ONE-IS-PRIME");
+        assertThat(wrong.path("caught").get(0).path("feedback").asText())
+                .as("the message written for this option, for the student")
+                .isEqualTo(message);
+    }
+
+    /**
+     * An option a teacher writes may name a code without writing a message of its own. The result
+     * then carries the code with no message, and the client falls back to the register's line for
+     * that code - which is why both halves travel together.
+     */
+    @Test
+    void anOptionWithNoMessageOfItsOwnStillNamesTheCode() throws Exception {
+        String admin = adminToken();
+        long questionId = publishedQuestionCatching(admin, "PROP-ONE-IS-PRIME", null);
+        long[] options = optionIdsOf(admin, questionId);
+
+        String student = studentToken();
+        JsonNode session = startSession(student, 50);
+        findQuestion(session, questionId);
+        JsonNode wrong = answerOne(student, session.path("sessionId").asLong(), questionId, options[0]);
+
+        assertThat(wrong.path("caught")).hasSize(1);
+        assertThat(wrong.path("caught").get(0).path("misconceptionCode").asText())
+                .isEqualTo("PROP-ONE-IS-PRIME");
+        assertThat(wrong.path("caught").get(0).path("feedback").isMissingNode()
+                        || wrong.path("caught").get(0).path("feedback").isNull())
+                .as("no message of its own, so the register's line stands in")
+                .isTrue();
     }
 
     /** A right answer names no error, because there is nothing to explain away. */
     @Test
     void aCorrectAnswerNamesNoError() throws Exception {
         String admin = adminToken();
-        long questionId = publishedQuestionCatching(admin, "PROP-ONE-IS-PRIME");
+        long questionId = publishedQuestionCatching(admin, "PROP-ONE-IS-PRIME", "anything");
         long[] options = optionIdsOf(admin, questionId);
 
         String student = studentToken();
@@ -134,7 +159,7 @@ class QuizApiTest {
         JsonNode right = answerOne(student, session.path("sessionId").asLong(), questionId, options[1]);
 
         assertThat(right.path("correct").asBoolean()).isTrue();
-        assertThat(right.path("misconceptionCodes")).isEmpty();
+        assertThat(right.path("caught")).isEmpty();
     }
 
     @Test
@@ -256,10 +281,15 @@ class QuizApiTest {
     /**
      * Creates and publishes a single-choice question whose wrong option names an error, and
      * returns its id. The code is a real register code, so the whole round trip can be checked:
-     * stored on the option, graded, and handed back to name the mistake.
+     * stored on the option, graded, and handed back to name the mistake. A null {@code feedback}
+     * stands for an option a teacher wrote with a code but no message of their own.
      */
-    private long publishedQuestionCatching(String admin, String code) throws Exception {
+    private long publishedQuestionCatching(String admin, String code, String feedback) throws Exception {
         String prompt = "catching " + System.nanoTime() + " what is 2 + 2";
+        String wrongOption = feedback == null
+                ? "{\"text\":\"5\",\"correct\":false,\"misconceptionCode\":\"%s\"}".formatted(code)
+                : "{\"text\":\"5\",\"correct\":false,\"misconceptionCode\":\"%s\",\"feedback\":\"%s\"}"
+                        .formatted(code, feedback);
 
         MvcResult created = mockMvc.perform(post("/api/admin/questions")
                         .header("Authorization", "Bearer " + admin)
@@ -267,10 +297,8 @@ class QuizApiTest {
                         .content("""
                                 {"topicId":1,"prompt":"%s","explanation":"Because.","difficulty":1,
                                  "answerType":"SINGLE_CHOICE",
-                                 "options":[
-                                   {"text":"5","correct":false,"misconceptionCode":"%s"},
-                                   {"text":"4","correct":true}]}
-                                """.formatted(prompt, code)))
+                                 "options":[%s,{"text":"4","correct":true}]}
+                                """.formatted(prompt, wrongOption)))
                 .andExpect(status().isCreated())
                 .andReturn();
 

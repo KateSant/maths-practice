@@ -21,17 +21,20 @@
         {
           "text": "5n",
           "correct": false,
-          "catches": "ALG-WRITE-EXPRESSION"
+          "catches": "ALG-WRITE-EXPRESSION",
+          "feedback": "You might have thought that \"5 more than n\" is 5n, but that is five times n. It means n + 5."
         },
         {
           "text": "n − 5",
           "correct": false,
-          "catches": "ALG-WRITE-EXPRESSION"
+          "catches": "ALG-WRITE-EXPRESSION",
+          "feedback": "You might have thought that \"5 more\" means taking 5 away, but n − 5 is five less than n."
         },
         {
           "text": "5 − n",
           "correct": false,
-          "catches": "ALG-WRITE-EXPRESSION"
+          "catches": "ALG-WRITE-EXPRESSION",
+          "feedback": "You might have thought that 5 − n is right, but it is the wrong way round."
         }
       ],
       "explanation": "\"5 more than n\" means add 5: n + 5. Writing 5n means 5 times n. \"More than\" is not a multiplication word, so it is not 5n, and it is not a subtraction either."
@@ -50,17 +53,20 @@
         {
           "text": "2/a",
           "correct": false,
-          "catches": "ALG-NOTATION-DIV"
+          "catches": "ALG-NOTATION-DIV",
+          "feedback": "You might have thought that \"a divided by 2\" is 2/a, but that is 2 divided by a — the wrong way round."
         },
         {
           "text": "a − 2",
           "correct": false,
-          "catches": "ALG-OP-CONFUSE"
+          "catches": "ALG-OP-CONFUSE",
+          "feedback": "You might have thought that dividing means taking 2 away, but a − 2 subtracts. Dividing a by 2 is a/2."
         },
         {
           "text": "2a",
           "correct": false,
-          "catches": "ALG-OP-CONFUSE"
+          "catches": "ALG-OP-CONFUSE",
+          "feedback": "You might have thought that dividing means multiplying by 2, but 2a is a times 2. Dividing gives a/2."
         }
       ],
       "explanation": "Dividing a by 2 is written a/2: the number being divided goes on top. Writing 2/a divides 2 by a, which is the other way round, and 2a multiplies instead of dividing."
@@ -79,17 +85,20 @@
         {
           "text": "a × a × a",
           "correct": false,
-          "catches": "ALG-TERM-COUNT"
+          "catches": "ALG-TERM-COUNT",
+          "feedback": "You might have thought that 3a is a × a × a, but that is a³. 3a means three a's added."
         },
         {
           "text": "3 + a",
           "correct": false,
-          "catches": "ALG-ADD-COEFFICIENT"
+          "catches": "ALG-ADD-COEFFICIENT",
+          "feedback": "You might have thought that 3a is 3 + a, but that adds 3 to a. 3a is three lots of a."
         },
         {
           "text": "a + 3",
           "correct": false,
-          "catches": "ALG-ADD-COEFFICIENT"
+          "catches": "ALG-ADD-COEFFICIENT",
+          "feedback": "You might have thought that a + 3 is 3a, but it is an addition, not three lots of a."
         }
       ],
       "explanation": "3a means three lots of a, which is a + a + a. a × a × a is a³, not 3a. 3 + a and a + 3 mean 3 added to a, which is different: if a is 4, 3a is 12 but 3 + a is 7."
@@ -108,17 +117,20 @@
         {
           "text": "8xy",
           "correct": false,
-          "catches": "ALG-UNLIKE-TERMS"
+          "catches": "ALG-UNLIKE-TERMS",
+          "feedback": "You might have thought that 5x + 3y collects to 8xy, but 5x and 3y are not like terms. They cannot be combined."
         },
         {
           "text": "8x + y",
           "correct": false,
-          "catches": "ALG-UNLIKE-TERMS"
+          "catches": "ALG-UNLIKE-TERMS",
+          "feedback": "You might have thought that the terms collect, but 8x + y joins them wrongly. 5x + 3y is already as simple as it gets."
         },
         {
           "text": "15xy",
           "correct": false,
-          "catches": "ALG-UNLIKE-TERMS"
+          "catches": "ALG-UNLIKE-TERMS",
+          "feedback": "You might have thought that 5x + 3y means 5 × 3, but there is nothing here to multiply."
         }
       ],
       "explanation": "5x and 3y are not like terms: one is a number of x's and the other a number of y's, so they cannot be combined. The expression is already as simple as it gets. Adding the coefficients gives 8xy, which treats them as like terms."
@@ -137,17 +149,20 @@
         {
           "text": "6a",
           "correct": false,
-          "catches": "ALG-MULT-NOT-ADD"
+          "catches": "ALG-MULT-NOT-ADD",
+          "feedback": "You might have thought that 2a × 3a is 6a, but a × a = a². The answer is 6a²."
         },
         {
           "text": "5a²",
           "correct": false,
-          "catches": "ALG-MULT-NOT-ADD"
+          "catches": "ALG-MULT-NOT-ADD",
+          "feedback": "You might have thought that 2a × 3a is 5a², but 2 × 3 = 6, not 5."
         },
         {
           "text": "5a",
           "correct": false,
-          "catches": "ALG-UNLIKE-TERMS"
+          "catches": "ALG-UNLIKE-TERMS",
+          "feedback": "You might have thought that 2a × 3a is 5a, but that adds both the coefficients and the letters. It is 6a²."
         }
       ],
       "explanation": "2a × 3a = 2 × a × 3 × a = 6 × a × a = 6a². Multiplying the coefficients (2 × 3 = 6) and the letters (a × a = a²) keeps them separate. Writing 6a adds the letters instead of multiplying, and 5a² adds the coefficients instead of multiplying."
@@ -166,17 +181,20 @@
         {
           "text": "Multiplied the terms instead of adding them",
           "correct": false,
-          "catches": "ALG-MULT-NOT-ADD"
+          "catches": "ALG-MULT-NOT-ADD",
+          "feedback": "You might have thought that Jaz multiplied, but she added 2 and 3. Her mistake was joining 2a and 3b at all."
         },
         {
           "text": "Added the coefficients but not the letters",
           "correct": false,
-          "catches": "ALG-ADD-COEFFICIENT"
+          "catches": "ALG-ADD-COEFFICIENT",
+          "feedback": "You might have thought that Jaz only added the coefficients, but she joined the letters into ab as well."
         },
         {
           "text": "Left the expression with two terms",
           "correct": false,
-          "catches": "ALG-UNLIKE-TERMS"
+          "catches": "ALG-UNLIKE-TERMS",
+          "feedback": "You might have thought that Jaz left the expression alone, but leaving 2a + 3b unchanged would have been right. She changed it to 5ab."
         }
       ],
       "explanation": "2a and 3b are unlike terms, so 2a + 3b cannot be simplified. Jaz has combined the 2 and the 3 and joined the letters to get 5ab. If a and b were both 1, the expression would be 5 but 5ab would be 5 too — the error only shows with other values."
@@ -195,17 +213,20 @@
         {
           "text": "6",
           "correct": false,
-          "catches": "ALG-SUBSTITUTE-NEG"
+          "catches": "ALG-SUBSTITUTE-NEG",
+          "feedback": "You might have thought that 3a is 6 when a = −2, but the minus sign carries: 3 × (−2) = −6."
         },
         {
           "text": "−1",
           "correct": false,
-          "catches": "ALG-OP-CONFUSE"
+          "catches": "ALG-OP-CONFUSE",
+          "feedback": "You might have thought that 3a means 3 + a, but it means 3 × a, which is −6."
         },
         {
           "text": "1",
           "correct": false,
-          "catches": "ALG-OP-CONFUSE"
+          "catches": "ALG-OP-CONFUSE",
+          "feedback": "You might have thought that 3a is 3 − 2, but it is 3 × (−2) = −6."
         }
       ],
       "explanation": "3a means 3 × a, so 3 × (−2) = −6. The negative sign applies to the whole value, so the answer is negative. Adding instead of multiplying gives 3 + (−2) = 1, and 3 − 2 = 1 too."
@@ -224,17 +245,20 @@
         {
           "text": "−9",
           "correct": false,
-          "catches": "ALG-SUBSTITUTE-NEG"
+          "catches": "ALG-SUBSTITUTE-NEG",
+          "feedback": "You might have thought that a² is −9 when a = −3, but (−3) × (−3) = 9."
         },
         {
           "text": "−6",
           "correct": false,
-          "catches": "ALG-A-SQUARED-2A"
+          "catches": "ALG-A-SQUARED-2A",
+          "feedback": "You might have thought that a² is 2a, but it is a × a: (−3) × (−3) = 9."
         },
         {
           "text": "6",
           "correct": false,
-          "catches": "ALG-A-SQUARED-2A"
+          "catches": "ALG-A-SQUARED-2A",
+          "feedback": "You might have thought that a² is 2 × 3, but it is (−3) × (−3) = 9."
         }
       ],
       "explanation": "a² means a × a, so (−3) × (−3) = 9. A negative times a negative is positive, so it is not −9. Multiplying by 2 instead of squaring gives −6."
@@ -253,17 +277,20 @@
         {
           "text": "2a²",
           "correct": false,
-          "catches": "ALG-LIKE-TERMS-POWER"
+          "catches": "ALG-LIKE-TERMS-POWER",
+          "feedback": "You might have thought that a + a² collects to 2a², but a and a² are not like terms."
         },
         {
           "text": "2a",
           "correct": false,
-          "catches": "ALG-LIKE-TERMS-POWER"
+          "catches": "ALG-LIKE-TERMS-POWER",
+          "feedback": "You might have thought that a + a² collects to 2a, but that treats the two as matching. They are different powers."
         },
         {
           "text": "a³",
           "correct": false,
-          "catches": "ALG-LIKE-TERMS-POWER"
+          "catches": "ALG-LIKE-TERMS-POWER",
+          "feedback": "You might have thought that a + a² is a³, but that multiplies them. a + a² is already as simple as it gets."
         }
       ],
       "explanation": "a and a² are not like terms: one is a and the other is a × a. They cannot be collected, so the expression stays as a + a². Adding to get 2a² or 2a, or multiplying to get a³, all treat them as like terms."
@@ -283,17 +310,20 @@
         {
           "text": "a + 3",
           "correct": false,
-          "catches": "ALG-WRITE-EXPRESSION"
+          "catches": "ALG-WRITE-EXPRESSION",
+          "feedback": "You might have thought that the perimeter is a + 3, but that is one length and one width. It goes right round: 2a + 6."
         },
         {
           "text": "3a",
           "correct": false,
-          "catches": "ALG-WRITE-EXPRESSION"
+          "catches": "ALG-WRITE-EXPRESSION",
+          "feedback": "You might have thought that the perimeter is 3a, but that multiplies. It is a + 3 + a + 3."
         },
         {
           "text": "2a + 3",
           "correct": false,
-          "catches": "ALG-WRITE-EXPRESSION"
+          "catches": "ALG-WRITE-EXPRESSION",
+          "feedback": "You might have thought that 2a + 3 is right, but it doubles the length and not the width."
         }
       ],
       "explanation": "The perimeter is a + 3 + a + 3 = 2a + 6. a + 3 adds only one length and one width, and 3a multiplies instead of adding. 2a + 3 doubles the length but forgets to double the width."
@@ -320,12 +350,14 @@
         {
           "text": "5 + a",
           "correct": false,
-          "catches": "ALG-ADD-COEFFICIENT"
+          "catches": "ALG-ADD-COEFFICIENT",
+          "feedback": "You might have thought that 5 + a equals 5a, but it adds 5 to a. 5a is five lots of a."
         },
         {
           "text": "a × a × a × a × a",
           "correct": false,
-          "catches": "ALG-TERM-COUNT"
+          "catches": "ALG-TERM-COUNT",
+          "feedback": "You might have thought that a × a × a × a × a is 5a, but it is a⁵."
         }
       ],
       "explanation": "5a means five lots of a: a + a + a + a + a, which is also 5 × a, and 2a + 3a collects to 5a. 5 + a adds 5 to a, which is different, and a × a × a × a × a is a⁵."
@@ -344,17 +376,20 @@
         {
           "text": "5a",
           "correct": 0,
-          "catches": "ALG-MULT-NOT-ADD"
+          "catches": "ALG-MULT-NOT-ADD",
+          "feedback": "You might have thought that 5a is not equal to 3a + 2a, but 3a + 2a is 5 lots of a. 6a is the odd one out."
         },
         {
           "text": "a + a + a + a + a",
           "correct": 0,
-          "catches": "ALG-MULT-NOT-ADD"
+          "catches": "ALG-MULT-NOT-ADD",
+          "feedback": "You might have thought that these five a's are not equal to 3a + 2a, but they are. 6a is not."
         },
         {
-          "text": "5 + a",
+          "text": "5 × a",
           "correct": 0,
-          "catches": "ALG-ADD-COEFFICIENT"
+          "catches": "ALG-ADD-COEFFICIENT",
+          "feedback": "You might have thought that 5 × a is not equal to 3a + 2a, but 5 × a is 5a. 6a is the odd one out."
         }
       ],
       "explanation": "3a + 2a is 3 lots of a plus 2 lots of a, which is 5 lots of a: 5a, or a + a + a + a + a. 6a comes from multiplying the coefficients instead of adding them. 5 + a adds 5 to a, which is different."
@@ -373,17 +408,20 @@
         {
           "text": "x + x + x + x",
           "correct": 0,
-          "catches": "ALG-ADD-COEFFICIENT"
+          "catches": "ALG-ADD-COEFFICIENT",
+          "feedback": "You might have thought that x + x + x + x is not equal to 4x, but four x's are 4x. 4 + x is the one that is not."
         },
         {
           "text": "4 × x",
           "correct": 0,
-          "catches": "ALG-ADD-COEFFICIENT"
+          "catches": "ALG-ADD-COEFFICIENT",
+          "feedback": "You might have thought that 4 × x is not equal to 4x, but it is. 4 + x adds instead."
         },
         {
           "text": "x × 4",
           "correct": 0,
-          "catches": "ALG-ADD-COEFFICIENT"
+          "catches": "ALG-ADD-COEFFICIENT",
+          "feedback": "You might have thought that x × 4 is not equal to 4x, but it is the same thing. 4 + x is the odd one out."
         }
       ],
       "explanation": "4x means four lots of x, so x + x + x + x, 4 × x and x × 4 all equal it. 4 + x adds 4 to x: if x = 3, then 4x is 12 but 4 + x is 7.",
@@ -403,17 +441,20 @@
         {
           "text": "10",
           "correct": false,
-          "catches": "ALG-PARTIAL-SUBSTITUTION"
+          "catches": "ALG-PARTIAL-SUBSTITUTION",
+          "feedback": "You might have thought that the answer is 10, but that is 2a on its own — b was not substituted. 3b is −6, so 10 − 6 = 4."
         },
         {
           "text": "16",
           "correct": false,
-          "catches": "ALG-SUBSTITUTE-NEG"
+          "catches": "ALG-SUBSTITUTE-NEG",
+          "feedback": "You might have thought that b is +2, but b = −2, so 3b = −6 and 10 − 6 = 4."
         },
         {
           "text": "−4",
           "correct": false,
-          "catches": "ALG-SUBSTITUTE-NEG"
+          "catches": "ALG-SUBSTITUTE-NEG",
+          "feedback": "You might have thought that the whole answer is negative, but only 3b is negative: 10 − 6 = 4."
         }
       ],
       "explanation": "2a = 2 × 5 = 10 and 3b = 3 × (−2) = −6, so 10 + (−6) = 4. Substituting only a gives 10 and ignores the second term. 16 treats b as +2, and −4 makes the 10 negative as well as the 6."
@@ -432,12 +473,14 @@
         {
           "text": "Sometimes",
           "correct": false,
-          "catches": "ALG-LETTER-OBJECT"
+          "catches": "ALG-LETTER-OBJECT",
+          "feedback": "You might have thought that 2a only sometimes means 2 × a, but a number beside a letter is always a multiplication."
         },
         {
           "text": "Never",
           "correct": false,
-          "catches": "ALG-LETTER-OBJECT"
+          "catches": "ALG-LETTER-OBJECT",
+          "feedback": "You might have thought that 2a never means 2 × a, but it always does, whatever the letter stands for."
         }
       ],
       "explanation": "Always. Writing a number next to a letter means they are multiplied, so 2a is 2 × a whatever a is. The letter stands for a number, not an object, so 2a is never \"2 apples\" as a separate thing."

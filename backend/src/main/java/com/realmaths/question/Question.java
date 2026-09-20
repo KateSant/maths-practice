@@ -109,7 +109,19 @@ public class Question {
      * for it. Callers that do not care about diagnosis use the three-argument form.
      */
     public void addOption(String label, String text, boolean correct, String misconceptionCode) {
-        options.add(new AnswerOption(this, options.size() + 1, label, text, correct, misconceptionCode));
+        addOption(label, text, correct, misconceptionCode, null);
+    }
+
+    /**
+     * Adds an option with the message a student reads if they pick it.
+     *
+     * <p>The message belongs to the option rather than to the misconception code because one code
+     * can cover different misreadings of the same question - it is the option that knows which
+     * one the student made.
+     */
+    public void addOption(
+            String label, String text, boolean correct, String misconceptionCode, String feedback) {
+        options.add(new AnswerOption(this, options.size() + 1, label, text, correct, misconceptionCode, feedback));
     }
 
     /**

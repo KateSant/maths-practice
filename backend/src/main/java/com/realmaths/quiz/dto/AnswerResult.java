@@ -11,12 +11,12 @@ import java.util.List;
  * A single-choice question is the case where the list has one entry, which is what lets the quiz
  * screen highlight options with the same rule for both types.
  *
- * <p>{@code misconceptionCodes} holds the register code of each wrong option the student actually
- * chose, so their feedback can name the error they made rather than list every error the question
- * catches. It belongs here and nowhere earlier: the student has already committed, and the correct
- * options are revealed in the same payload, so it gives nothing away. The codes are deliberately
- * kept out of the question the student sees beforehand, where they would mark the wrong options for
- * them. Empty when the answer is right, and for a wrong option carrying no code.
+ * <p>{@code caught} names what the student's wrong choices got wrong: one entry per wrong option
+ * they picked, carrying the register code (for the teacher) and the message written for that option
+ * (for the student), which is null when the option has no message of its own. It belongs here and
+ * nowhere earlier: the student has already committed, and the correct options are revealed in the
+ * same payload, so it gives nothing away. Nothing carries a code or a message beforehand, where it
+ * would mark the wrong options for them.
  */
 public record AnswerResult(
         Long questionId,
@@ -24,10 +24,22 @@ public record AnswerResult(
         boolean correct,
         List<Long> correctOptionIds,
         String explanation,
-        List<String> misconceptionCodes,
+        List<CaughtError> caught,
         int pointsAwarded,
         int totalPoints,
         int currentStreak,
         int bestStreak,
         int answeredSoFar,
-        int correctSoFar) {}
+        int correctSoFar) {
+
+    /**
+     * One error a wrong pick caught.
+     *
+     * <p>Both halves are here because they answer different questions. The code is the error class,
+     * which is what a teacher's dashboard counts and what the register's generic line is keyed on;
+     * the message is written for this option, because one class can cover two options in the same
+     * question that are different misreadings - 0.2 means tenths, 0.002 means thousandths, and both
+     * catch PV-COLUMN-NAME.
+     */
+    public record CaughtError(String misconceptionCode, String feedback) {}
+}

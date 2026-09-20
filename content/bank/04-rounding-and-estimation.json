@@ -21,17 +21,20 @@
         {
           "text": "3,400",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 3,486 rounds down to 3,400, but it is 86 above 3,400 and only 14 below 3,500, so it rounds up."
         },
         {
           "text": "3,490",
           "correct": false,
-          "catches": "RND-WRONG-PLACE"
+          "catches": "RND-WRONG-PLACE",
+          "feedback": "You might have thought that the nearest hundred gives 3,490, but that is the nearest ten."
         },
         {
           "text": "3,000",
           "correct": false,
-          "catches": "RND-WRONG-PLACE"
+          "catches": "RND-WRONG-PLACE",
+          "feedback": "You might have thought that 3,486 rounds to 3,000, but that is the nearest thousand. The nearest hundred is 3,500."
         }
       ],
       "explanation": "The two hundreds either side are 3,400 and 3,500. 3,486 is 86 above 3,400 and only 14 below 3,500, so it is nearer 3,500. Rounding to 3,490 rounds to the nearest ten instead of the nearest hundred, and 3,000 rounds to the nearest thousand."
@@ -50,17 +53,20 @@
         {
           "text": "2.5",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 2.41 rounds up to 2.5, but the hundredths digit is 1, which is less than 5, so it rounds down to 2.4."
         },
         {
           "text": "2.41",
           "correct": false,
-          "catches": "RND-TRUNCATE"
+          "catches": "RND-TRUNCATE",
+          "feedback": "You might have thought that 2.41 is already rounded, but it still has two decimal places. One decimal place is 2.4."
         },
         {
           "text": "2",
           "correct": false,
-          "catches": "RND-DP-VS-SF"
+          "catches": "RND-DP-VS-SF",
+          "feedback": "You might have thought that 2.41 rounds to 2, but that is the nearest whole number. To 1 decimal place it is 2.4."
         }
       ],
       "explanation": "1 decimal place means one digit after the point. The hundredths digit is 1, which is less than 5, so 2.41 rounds down to 2.4. Rounding up gives 2.5, keeping both digits gives 2.41, and 2 is rounded to the nearest whole number, not to 1 decimal place."
@@ -79,17 +85,20 @@
         {
           "text": "0.27",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 0.27 does not round to 0.3, but the first significant figure is the 2 in the tenths, and the 7 rounds it up. 0.35 is the one that does not."
         },
         {
           "text": "0.34",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 0.34 does not round to 0.3, but it does. 0.35 is the one that does not: it is halfway and rounds up to 0.4."
         },
         {
           "text": "0.25",
           "correct": false,
-          "catches": "RND-LEADING-ZERO"
+          "catches": "RND-LEADING-ZERO",
+          "feedback": "You might have thought that 0.25 does not round to 0.3 because of the leading zero, but that zero does not count. 0.35 is the one that does not."
         }
       ],
       "explanation": "To 1 significant figure the first digit that is not zero is the one that matters, so here it is the tenths digit. 0.27, 0.34 and 0.25 all round to 0.3, but 0.35 is halfway and rounds up to 0.4."
@@ -108,17 +117,20 @@
         {
           "text": "27,500",
           "correct": false,
-          "catches": "RND-DP-VS-SF"
+          "catches": "RND-DP-VS-SF",
+          "feedback": "You might have thought that 27,481 rounds to 27,500, but two significant figures means the 2 and the 7 only, and the next digit is 4: 27,000."
         },
         {
           "text": "28,000",
           "correct": false,
-          "catches": "RND-WRONG-PLACE"
+          "catches": "RND-WRONG-PLACE",
+          "feedback": "You might have thought that the 7 rounds up to 28,000, but the digit after it is 4, which is less than 5."
         },
         {
           "text": "27,480",
           "correct": false,
-          "catches": "RND-WRONG-PLACE"
+          "catches": "RND-WRONG-PLACE",
+          "feedback": "You might have thought that 27,480 is rounded, but it still has all of its digits. To 2 significant figures it is 27,000."
         }
       ],
       "explanation": "The first two significant figures are 2 and 7. The next digit is 4, which is less than 5, so the 7 stays and the rest become zeros: 27,000. Rounding to 27,500 uses the wrong place, and 28,000 rounds the second digit up when it should not."
@@ -137,17 +149,20 @@
         {
           "text": "Rounded to the nearest ten instead of the nearest thousand",
           "correct": false,
-          "catches": "RND-WRONG-PLACE"
+          "catches": "RND-WRONG-PLACE",
+          "feedback": "You might have thought that Ali's mistake was rounding to the nearest ten, but that is only his first step. The mistake is carrying on from there."
         },
         {
           "text": "Cut off the digits without looking at the next one",
           "correct": false,
-          "catches": "RND-TRUNCATE"
+          "catches": "RND-TRUNCATE",
+          "feedback": "You might have thought that Ali cut the digits off, but he looked at the next digit each time. He rounded more than once."
         },
         {
           "text": "Rounded down when he should have rounded up",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that Ali rounded the wrong way, but each step of his rounds correctly on its own. 3,472 to 1 significant figure is 3,000."
         }
       ],
       "explanation": "3,472 to 1 significant figure is 3,000, because 3,472 is between 3,000 and 4,000 and nearer to 3,000. Ali kept rounding on: each step is correct on its own, but the number to be rounded must be compared with the two thousands, not with the result of the previous rounding."
@@ -166,17 +181,20 @@
         {
           "text": "44",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 44 rounds to 50, but it is nearer 40."
         },
         {
           "text": "55",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 55 rounds to 50, but it is halfway between 50 and 60, and rounds up to 60."
         },
         {
           "text": "60",
           "correct": false,
-          "catches": "RND-WRONG-PLACE"
+          "catches": "RND-WRONG-PLACE",
+          "feedback": "You might have thought that 60 rounds to 50, but it is already a multiple of 10 and rounds to itself."
         }
       ],
       "explanation": "Numbers from 45 to 54 round to 50. 46 is in that range. 44 is nearer 40, 55 is halfway and rounds up to 60, and 60 is a multiple of 10 itself."
@@ -195,17 +213,20 @@
         {
           "text": "£819",
           "correct": false,
-          "catches": "RND-EST-AFTER"
+          "catches": "RND-EST-AFTER",
+          "feedback": "You might have thought that £819 is the estimate, but that is the exact answer. An estimate rounds before multiplying."
         },
         {
           "text": "£900",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 39 rounds up to 45, but to 1 significant figure it is 40, so the estimate is £800."
         },
         {
           "text": "£600",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 39 rounds down to 30, but to 1 significant figure it is 40: 40 × 20 = £800."
         }
       ],
       "explanation": "Round first, then multiply: £39 → £40 and 21 → 20, so the estimate is 40 × 20 = £800. Working out the exact answer and then rounding gives £819, which is not an estimate. £900 and £600 come from rounding the numbers to the wrong values."
@@ -224,17 +245,20 @@
         {
           "text": "600 ÷ 20",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 28 rounds to 20, but to 1 significant figure it is 30: 600 ÷ 30 = 20."
         },
         {
           "text": "620 ÷ 30",
           "correct": false,
-          "catches": "RND-EST-AFTER"
+          "catches": "RND-EST-AFTER",
+          "feedback": "You might have thought that 612 rounds to 620, but to 1 significant figure it is 600."
         },
         {
           "text": "612 ÷ 28",
           "correct": false,
-          "catches": "RND-EST-AFTER"
+          "catches": "RND-EST-AFTER",
+          "feedback": "You might have thought that this is the estimate, but it is the exact calculation. An estimate rounds first."
         }
       ],
       "explanation": "612 → 600 and 28 → 30, so the estimate is 600 ÷ 30 = 20. Rounding 28 down to 20 changes the estimate to 30. 620 ÷ 30 is not rounding to 1 significant figure, and 612 ÷ 28 is the exact calculation: the rounding happens before the division, not after."
@@ -253,17 +277,20 @@
         {
           "text": "0.4",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 0.45 rounds down to 0.4, but the next digit is 5, so it rounds up to 0.5."
         },
         {
           "text": "0.45",
           "correct": false,
-          "catches": "RND-TRUNCATE"
+          "catches": "RND-TRUNCATE",
+          "feedback": "You might have thought that 0.45 is already to one significant figure, but it has two decimal places. It is 0.5."
         },
         {
           "text": "0.05",
           "correct": false,
-          "catches": "RND-LEADING-ZERO"
+          "catches": "RND-LEADING-ZERO",
+          "feedback": "You might have thought that the leading zero counts, but it does not. The first significant figure is the 4, so 0.45 is 0.5."
         }
       ],
       "explanation": "The first significant figure is the 4 in the tenths column. The next digit is 5, which is halfway, so we round up: 0.45 → 0.5. Rounding down gives 0.4, cutting the digits off gives 0.45, and 0.05 treats the leading zero as significant."
@@ -282,17 +309,20 @@
         {
           "text": "0.45",
           "correct": 0,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 0.45 does not round to 0.5, but its hundredths digit is 5, so it does. 0.55 is the one that does not."
         },
         {
           "text": "0.52",
           "correct": 0,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 0.52 does not round to 0.5, but it does. 0.55 is the one that does not: it rounds up to 0.6."
         },
         {
           "text": "0.54",
           "correct": 0,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 0.54 does not round to 0.5, but it does. 0.55 is halfway and rounds to 0.6."
         }
       ],
       "explanation": "0.45 rounds up to 0.5 and 0.52 and 0.54 round down to 0.5. 0.55 is halfway and rounds up to 0.6, so it does not round to 0.5."
@@ -311,17 +341,20 @@
         {
           "text": "0.045",
           "correct": 0,
-          "catches": "RND-LEADING-ZERO"
+          "catches": "RND-LEADING-ZERO",
+          "feedback": "You might have thought that 0.045 does not have two significant figures, but the 4 and the 5 count and the leading zero does not. 0.0450 has three."
         },
         {
           "text": "3.7",
           "correct": 0,
-          "catches": "RND-LEADING-ZERO"
+          "catches": "RND-LEADING-ZERO",
+          "feedback": "You might have thought that 3.7 does not have two significant figures, but it does. 0.0450 has three, because the trailing zero counts."
         },
         {
           "text": "0.30",
           "correct": 0,
-          "catches": "RND-TRAILING-ZERO"
+          "catches": "RND-TRAILING-ZERO",
+          "feedback": "You might have thought that 0.30 does not have two significant figures, but a trailing zero counts after a decimal point. 0.0450 has three."
         }
       ],
       "explanation": "Leading zeros never count, so 0.045 has two significant figures (4 and 5), 3.7 has two, and 0.30 has two because the trailing zero after a decimal point counts. 0.0450 has three: 4, 5 and the final 0."
@@ -344,17 +377,20 @@
         {
           "text": "3,472",
           "correct": false,
-          "catches": "RND-REPEAT"
+          "catches": "RND-REPEAT",
+          "feedback": "You might have thought that 3,472 rounds to 4,000, but it is nearer 3,000. Rounding it step by step does reach 4,000, which is the trap."
         },
         {
           "text": "4,500",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 4,500 rounds to 4,000, but it is halfway and rounds up to 5,000."
         },
         {
           "text": "3,400",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 3,400 rounds to 4,000, but it is nearer 3,000."
         }
       ],
       "explanation": "To 1 significant figure compare the number with the two thousands either side. 3,600 and 4,499 are both nearer 4,000. The trap is 3,472: rounding it step by step (to 3,470, then 3,500, then 4,000) reaches 4,000, but it is actually nearer 3,000. 4,500 is halfway and rounds up to 5,000, and 3,400 is nearer 3,000."
@@ -374,17 +410,20 @@
         {
           "text": "£2,100",
           "correct": false,
-          "catches": "RND-WRONG-PLACE"
+          "catches": "RND-WRONG-PLACE",
+          "feedback": "You might have thought that £349 rounds to £350, but that is the nearest ten. To the nearest hundred it is £300, so six phones cost about £1,800."
         },
         {
           "text": "£2,094",
           "correct": false,
-          "catches": "RND-EST-AFTER"
+          "catches": "RND-EST-AFTER",
+          "feedback": "You might have thought that £2,094 is the estimate, but it is the exact answer."
         },
         {
           "text": "£3,000",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that £349 rounds up to £500, but to the nearest hundred it is £300, giving £1,800."
         }
       ],
       "explanation": "Round the price to the nearest hundred first: £349 → £300. Then 300 × 6 = £1,800. £2,100 rounds the price to the nearest £50, not the nearest hundred; £2,094 is the exact answer, so it is not an estimate; and £3,000 rounds £349 up too far."
@@ -403,17 +442,20 @@
         {
           "text": "25",
           "correct": 0,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 25 does not round to 30, but it is halfway and rounds up. 35 is the one that does not."
         },
         {
           "text": "26",
           "correct": 0,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 26 does not round to 30, but it does. 35 is the one that rounds to 40."
         },
         {
           "text": "34",
           "correct": 0,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that 34 does not round to 30, but it rounds down to 30. 35 is the one that does not."
         }
       ],
       "explanation": "25 is halfway and rounds up to 30, and 26 and 34 round down to 30. 35 is halfway between 30 and 40 and rounds up to 40, so it does not round to 30.",
@@ -429,7 +471,8 @@
         {
           "text": "Always",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that rounding always makes a number smaller, but 3,486 rounds to 3,500, which is bigger."
         },
         {
           "text": "Sometimes",
@@ -438,7 +481,8 @@
         {
           "text": "Never",
           "correct": false,
-          "catches": "RND-DIRECTION"
+          "catches": "RND-DIRECTION",
+          "feedback": "You might have thought that rounding never makes it smaller, but 3,472 rounds to 3,000. So sometimes."
         }
       ],
       "explanation": "Sometimes. 3,486 rounds to 3,500, which is bigger, and 0.27 rounds to 0.3, which is bigger too, because both round up. 3,472 rounds to 3,000, which is smaller. Rounding goes to the nearer value, so it can go either way."

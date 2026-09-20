@@ -14,10 +14,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "What is the value of the 2 in 5.320?",
       "options": [
-        {"text": "0.02", "correct": true},
-        {"text": "0.2", "correct": false, "catches": "PV-COLUMN-NAME"},
-        {"text": "0.002", "correct": false, "catches": "PV-COLUMN-NAME"},
-        {"text": "2", "correct": false, "catches": "PV-POWER-TEN"}
+        {
+          "text": "0.02",
+          "correct": true
+        },
+        {
+          "text": "0.2",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that the 2 fills the tenths column, but it is in the hundredths column, so it is worth 0.02."
+        },
+        {
+          "text": "0.002",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that the 2 fills the thousandths column, but it is in the hundredths column, so it is worth 0.02."
+        },
+        {
+          "text": "2",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that the 2 is a whole number of ones, but it sits two columns after the point, so it is worth 0.02."
+        }
       ],
       "explanation": "After the point come tenths, then hundredths, then thousandths. In 5.320 the 2 is in the hundredths column, so it is worth 2 hundredths, 0.02. Writing 0.2 puts it in the tenths column, 0.002 puts it in the thousandths column, and 2 puts it in the units column."
     },
@@ -28,10 +46,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Which fraction is the same as 0.1?",
       "options": [
-        {"text": "1/10", "correct": true},
-        {"text": "1/100", "correct": false, "catches": "PV-COLUMN-NAME"},
-        {"text": "10/1", "correct": false, "catches": "PV-SAME-VALUE"},
-        {"text": "1/1000", "correct": false, "catches": "PV-COLUMN-NAME"}
+        {
+          "text": "1/10",
+          "correct": true
+        },
+        {
+          "text": "1/100",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that 1/100 is 0.1, but 1/100 is one hundredth, 0.01, which is ten times smaller."
+        },
+        {
+          "text": "10/1",
+          "correct": false,
+          "catches": "PV-SAME-VALUE",
+          "feedback": "You might have thought that 10/1 means a tenth, but it means ten divided by one, which is 10. A tenth is 1/10."
+        },
+        {
+          "text": "1/1000",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that 1/1000 is 0.1, but it is one thousandth, 0.001, a hundred times smaller."
+        }
       ],
       "explanation": "0.1 is one tenth, and one tenth is written 1/10. 1/100 is one hundredth and 1/1000 is one thousandth, each ten times smaller. 10/1 is ten, not a tenth. The same value can be written as a decimal or as a fraction."
     },
@@ -42,10 +78,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Ben works out 0.4 × 100 and writes the answer 0.400. What has he done?",
       "options": [
-        {"text": "Added two zeros instead of moving the digits", "correct": true},
-        {"text": "Multiplied by 10", "correct": false, "catches": "PV-POWER-TEN"},
-        {"text": "Divided by 100", "correct": false, "catches": "PV-POWER-TEN"},
-        {"text": "Rounded to 3 decimal places", "correct": false, "catches": "PV-POWER-TEN"}
+        {
+          "text": "Added two zeros instead of moving the digits",
+          "correct": true
+        },
+        {
+          "text": "Multiplied by 10",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that Ben multiplied by 10, but that gives 4, and his answer is still worth 0.4."
+        },
+        {
+          "text": "Divided by 100",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that Ben divided, but dividing by 100 gives 0.004, and his 0.400 is worth 0.4."
+        },
+        {
+          "text": "Rounded to 3 decimal places",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that Ben rounded, but rounding 40 to three decimal places gives 40.000, not 0.400."
+        }
       ],
       "explanation": "Multiplying by 100 moves every digit two columns left, so 0.4 × 100 = 40. Ben wrote extra zeros and left the 4 in the tenths column, so the value stayed at 0.4. Multiplying by 10 gives 4, dividing by 100 gives 0.004, and nothing was rounded."
     },
@@ -56,10 +110,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "What number has 7 tenths and 3 hundredths?",
       "options": [
-        {"text": "0.73", "correct": true},
-        {"text": "0.37", "correct": false, "catches": "PV-COLUMN-NAME"},
-        {"text": "7.3", "correct": false, "catches": "PV-POWER-TEN"},
-        {"text": "73", "correct": false, "catches": "PV-POWER-TEN"}
+        {
+          "text": "0.73",
+          "correct": true
+        },
+        {
+          "text": "0.37",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that the tenths digit goes second, but tenths come first, so it is 0.73, not 0.37."
+        },
+        {
+          "text": "7.3",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that seven tenths is 7.3, but 7.3 puts the 7 in the ones column, ten times too big."
+        },
+        {
+          "text": "73",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that the number is 73, but that is a whole number, a hundred times too big."
+        }
       ],
       "explanation": "Tenths come first after the point, so the 7 is first and the 3 is second: 0.73. 0.37 puts the 3 in the tenths column. 7.3 moves the 7 into the units column, ten times too big, and 73 is a hundred times too big."
     },
@@ -71,9 +143,22 @@
       "bridge": true,
       "prompt": "Dan runs 0.5 km on Monday and 0.45 km on Tuesday. Which day did he run further?",
       "options": [
-        {"text": "Monday", "correct": true},
-        {"text": "Tuesday, because 45 is bigger than 5", "correct": false, "catches": "PV-COLUMN-NAME"},
-        {"text": "Tuesday, because 0.45 has more digits", "correct": false, "catches": "PV-MORE-DIGITS"}
+        {
+          "text": "Monday",
+          "correct": true
+        },
+        {
+          "text": "Tuesday, because 45 is bigger than 5",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that 45 beats 5, but 45 counts hundredths and 5 counts tenths, and a tenth is the bigger piece."
+        },
+        {
+          "text": "Tuesday, because 0.45 has more digits",
+          "correct": false,
+          "catches": "PV-MORE-DIGITS",
+          "feedback": "You might have thought that more digits means further, but 0.45 is four tenths and 0.5 is five tenths."
+        }
       ],
       "explanation": "0.5 is five tenths. 0.45 is four tenths and five hundredths. Compare the tenths first, so Monday is further. 45 is bigger than 5, but it counts hundredths, not tenths. More digits do not make a decimal bigger."
     },
@@ -84,11 +169,32 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every number where the 7 is worth 7 hundredths.",
       "options": [
-        {"text": "0.07", "correct": true},
-        {"text": "12.074", "correct": true},
-        {"text": "0.7", "correct": false, "catches": "PV-COLUMN-NAME"},
-        {"text": "7.02", "correct": false, "catches": "PV-COLUMN-NAME"},
-        {"text": "0.007", "correct": false, "catches": "PV-COLUMN-NAME"}
+        {
+          "text": "0.07",
+          "correct": true
+        },
+        {
+          "text": "12.074",
+          "correct": true
+        },
+        {
+          "text": "0.7",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that the 7 in 0.7 is hundredths, but it is in the tenths column, worth 0.7."
+        },
+        {
+          "text": "7.02",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that the 7 in 7.02 is hundredths, but it is in the ones column, worth 7."
+        },
+        {
+          "text": "0.007",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that the 7 in 0.007 is hundredths, but it is in the thousandths column."
+        }
       ],
       "explanation": "After the point the columns are tenths, hundredths, thousandths. In 0.07 the 7 is hundredths, and in 12.074 the 0 holds tenths so the 7 is hundredths again. In 0.7 the 7 is tenths, in 7.02 it is units, and in 0.007 it is thousandths."
     },
@@ -99,10 +205,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Which of these is not a power of 10?",
       "options": [
-        {"text": "10 + 10 + 10 + 10", "correct": true},
-        {"text": "10 × 10 × 10 × 10", "correct": false, "catches": "PV-POWER-TEN"},
-        {"text": "1 × 10 × 10 × 10", "correct": false, "catches": "PV-POWER-TEN"},
-        {"text": "10 × 10", "correct": false, "catches": "PV-POWER-TEN"}
+        {
+          "text": "10 + 10 + 10 + 10",
+          "correct": true
+        },
+        {
+          "text": "10 × 10 × 10 × 10",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that this one is not a power of 10, but it is 10,000. It is 10 + 10 + 10 + 10 = 40 that is not."
+        },
+        {
+          "text": "1 × 10 × 10 × 10",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that the 1 in front spoils it, but 1 × 10 × 10 × 10 is 1,000, still a power of 10."
+        },
+        {
+          "text": "10 × 10",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that 10 × 10 is too small to count, but it is 100, which is 10²."
+        }
       ],
       "explanation": "A power of 10 is made by multiplying tens. 10 × 10 × 10 × 10 = 10 000, 1 × 10 × 10 × 10 = 1 000 and 10 × 10 = 100 are all powers of 10. 10 + 10 + 10 + 10 = 40 is not. Adding tens is not the same as multiplying them."
     },
@@ -113,9 +237,22 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "One night it was −12 °C in Oslo, −3 °C in Prague and −0.4 °C in Warsaw. Which city was coldest?",
       "options": [
-        {"text": "Oslo", "correct": true},
-        {"text": "Prague", "correct": false, "catches": "PV-NEG-ORDER"},
-        {"text": "Warsaw", "correct": false, "catches": "PV-NEG-ORDER"}
+        {
+          "text": "Oslo",
+          "correct": true
+        },
+        {
+          "text": "Prague",
+          "correct": false,
+          "catches": "PV-NEG-ORDER",
+          "feedback": "You might have thought that −3 °C is coldest because 3 is a small number, but −12 is further below zero, so it is colder."
+        },
+        {
+          "text": "Warsaw",
+          "correct": false,
+          "catches": "PV-NEG-ORDER",
+          "feedback": "You might have thought that −0.4 °C is coldest because it is closest to zero, but closer to zero is warmer, and −12 °C is far colder."
+        }
       ],
       "explanation": "Coldest means the lowest temperature. On a number line −12 is further left than −3 or −0.4, so Oslo is coldest. −3 is not colder just because 3 is smaller than 12: −12 is further below zero."
     },
@@ -126,10 +263,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "How many hundreds are in 43 872?",
       "options": [
-        {"text": "438.72 hundreds", "correct": true},
-        {"text": "438 hundreds", "correct": false, "catches": "PV-UNIT-COUNT"},
-        {"text": "8 hundreds", "correct": false, "catches": "PV-UNIT-COUNT"},
-        {"text": "872 hundreds", "correct": false, "catches": "PV-UNIT-COUNT"}
+        {
+          "text": "438.72 hundreds",
+          "correct": true
+        },
+        {
+          "text": "438 hundreds",
+          "correct": false,
+          "catches": "PV-UNIT-COUNT",
+          "feedback": "You might have thought that 438 hundreds is the answer, but that counts the whole hundreds and drops the 72. There are 438.72."
+        },
+        {
+          "text": "8 hundreds",
+          "correct": false,
+          "catches": "PV-UNIT-COUNT",
+          "feedback": "You might have thought that the 8 in the hundreds column is the number of hundreds, but that is one hundred. There are 438.72 hundreds."
+        },
+        {
+          "text": "872 hundreds",
+          "correct": false,
+          "catches": "PV-UNIT-COUNT",
+          "feedback": "You might have thought that the last three digits are the hundreds, but 872 is just the end of the number. There are 438.72 hundreds."
+        }
       ],
       "explanation": "43 872 ÷ 100 = 438.72, so there are 438.72 hundreds. 438 counts only the whole hundreds and drops the 72. 8 is just the digit in the hundreds column, and 872 is the last three digits of the number, not a count of hundreds."
     },
@@ -140,10 +295,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Find a number between 0.6 and 0.61.",
       "options": [
-        {"text": "0.605", "correct": true},
-        {"text": "0.6", "correct": false, "catches": "PV-BETWEEN"},
-        {"text": "0.61", "correct": false, "catches": "PV-BETWEEN"},
-        {"text": "0.0605", "correct": false, "catches": "PV-ZERO-PLACE"}
+        {
+          "text": "0.605",
+          "correct": true
+        },
+        {
+          "text": "0.6",
+          "correct": false,
+          "catches": "PV-BETWEEN",
+          "feedback": "You might have thought that 0.6 sits between them, but it is one of the two ends. 0.605 is between them."
+        },
+        {
+          "text": "0.61",
+          "correct": false,
+          "catches": "PV-BETWEEN",
+          "feedback": "You might have thought that 0.61 sits between them, but it is the other end. 0.601, 0.602 … 0.609 all fit."
+        },
+        {
+          "text": "0.0605",
+          "correct": false,
+          "catches": "PV-ZERO-PLACE",
+          "feedback": "You might have thought that the extra zero changes nothing, but it moves every digit one column right, so 0.0605 is smaller than 0.6."
+        }
       ],
       "explanation": "0.605 is bigger than 0.6 and smaller than 0.61. Only naming tenths and hundredths hides the numbers in between: 0.601, 0.602 and 0.605 all fit. 0.6 and 0.61 are the two numbers you started with, not numbers between them. The extra zero in 0.0605 shifts every digit right, so it is smaller than 0.6."
     },
@@ -154,10 +327,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Write 2.05 kg in grams.",
       "options": [
-        {"text": "2 050 g", "correct": true},
-        {"text": "2 005 g", "correct": false, "catches": "PV-MEASURE-PLACE"},
-        {"text": "250 g", "correct": false, "catches": "PV-COLUMN-NAME"},
-        {"text": "205 g", "correct": false, "catches": "PV-COLUMN-NAME"}
+        {
+          "text": "2 050 g",
+          "correct": true
+        },
+        {
+          "text": "2 005 g",
+          "correct": false,
+          "catches": "PV-MEASURE-PLACE",
+          "feedback": "You might have thought that 0.05 kg is 5 g, but it is five hundredths of a kilogram, which is 50 g."
+        },
+        {
+          "text": "250 g",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that 0.05 kg is 250 g, but 0.25 kg would be 250 g. Here it is 50 g."
+        },
+        {
+          "text": "205 g",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that dropping the point gives grams, but 2.05 kg is 2 050 g."
+        }
       ],
       "explanation": "There are 1 000 g in 1 kg, so 2.05 kg = 2.05 × 1 000 = 2 050 g. The 5 is hundredths of a kilogram, which is 50 g, so 2.05 kg is not 2 kg 5 g. Dropping the point and reading 205 or 250 loses the place of the digits."
     },
@@ -169,10 +360,26 @@
       "retention": true,
       "prompt": "Tick every number where the 7 is worth 700.",
       "options": [
-        {"text": "4,782", "correct": true},
-        {"text": "40,782", "correct": true},
-        {"text": "7,482", "correct": false, "catches": "PV-COLUMN-NAME"},
-        {"text": "4,872", "correct": false, "catches": "PV-COLUMN-NAME"}
+        {
+          "text": "4,782",
+          "correct": true
+        },
+        {
+          "text": "40,782",
+          "correct": true
+        },
+        {
+          "text": "7,482",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that the 7 is worth 700 here, but it is in the thousands column, worth 7,000."
+        },
+        {
+          "text": "4,872",
+          "correct": false,
+          "catches": "PV-COLUMN-NAME",
+          "feedback": "You might have thought that the 7 is worth 700 here, but it is in the tens column, worth 70."
+        }
       ],
       "explanation": "700 is seven hundreds, so the 7 must be in the hundreds column. It is in 4,782 and 40,782. In 7,482 the 7 is thousands, worth 7,000, and in 4,872 it is tens, worth 70."
     },
@@ -183,9 +390,22 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Is a number with more decimal places always larger?",
       "options": [
-        {"text": "Always", "correct": false, "catches": "PV-MORE-DIGITS"},
-        {"text": "Sometimes", "correct": true},
-        {"text": "Never", "correct": false, "catches": "PV-MORE-DIGITS"}
+        {
+          "text": "Always",
+          "correct": false,
+          "catches": "PV-MORE-DIGITS",
+          "feedback": "You might have thought that more decimal places always means more, but 0.45 is smaller than 0.5."
+        },
+        {
+          "text": "Sometimes",
+          "correct": true
+        },
+        {
+          "text": "Never",
+          "correct": false,
+          "catches": "PV-MORE-DIGITS",
+          "feedback": "You might have thought that it never matters, but 0.45 is bigger than 0.4. So the answer is sometimes."
+        }
       ],
       "explanation": "Sometimes. 0.45 has more decimal places than 0.4 and is bigger, so it is not never. But 0.45 has more decimal places than 0.5 and is smaller, so it is not always. Compare the columns from the left: tenths, then hundredths, then thousandths."
     },
@@ -196,10 +416,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "A ticket costs £6.70. Work out the cost of 100 tickets.",
       "options": [
-        {"text": "£670", "correct": true},
-        {"text": "£67", "correct": false, "catches": "PV-POWER-TEN"},
-        {"text": "£6,700", "correct": false, "catches": "PV-POWER-TEN"},
-        {"text": "£6.70", "correct": false, "catches": "PV-POWER-TEN"}
+        {
+          "text": "£670",
+          "correct": true
+        },
+        {
+          "text": "£67",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that £6.70 × 100 is £67, but that is multiplying by 10. The digits move two columns."
+        },
+        {
+          "text": "£6,700",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that the answer grows three columns, but × 100 moves each digit two, giving £670."
+        },
+        {
+          "text": "£6.70",
+          "correct": false,
+          "catches": "PV-POWER-TEN",
+          "feedback": "You might have thought that adding zeros multiplies, but the price is unchanged. The digits have to move."
+        }
       ],
       "explanation": "£6.70 × 100 = £670: multiplying by 100 moves every digit two columns left, so the 6 goes from units to hundreds. £67 is ten times too small and £6,700 is ten times too big. £6.70 is the price unchanged — writing extra zeros does not multiply."
     },
@@ -210,10 +448,28 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Three of these are equal. Which is the odd one out?",
       "options": [
-        {"text": "0.04", "correct": true},
-        {"text": "0.40", "correct": false, "catches": "PV-ZERO-PLACE"},
-        {"text": "0.400", "correct": false, "catches": "PV-ZERO-PLACE"},
-        {"text": "0.4000", "correct": false, "catches": "PV-ZERO-PLACE"}
+        {
+          "text": "0.04",
+          "correct": true
+        },
+        {
+          "text": "0.40",
+          "correct": false,
+          "catches": "PV-ZERO-PLACE",
+          "feedback": "You might have thought that 0.40 is different, but a zero after the last digit changes nothing. 0.04 is the odd one out."
+        },
+        {
+          "text": "0.400",
+          "correct": false,
+          "catches": "PV-ZERO-PLACE",
+          "feedback": "You might have thought that 0.400 is different, but it is still 0.4. The odd one out is 0.04."
+        },
+        {
+          "text": "0.4000",
+          "correct": false,
+          "catches": "PV-ZERO-PLACE",
+          "feedback": "You might have thought that 0.4000 is different, but it is still 0.4. 0.04 is the odd one out, ten times smaller."
+        }
       ],
       "explanation": "Zeros after the last digit do not change a decimal, so 0.40, 0.400 and 0.4000 all equal 0.4. 0.04 is the odd one out: the 4 is in the hundredths column, so it is four hundredths, ten times smaller than four tenths."
     }

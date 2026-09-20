@@ -21,17 +21,20 @@
         {
           "text": "2/8",
           "correct": false,
-          "catches": "FRAC-ADD-DENOM"
+          "catches": "FRAC-ADD-DENOM",
+          "feedback": "You might have thought that 1/4 + 1/4 is 2/8, but that adds the denominators too. Only the numerators add: 2/4 = 1/2."
         },
         {
           "text": "1/8",
           "correct": false,
-          "catches": "FRAC-ADD-DENOM"
+          "catches": "FRAC-ADD-DENOM",
+          "feedback": "You might have thought that 1/4 + 1/4 is 1/8, but that is a quarter of the right answer. It is 2/4 = 1/2."
         },
         {
           "text": "1/4",
           "correct": false,
-          "catches": "FRAC-WHOLE-NUM"
+          "catches": "FRAC-WHOLE-NUM",
+          "feedback": "You might have thought that two quarters make a quarter, but they make a half."
         }
       ],
       "explanation": "The denominators are already the same, so add the numerators: 1 + 1 = 2, giving 2/4, which simplifies to 1/2. Adding the denominators as well gives 2/8. Two quarters make a half, not a quarter."
@@ -50,17 +53,20 @@
         {
           "text": "5",
           "correct": false,
-          "catches": "FRAC-OF-AMOUNT"
+          "catches": "FRAC-OF-AMOUNT",
+          "feedback": "You might have thought that 3/4 of 20 is 5, but 5 is one quarter of 20. Three of them is 15."
         },
         {
           "text": "60",
           "correct": false,
-          "catches": "FRAC-OF-AMOUNT"
+          "catches": "FRAC-OF-AMOUNT",
+          "feedback": "You might have thought that 3/4 of 20 is 60, but that uses the 3 alone. Divide by 4 as well: 20 ÷ 4 = 5, then 3 × 5 = 15."
         },
         {
           "text": "26.67",
           "correct": false,
-          "catches": "FRAC-OF-AMOUNT"
+          "catches": "FRAC-OF-AMOUNT",
+          "feedback": "You might have thought that you divide by the fraction, but 3/4 of 20 means 20 × 3/4 = 15."
         }
       ],
       "explanation": "20 ÷ 4 = 5 is one quarter, and 3 × 5 = 15 is three of them. Stopping after the division gives 5, multiplying by the numerator only gives 60, and dividing by the fraction instead of multiplying gives 26.67."
@@ -79,17 +85,20 @@
         {
           "text": "5/6",
           "correct": false,
-          "catches": "FRAC-MULT-COMMON"
+          "catches": "FRAC-MULT-COMMON",
+          "feedback": "You might have thought that a common denominator is needed, but multiplying is 1 × 1 over 2 × 3 = 1/6."
         },
         {
           "text": "2/3",
           "correct": false,
-          "catches": "FRAC-MULT-COMMON"
+          "catches": "FRAC-MULT-COMMON",
+          "feedback": "You might have thought that 2/3 is about right, but it is bigger than either fraction. A half of a third is smaller than both: 1/6."
         },
         {
           "text": "1/5",
           "correct": false,
-          "catches": "FRAC-ADD-ACROSS"
+          "catches": "FRAC-ADD-ACROSS",
+          "feedback": "You might have thought that 1/5 comes from 2 + 3, but multiplying gives 1 × 1 over 2 × 3 = 1/6."
         }
       ],
       "explanation": "Multiply the numerators and the denominators: 1 × 1 = 1 and 2 × 3 = 6, so the answer is 1/6. Notice the answer is smaller than either fraction, because a half of a third is a small piece. Bringing in a common denominator and adding gives 5/6 or 2/3, and adding across gives 2/5, not 1/5."
@@ -108,17 +117,20 @@
         {
           "text": "Divided the top and the bottom by different numbers",
           "correct": false,
-          "catches": "FRAC-SIMPLIFY-PARTIAL"
+          "catches": "FRAC-SIMPLIFY-PARTIAL",
+          "feedback": "You might have thought that Ravi divided by different numbers, but he divided nothing — he took 1 off each. Both 12 and 18 divide by 6, giving 2/3."
         },
         {
           "text": "Stopped before the fraction was fully simplified",
           "correct": false,
-          "catches": "FRAC-SIMPLIFY-PARTIAL"
+          "catches": "FRAC-SIMPLIFY-PARTIAL",
+          "feedback": "You might have thought that Ravi stopped too soon, but 11/17 is not a simpler name for 12/18 at all."
         },
         {
           "text": "Found an equivalent fraction instead of simplifying",
           "correct": false,
-          "catches": "FRAC-EQUIV-ADD"
+          "catches": "FRAC-EQUIV-ADD",
+          "feedback": "You might have thought that Ravi found an equivalent fraction, but 11/17 is not equivalent to 12/18. Simplifying divides both parts by the same factor."
         }
       ],
       "explanation": "Simplifying means dividing the top and the bottom by the same number. 12 and 18 both divide by 6, so 12/18 = 2/3. Subtracting 1 from each leaves 11/17, which is a different fraction, not a simpler name for the same one."
@@ -137,17 +149,20 @@
         {
           "text": "4/5",
           "correct": false,
-          "catches": "FRAC-EQUIV-ADD"
+          "catches": "FRAC-EQUIV-ADD",
+          "feedback": "You might have thought that adding 1 to the top and the bottom keeps the fraction, but 4/5 is a different fraction. 3/4 = 6/8."
         },
         {
           "text": "3/5",
           "correct": false,
-          "catches": "FRAC-EQUIV-MIXED"
+          "catches": "FRAC-EQUIV-MIXED",
+          "feedback": "You might have thought that 3/5 is the same as 3/4, but the denominators differ. 3/4 = 6/8."
         },
         {
           "text": "7/8",
           "correct": false,
-          "catches": "FRAC-EQUIV-MIXED"
+          "catches": "FRAC-EQUIV-MIXED",
+          "feedback": "You might have thought that 7/8 is the same as 3/4, but 7/8 is closer to a whole. 3/4 = 6/8."
         }
       ],
       "explanation": "Multiplying the top and the bottom by the same number gives an equivalent fraction: 3/4 = 6/8. Adding 1 to each gives 4/5, which is a different fraction. 3/5 and 7/8 do not split the same whole in the same place."
@@ -166,17 +181,20 @@
         {
           "text": "5.3",
           "correct": false,
-          "catches": "FRAC-BAR-DECIMAL"
+          "catches": "FRAC-BAR-DECIMAL",
+          "feedback": "You might have thought that 5/3 is 5.3, but the fraction bar is not a decimal point. 5 ÷ 3 = 1 2/3."
         },
         {
           "text": "3/5",
           "correct": false,
-          "catches": "FRAC-WHOLE-NUM"
+          "catches": "FRAC-WHOLE-NUM",
+          "feedback": "You might have thought that 3/5 equals 5/3, but 3/5 is 5/3 upside down."
         },
         {
           "text": "15",
           "correct": false,
-          "catches": "FRAC-WHOLE-NUM"
+          "catches": "FRAC-WHOLE-NUM",
+          "feedback": "You might have thought that 5/3 is 5 × 3, but the fraction means 5 ÷ 3 = 1 2/3."
         }
       ],
       "explanation": "5/3 means 5 ÷ 3, which is 1 remainder 2, so it is 1 2/3. The fraction bar is not a decimal point, so 5/3 is not 5.3. 3/5 is the reciprocal, and 15 comes from multiplying 5 by 3 instead of dividing."
@@ -195,17 +213,20 @@
         {
           "text": "7.2",
           "correct": false,
-          "catches": "FRAC-REVERSE"
+          "catches": "FRAC-REVERSE",
+          "feedback": "You might have thought that you apply 3/5 to 12 again, but 12 is already 3/5 of the number. One fifth is 4, so the whole is 20."
         },
         {
           "text": "36",
           "correct": false,
-          "catches": "FRAC-OF-AMOUNT"
+          "catches": "FRAC-OF-AMOUNT",
+          "feedback": "You might have thought that you multiply 12 by 3, but if 3/5 is 12 then 1/5 is 4, and the whole is 5 × 4 = 20."
         },
         {
           "text": "4",
           "correct": false,
-          "catches": "FRAC-OF-AMOUNT"
+          "catches": "FRAC-OF-AMOUNT",
+          "feedback": "You might have thought that 4 is the number, but it is one fifth of it."
         }
       ],
       "explanation": "If 3/5 of the number is 12, then 1/5 is 12 ÷ 3 = 4, and the whole number is 5 × 4 = 20. Applying 3/5 to 12 again gives 7.2, and multiplying by 3 gives 36; neither finds the whole from the part."
@@ -224,17 +245,20 @@
         {
           "text": "1/2 × 1/4",
           "correct": false,
-          "catches": "FRAC-DIVIDE-FIRST"
+          "catches": "FRAC-DIVIDE-FIRST",
+          "feedback": "You might have thought that multiplying gives 2, but 1/2 × 1/4 = 1/8. Dividing asks how many quarters are in a half."
         },
         {
           "text": "1/2 + 1/4",
           "correct": false,
-          "catches": "FRAC-ADD-ACROSS"
+          "catches": "FRAC-ADD-ACROSS",
+          "feedback": "You might have thought that adding gives 2, but 1/2 + 1/4 = 3/4."
         },
         {
           "text": "1/2 − 1/4",
           "correct": false,
-          "catches": "FRAC-SUB-ACROSS"
+          "catches": "FRAC-SUB-ACROSS",
+          "feedback": "You might have thought that subtracting gives 2, but 1/2 − 1/4 = 1/4."
         }
       ],
       "explanation": "1/2 ÷ 1/4 asks how many quarters fit in a half, which is 2. Multiplying instead gives 1/8, which is much smaller. Adding gives 3/4, and subtracting gives 1/4."
@@ -249,7 +273,8 @@
         {
           "text": "Always",
           "correct": false,
-          "catches": "FRAC-BIG-DENOM"
+          "catches": "FRAC-BIG-DENOM",
+          "feedback": "You might have thought that a bigger denominator always means a smaller fraction, but 3/4 is bigger than 1/2 even though 4 is bigger than 2 — the numerators differ."
         },
         {
           "text": "Sometimes",
@@ -258,7 +283,8 @@
         {
           "text": "Never",
           "correct": false,
-          "catches": "FRAC-BIG-DENOM"
+          "catches": "FRAC-BIG-DENOM",
+          "feedback": "You might have thought that it is never true, but with numerator 1 a bigger denominator does give a smaller fraction: 1/3 is smaller than 1/2."
         }
       ],
       "explanation": "Sometimes. With the same numerator, a bigger denominator gives a smaller fraction: 1/3 is smaller than 1/2. But 3/4 is bigger than 1/2 even though 4 is bigger than 2, because the numerators are different. The denominator has to be compared with the numerator."
@@ -277,17 +303,20 @@
         {
           "text": "1/8",
           "correct": 0,
-          "catches": "FRAC-BIG-DENOM"
+          "catches": "FRAC-BIG-DENOM",
+          "feedback": "You might have thought that 1/8 is bigger than 1/5, but eighths are smaller pieces than fifths."
         },
         {
           "text": "1/10",
           "correct": 0,
-          "catches": "FRAC-BIG-DENOM"
+          "catches": "FRAC-BIG-DENOM",
+          "feedback": "You might have thought that 1/10 is bigger than 1/5, but it is smaller."
         },
         {
           "text": "1/20",
           "correct": 0,
-          "catches": "FRAC-BIG-DENOM"
+          "catches": "FRAC-BIG-DENOM",
+          "feedback": "You might have thought that 1/20 is bigger, but with numerator 1 a bigger denominator means a smaller fraction."
         }
       ],
       "explanation": "With numerator 1, a bigger denominator makes a smaller fraction, so 1/8, 1/10 and 1/20 are all smaller than 1/5. 1/3 is bigger, because thirds are larger pieces than fifths."
@@ -314,12 +343,14 @@
         {
           "text": "4/6",
           "correct": false,
-          "catches": "FRAC-EQUIV-MIXED"
+          "catches": "FRAC-EQUIV-MIXED",
+          "feedback": "You might have thought that 4/6 is the same as 1/2, but 4/6 simplifies to 2/3."
         },
         {
           "text": "3/4",
           "correct": false,
-          "catches": "FRAC-EQUIV-ADD"
+          "catches": "FRAC-EQUIV-ADD",
+          "feedback": "You might have thought that 3/4 is the same as 1/2, but 3/4 is three quarters."
         }
       ],
       "explanation": "Multiplying the top and the bottom by the same number keeps the value: 1/2 = 2/4 = 3/6 = 5/10. 4/6 simplifies to 2/3 and 3/4 is three quarters, so neither is the same as a half."
@@ -338,17 +369,20 @@
         {
           "text": "3/5",
           "correct": 0,
-          "catches": "FRAC-COMPARE-PARTS"
+          "catches": "FRAC-COMPARE-PARTS",
+          "feedback": "You might have thought that 3/5 is smaller than a half, but 3 is more than half of 5."
         },
         {
           "text": "4/7",
           "correct": 0,
-          "catches": "FRAC-COMPARE-PARTS"
+          "catches": "FRAC-COMPARE-PARTS",
+          "feedback": "You might have thought that 4/7 is smaller than a half, but 4 is more than half of 7."
         },
         {
           "text": "5/8",
           "correct": 0,
-          "catches": "FRAC-COMPARE-PARTS"
+          "catches": "FRAC-COMPARE-PARTS",
+          "feedback": "You might have thought that 5/8 is smaller than a half, but it is bigger. 5/12 is the smaller one."
         }
       ],
       "explanation": "A fraction is smaller than 1/2 when the numerator is less than half the denominator. 5/12 is less than 6/12, so it is smaller. 3/5, 4/7 and 5/8 all have more than half the denominator on top."
@@ -376,12 +410,14 @@
         {
           "text": "3/1",
           "correct": false,
-          "catches": "FRAC-WHOLE-NUM"
+          "catches": "FRAC-WHOLE-NUM",
+          "feedback": "You might have thought that 3/1 equals 1, but it is three wholes. Equal to 1 means the top and the bottom are the same."
         },
         {
           "text": "5/4",
           "correct": false,
-          "catches": "FRAC-WHOLE-NUM"
+          "catches": "FRAC-WHOLE-NUM",
+          "feedback": "You might have thought that 5/4 equals 1, but it is one and a quarter."
         }
       ],
       "explanation": "When the numerator and the denominator are the same, the whole is split into that many parts and all of them are taken, so the fraction is 1: 2/2, 4/4 and 6/6 all equal 1. 3/1 is 3 wholes and 5/4 is more than 1."
@@ -401,17 +437,20 @@
         {
           "text": "3/2 cups",
           "correct": false,
-          "catches": "FRAC-MULT-COMMON"
+          "catches": "FRAC-MULT-COMMON",
+          "feedback": "You might have thought that half the recipe means 3/2 cups, but that doubles the sugar. Half of 3/4 is 3/8."
         },
         {
           "text": "1/4 of a cup",
           "correct": false,
-          "catches": "FRAC-MULT-COMMON"
+          "catches": "FRAC-MULT-COMMON",
+          "feedback": "You might have thought that you subtract a half, but halving is multiplying: 3/4 × 1/2 = 3/8."
         },
         {
           "text": "3/4 of a cup",
           "correct": false,
-          "catches": "FRAC-OF-AMOUNT"
+          "catches": "FRAC-OF-AMOUNT",
+          "feedback": "You might have thought that the amount stays the same, but half the recipe uses half the sugar: 3/8."
         }
       ],
       "explanation": "Half the recipe means half of 3/4: 3/4 × 1/2 = 3/8. The answer is smaller than 3/4, which makes sense for half a recipe. 3/2 doubles it, 1/4 subtracts a half instead of halving, and 3/4 leaves the amount unchanged."
@@ -430,17 +469,20 @@
         {
           "text": "2 1/4",
           "correct": false,
-          "catches": "FRAC-MIXED-IMPROPER"
+          "catches": "FRAC-MIXED-IMPROPER",
+          "feedback": "You might have thought that 11/4 is 2 1/4, but 11 ÷ 4 is 2 remainder 3, so it is 2 3/4."
         },
         {
           "text": "3 1/4",
           "correct": false,
-          "catches": "FRAC-MIXED-IMPROPER"
+          "catches": "FRAC-MIXED-IMPROPER",
+          "feedback": "You might have thought that 11/4 is 3 1/4, but 11 ÷ 4 is 2 remainder 3."
         },
         {
           "text": "11 4/1",
           "correct": false,
-          "catches": "FRAC-MIXED-IMPROPER"
+          "catches": "FRAC-MIXED-IMPROPER",
+          "feedback": "You might have thought that 11 4/1 is the mixed number, but the numerator and the denominator are not whole numbers to split off."
         }
       ],
       "explanation": "11 ÷ 4 = 2 remainder 3, so 11/4 = 2 3/4. 2 1/4 uses the wrong remainder; 3 1/4 has the whole number too big; and 11 4/1 reads the numerator and denominator as separate wholes."

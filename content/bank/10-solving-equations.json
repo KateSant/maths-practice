@@ -22,17 +22,20 @@
         {
           "text": "9 km",
           "correct": false,
-          "catches": "EQ-SIGN-ERROR"
+          "catches": "EQ-SIGN-ERROR",
+          "feedback": "You might have thought that the journey is 9 km, but that adds the £5 instead of subtracting it. 2x = 8, so x = 4."
         },
         {
           "text": "8 km",
           "correct": false,
-          "catches": "EQ-STOP-EARLY"
+          "catches": "EQ-STOP-EARLY",
+          "feedback": "You might have thought that the journey is 8 km, but that stops at 2x = 8 without dividing by 2."
         },
         {
           "text": "6.5 km",
           "correct": false,
-          "catches": "EQ-ORDER-INVERSE"
+          "catches": "EQ-ORDER-INVERSE",
+          "feedback": "You might have thought that the journey is 6.5 km, but that divides before subtracting. 13 − 5 = 8, then 8 ÷ 2 = 4."
         }
       ],
       "explanation": "The journey costs 2x + 5 = 13, where x is the number of kilometres. Subtract 5 from both sides: 2x = 8, then divide by 2: x = 4. Adding the 5 instead gives 9, and stopping at 2x = 8 gives 8 km instead of dividing by 2. 6.5 comes from dividing before subtracting."
@@ -51,17 +54,20 @@
         {
           "text": "x = 9/7",
           "correct": false,
-          "catches": "EQ-BOTH-SIDES"
+          "catches": "EQ-BOTH-SIDES",
+          "feedback": "You might have thought that the x terms add, but subtract 2x from both sides: 3x = 9, so x = 3."
         },
         {
           "text": "x = 9",
           "correct": false,
-          "catches": "EQ-STOP-EARLY"
+          "catches": "EQ-STOP-EARLY",
+          "feedback": "You might have thought that x = 9, but that stops at 3x = 9 without dividing by 3."
         },
         {
           "text": "x = 3/7",
           "correct": false,
-          "catches": "EQ-BOTH-SIDES"
+          "catches": "EQ-BOTH-SIDES",
+          "feedback": "You might have thought that x = 3/7, but 3x = 9 gives x = 3."
         }
       ],
       "explanation": "Subtract 2x from both sides: 3x = 9, so x = 3. Adding the x terms instead gives 7x = 9, which is why 9/7 appears. Stopping at 3x = 9 leaves x = 9, and dividing the wrong way gives 3/7."
@@ -80,17 +86,20 @@
         {
           "text": "x = 3",
           "correct": false,
-          "catches": "EQ-SIGN-ERROR"
+          "catches": "EQ-SIGN-ERROR",
+          "feedback": "You might have thought that x = 3, but that drops the sign. 2 − 5 = −3."
         },
         {
           "text": "x = 7",
           "correct": false,
-          "catches": "EQ-SIGN-ERROR"
+          "catches": "EQ-SIGN-ERROR",
+          "feedback": "You might have thought that x = 7, but that adds the 5 instead of subtracting it."
         },
         {
           "text": "There is no solution",
           "correct": false,
-          "catches": "EQ-NO-NEGATIVE"
+          "catches": "EQ-NO-NEGATIVE",
+          "feedback": "You might have thought that there is no solution, but a negative answer is an answer: −3 + 5 = 2."
         }
       ],
       "explanation": "Subtract 5 from both sides: x = 2 − 5 = −3. A negative answer is a solution. Keeping the size and dropping the sign gives 3, adding instead of subtracting gives 7, and rejecting the answer as impossible is the misconception that equations must have positive solutions."
@@ -109,17 +118,20 @@
         {
           "text": "Divide both sides by 3",
           "correct": false,
-          "catches": "EQ-FRACTION-COEFF"
+          "catches": "EQ-FRACTION-COEFF",
+          "feedback": "You might have thought that dividing by 3 undoes it, but x is already divided by 3. Multiply both sides by 3 to get x = 12."
         },
         {
           "text": "Multiply both sides by 4",
           "correct": false,
-          "catches": "EQ-OP-CONFUSE"
+          "catches": "EQ-OP-CONFUSE",
+          "feedback": "You might have thought that multiplying by 4 undoes it, but the 3 is the divisor. Multiply both sides by 3."
         },
         {
           "text": "Subtract 3 from both sides",
           "correct": false,
-          "catches": "EQ-BALANCE-AS-ACTION"
+          "catches": "EQ-BALANCE-AS-ACTION",
+          "feedback": "You might have thought that you subtract the 3, but it is a divisor, not something added. x = 12."
         }
       ],
       "explanation": "x is divided by 3, so undo it by multiplying both sides by 3: x = 12. Dividing again makes x smaller, and subtracting 3 treats the equation as \"work out the answer\" rather than keeping both sides equal."
@@ -138,17 +150,20 @@
         {
           "text": "Added 5 to only one side",
           "correct": false,
-          "catches": "EQ-ONE-SIDE"
+          "catches": "EQ-ONE-SIDE",
+          "feedback": "You might have thought that Sam added 5 to one side only, but he added it to both. He divided 22 by 4 instead of 32 by 4."
         },
         {
           "text": "Subtracted 5 instead of adding it",
           "correct": false,
-          "catches": "EQ-SIGN-ERROR"
+          "catches": "EQ-SIGN-ERROR",
+          "feedback": "You might have thought that Sam subtracted the 5, but he added it correctly. The order of his steps is what went wrong."
         },
         {
           "text": "Left the 4 attached to x",
           "correct": false,
-          "catches": "EQ-STOP-EARLY"
+          "catches": "EQ-STOP-EARLY",
+          "feedback": "You might have thought that Sam left the 4 attached to x, but he did divide by 4 — just before undoing the −5."
         }
       ],
       "explanation": "Undo the − 5 first: 4x = 32, then divide by 4 to get x = 8. Sam divided 22 by 4 instead, working on the wrong side of the subtraction. Whatever is done must be done to the whole of both sides, in the reverse order to the one the expression was built in."
@@ -167,17 +182,20 @@
         {
           "text": "Divided before subtracting",
           "correct": false,
-          "catches": "EQ-ORDER-INVERSE"
+          "catches": "EQ-ORDER-INVERSE",
+          "feedback": "You might have thought that Lina divided too early, but her order was right: subtract, then divide. It is the sign of the 2 that went wrong."
         },
         {
           "text": "Multiplied by 3 instead of dividing",
           "correct": false,
-          "catches": "EQ-OP-CONFUSE"
+          "catches": "EQ-OP-CONFUSE",
+          "feedback": "You might have thought that Lina multiplied by 3, but she divided by it. She added 2 where she should have subtracted it."
         },
         {
           "text": "Worked on only one side",
           "correct": false,
-          "catches": "EQ-ONE-SIDE"
+          "catches": "EQ-ONE-SIDE",
+          "feedback": "You might have thought that Lina worked on one side only, but she worked on both. Her slip was adding 2 to 11."
         }
       ],
       "explanation": "Undo the + 2 by subtracting: 3x = 9, so x = 3. Lina used the inverse of the wrong sign, adding 2 to get 13. The operations must be undone in reverse order, each one by its inverse."
@@ -196,17 +214,20 @@
         {
           "text": "Subtracted 4 before multiplying",
           "correct": false,
-          "catches": "EQ-ORDER-INVERSE"
+          "catches": "EQ-ORDER-INVERSE",
+          "feedback": "You might have thought that Priya subtracted 4 first, but she divided 5 by 2 instead of multiplying it."
         },
         {
           "text": "Applied the 2 to only part of the left side",
           "correct": false,
-          "catches": "EQ-DIVIDE-ALL"
+          "catches": "EQ-DIVIDE-ALL",
+          "feedback": "You might have thought that Priya applied the 2 to part of the left side, but she applied it to the whole right side, in the wrong direction."
         },
         {
           "text": "Ignored the bracket",
           "correct": false,
-          "catches": "EQ-DIVIDE-ALL"
+          "catches": "EQ-DIVIDE-ALL",
+          "feedback": "You might have thought that Priya ignored the bracket, but she kept it. The error is dividing by 2 instead of multiplying by it."
         }
       ],
       "explanation": "The whole left side is divided by 2, so undo it by multiplying both sides by 2: x + 4 = 10, so x = 6. Priya divided the right side as well, which makes it smaller instead of undoing the division. The same operation must be applied to the whole of both sides."
@@ -225,17 +246,20 @@
         {
           "text": "x = 1",
           "correct": false,
-          "catches": "EQ-DIVIDE-ALL"
+          "catches": "EQ-DIVIDE-ALL",
+          "feedback": "You might have thought that x = 1, but that divides only the x by 3. Divide both sides by 3 first: x − 2 = 3, so x = 5."
         },
         {
           "text": "x = 3",
           "correct": false,
-          "catches": "EQ-DIVIDE-ALL"
+          "catches": "EQ-DIVIDE-ALL",
+          "feedback": "You might have thought that x = 3, but that is the value of x − 2. Add the 2 back: x = 5."
         },
         {
           "text": "x = 11",
           "correct": false,
-          "catches": "EQ-ORDER-INVERSE"
+          "catches": "EQ-ORDER-INVERSE",
+          "feedback": "You might have thought that x = 11, but that adds the 2 before dividing. x − 2 = 3, so x = 5."
         }
       ],
       "explanation": "Either divide both sides by 3 first: x − 2 = 3, so x = 5; or expand: 3x − 6 = 9, so 3x = 15 and x = 5. Dividing only the x by 3 gives x = 1, and 3 is the value of x − 2, not of x."
@@ -254,17 +278,20 @@
         {
           "text": "x = 1",
           "correct": false,
-          "catches": "EQ-BOTH-SIDES"
+          "catches": "EQ-BOTH-SIDES",
+          "feedback": "You might have thought that x = 1, but that adds the x terms. Subtract x from both sides: 2x − 4 = 2, so x = 3."
         },
         {
           "text": "x = 6",
           "correct": false,
-          "catches": "EQ-STOP-EARLY"
+          "catches": "EQ-STOP-EARLY",
+          "feedback": "You might have thought that x = 6, but that stops at 2x = 6 without dividing by 2."
         },
         {
           "text": "x = −3",
           "correct": false,
-          "catches": "EQ-SIGN-ERROR"
+          "catches": "EQ-SIGN-ERROR",
+          "feedback": "You might have thought that x = −3, but that is a sign slip. 2x = 6 gives x = 3."
         }
       ],
       "explanation": "Subtract x from both sides: 2x − 4 = 2. Add 4: 2x = 6, so x = 3. Adding the x terms instead gives 4x = 6, which leads to 1.5 or 1. Stopping at 2x = 6 gives 6, and a sign slip gives −3."
@@ -291,12 +318,14 @@
         {
           "text": "x − 1 = 5",
           "correct": false,
-          "catches": "EQ-OP-CONFUSE"
+          "catches": "EQ-OP-CONFUSE",
+          "feedback": "You might have thought that x − 1 = 5 has the solution x = 4, but it needs x = 6."
         },
         {
           "text": "3x = 15",
           "correct": false,
-          "catches": "EQ-OP-CONFUSE"
+          "catches": "EQ-OP-CONFUSE",
+          "feedback": "You might have thought that 3x = 15 has the solution x = 4, but it needs x = 5."
         }
       ],
       "explanation": "Substitute x = 4 and check: 4 + 3 = 7, 2 × 4 = 8 and 4/2 = 2, so the first three work. x − 1 = 5 needs x = 6, and 3x = 15 needs x = 5. Substituting is the quickest check."
@@ -315,17 +344,20 @@
         {
           "text": "x = 5",
           "correct": false,
-          "catches": "EQ-DIVIDE-ALL"
+          "catches": "EQ-DIVIDE-ALL",
+          "feedback": "You might have thought that x = 5, but that subtracts 3 from 14 without halving first. x + 3 = 7, so x = 4."
         },
         {
           "text": "x = 11",
           "correct": false,
-          "catches": "EQ-ORDER-INVERSE"
+          "catches": "EQ-ORDER-INVERSE",
+          "feedback": "You might have thought that x = 11, but that forgets the 2. x + 3 = 7."
         },
         {
           "text": "x = 2",
           "correct": false,
-          "catches": "EQ-DIVIDE-ALL"
+          "catches": "EQ-DIVIDE-ALL",
+          "feedback": "You might have thought that x = 2, but 7 − 3 = 4."
         }
       ],
       "explanation": "Divide both sides by 2: x + 3 = 7, so x = 4. Expanding first gives 2x + 6 = 14, then 2x = 8 and x = 4 as well. Subtracting 3 from 14 gives 11, which forgets the 2; and 2 is 7 − 5, not 7 − 3."
@@ -344,17 +376,20 @@
         {
           "text": "Subtract 3 from both sides",
           "correct": false,
-          "catches": "EQ-ORDER-INVERSE"
+          "catches": "EQ-ORDER-INVERSE",
+          "feedback": "You might have thought that you subtract 3 first, but the 3 was subtracted to build the expression, so undo it by adding: 5x = 20."
         },
         {
           "text": "Divide both sides by 5",
           "correct": false,
-          "catches": "EQ-ORDER-INVERSE"
+          "catches": "EQ-ORDER-INVERSE",
+          "feedback": "You might have thought that you divide by 5 first, but that leaves x − 3/5. Undo the −3 first."
         },
         {
           "text": "Subtract 5x from both sides",
           "correct": false,
-          "catches": "EQ-OP-CONFUSE"
+          "catches": "EQ-OP-CONFUSE",
+          "feedback": "You might have thought that you subtract 5x, but that moves the x to the wrong side. Add 3 to both sides."
         }
       ],
       "explanation": "The 3 was subtracted to build the expression, so undo it by adding 3 to both sides: 5x = 20, then x = 4. Subtracting 3 again takes it further from the answer, and dividing by 5 first leaves x − 3/5 on the left."
@@ -382,12 +417,14 @@
         {
           "text": "2x = 12",
           "correct": false,
-          "catches": "EQ-OP-CONFUSE"
+          "catches": "EQ-OP-CONFUSE",
+          "feedback": "You might have thought that 2x = 12 has the solution x = 5, but it needs x = 6."
         },
         {
           "text": "x + 5 = 5",
           "correct": false,
-          "catches": "EQ-BALANCE-AS-ACTION"
+          "catches": "EQ-BALANCE-AS-ACTION",
+          "feedback": "You might have thought that x + 5 = 5 has the solution x = 5, but it needs x = 0."
         }
       ],
       "explanation": "Check each by substituting 5: 5 + 2 = 7, 3 × 5 = 15 and 5 − 1 = 4 all work. 2x = 12 needs x = 6, and x + 5 = 5 needs x = 0."
@@ -402,7 +439,8 @@
         {
           "text": "Always",
           "correct": false,
-          "catches": "EQ-BALANCE-AS-ACTION"
+          "catches": "EQ-BALANCE-AS-ACTION",
+          "feedback": "You might have thought that an equation always has exactly one solution, but x + 1 = x + 1 is true for every x."
         },
         {
           "text": "Sometimes",
@@ -411,7 +449,8 @@
         {
           "text": "Never",
           "correct": false,
-          "catches": "EQ-BALANCE-AS-ACTION"
+          "catches": "EQ-BALANCE-AS-ACTION",
+          "feedback": "You might have thought that an equation never has exactly one solution, but x + 5 = 2 has exactly one, −3."
         }
       ],
       "explanation": "Sometimes. x + 5 = 2 has exactly one solution, x = −3, and x + 1 = x + 1 is true for every x, so it has infinitely many. An equation is a statement that two expressions are equal, and the number of values that make it true depends on the equation."
@@ -430,17 +469,20 @@
         {
           "text": "x + 2 = 8",
           "correct": false,
-          "catches": "EQ-OP-CONFUSE"
+          "catches": "EQ-OP-CONFUSE",
+          "feedback": "You might have thought that x + 2 = 8 does not have the solution x = 6, but 6 + 2 = 8. 2x = 10 needs x = 5."
         },
         {
           "text": "x/2 = 3",
           "correct": false,
-          "catches": "EQ-OP-CONFUSE"
+          "catches": "EQ-OP-CONFUSE",
+          "feedback": "You might have thought that x/2 = 3 does not have the solution x = 6, but 6/2 = 3. 2x = 10 is the one that does not."
         },
         {
           "text": "3x = 18",
           "correct": false,
-          "catches": "EQ-OP-CONFUSE"
+          "catches": "EQ-OP-CONFUSE",
+          "feedback": "You might have thought that 3x = 18 does not have the solution x = 6, but 3 × 6 = 18. 2x = 10 is the odd one out."
         }
       ],
       "explanation": "Substitute x = 6: 6 + 2 = 8, 6/2 = 3 and 3 × 6 = 18 all work. 2x = 10 needs x = 5, not 6. Substituting is the quickest way to check."

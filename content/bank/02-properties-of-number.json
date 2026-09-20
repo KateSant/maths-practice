@@ -21,17 +21,20 @@
         {
           "text": "15",
           "correct": false,
-          "catches": "PROP-CUBE-TRIPLE"
+          "catches": "PROP-CUBE-TRIPLE",
+          "feedback": "You might have thought that 5³ means 5 × 3, but the index says how many 5s to multiply: 5 × 5 × 5 = 125."
         },
         {
           "text": "25",
           "correct": false,
-          "catches": "PROP-POWER-AS-PRODUCT"
+          "catches": "PROP-POWER-AS-PRODUCT",
+          "feedback": "You might have thought that 5³ is 5 × 5, but that is 5². Cubing uses three 5s."
         },
         {
           "text": "53",
           "correct": false,
-          "catches": "PROP-INDEX-AS-NUMBER"
+          "catches": "PROP-INDEX-AS-NUMBER",
+          "feedback": "You might have thought that 5³ is written 53, but the index is a power, not a digit beside the base."
         }
       ],
       "explanation": "5³ means 5 × 5 × 5 = 125. Multiplying by the index gives 5 × 3 = 15, which is the cube-triple error. Squaring uses only two 5s and gives 25, and writing 53 reads the index as a digit beside the base."
@@ -50,17 +53,20 @@
         {
           "text": "49",
           "correct": 0,
-          "catches": "PROP-MULTIPLE-LIMIT"
+          "catches": "PROP-MULTIPLE-LIMIT",
+          "feedback": "You might have thought that 49 is not a multiple of 7, but 49 is 7 × 7. The one that is not is 75."
         },
         {
           "text": "98",
           "correct": 0,
-          "catches": "PROP-MULTIPLE-LIMIT"
+          "catches": "PROP-MULTIPLE-LIMIT",
+          "feedback": "You might have thought that 98 is not a multiple of 7, but 98 is 7 × 14. 75 is the one that is not."
         },
         {
           "text": "140",
           "correct": 0,
-          "catches": "PROP-MULTIPLE-LIMIT"
+          "catches": "PROP-MULTIPLE-LIMIT",
+          "feedback": "You might have thought that 140 is not a multiple of 7, but the multiples carry on past the times table: 140 = 7 × 20. 75 is the one that is not."
         }
       ],
       "explanation": "49, 98 and 140 are all multiples of 7: 7 × 7, 7 × 14 and 7 × 20. 75 is not, because 7 × 10 = 70 and 7 × 11 = 77. The 7 times table does not stop at 12 × 7, so the multiples carry on past 84."
@@ -79,17 +85,20 @@
         {
           "text": "Found the square root instead",
           "correct": false,
-          "catches": "PROP-POWER-AS-PRODUCT"
+          "catches": "PROP-POWER-AS-PRODUCT",
+          "feedback": "You might have thought that Mia found the square root, but the square root of 9 is 3. She wrote 6, which is 3 × 2."
         },
         {
           "text": "Worked out 2³ instead of 3²",
           "correct": false,
-          "catches": "PROP-POWER-AS-PRODUCT"
+          "catches": "PROP-POWER-AS-PRODUCT",
+          "feedback": "You might have thought that Mia worked out 2³, but that is 8. Her 6 came from 3 × 2."
         },
         {
           "text": "Added the base and the index",
           "correct": false,
-          "catches": "PROP-POWER-AS-PRODUCT"
+          "catches": "PROP-POWER-AS-PRODUCT",
+          "feedback": "You might have thought that Mia added 3 and 2, but that gives 5. She wrote 6, which is 3 × 2."
         }
       ],
       "explanation": "3² means 3 × 3 = 9. Mia has done 3 × 2 = 6: the index says how many copies of the base to multiply, not what to multiply the base by. Working out 2³ gives 8, adding gives 5, and the square root of 3 is not a whole number."
@@ -108,17 +117,20 @@
         {
           "text": "21",
           "correct": false,
-          "catches": "PROP-ONE-IS-PRIME"
+          "catches": "PROP-ONE-IS-PRIME",
+          "feedback": "You might have thought that 21 is prime, but 21 = 3 × 7, so it has four factors. 29 has only two."
         },
         {
           "text": "27",
           "correct": false,
-          "catches": "PROP-ONE-IS-PRIME"
+          "catches": "PROP-ONE-IS-PRIME",
+          "feedback": "You might have thought that 27 is prime because it is odd, but 27 = 3 × 9. 29 is the prime here."
         },
         {
           "text": "1",
           "correct": false,
-          "catches": "PROP-ONE-IS-PRIME"
+          "catches": "PROP-ONE-IS-PRIME",
+          "feedback": "You might have thought that 1 is prime, but a prime has exactly two factors and 1 has only one. 29 is the prime."
         }
       ],
       "explanation": "29 has no factors other than 1 and itself. 21 = 3 × 7 and 27 = 3 × 9, so they are odd but not prime. 1 is not prime either: a prime has exactly two factors, and 1 has only one."
@@ -141,12 +153,14 @@
         {
           "text": "3 × 5 × 7",
           "correct": false,
-          "catches": "PROP-STRUCTURE-PRODUCT"
+          "catches": "PROP-STRUCTURE-PRODUCT",
+          "feedback": "You might have thought that 3 × 5 × 7 is a multiple of 10, but there is no 2 in it, so it is odd: 105."
         },
         {
           "text": "2 × 3 × 7",
           "correct": false,
-          "catches": "PROP-STRUCTURE-PRODUCT"
+          "catches": "PROP-STRUCTURE-PRODUCT",
+          "feedback": "You might have thought that 2 × 3 × 7 is a multiple of 10, but it has no 5 in it: 2 × 3 × 7 = 42."
         }
       ],
       "explanation": "A product is a multiple of 10 when it contains both a 2 and a 5. 2 × 3 × 5 and 2 × 5 × 7 both do, so both are multiples of 10 — you can see it without working them out. 3 × 5 × 7 has no 2 and 2 × 3 × 7 has no 5, so neither is a multiple of 10."
@@ -165,17 +179,20 @@
         {
           "text": "4 × 6",
           "correct": false,
-          "catches": "PROP-PRIME-FACTOR"
+          "catches": "PROP-PRIME-FACTOR",
+          "feedback": "You might have thought that 4 × 6 is a prime factorisation, but 4 and 6 are not prime: 4 = 2 × 2 and 6 = 2 × 3."
         },
         {
           "text": "2 × 12",
           "correct": false,
-          "catches": "PROP-PRIME-FACTOR"
+          "catches": "PROP-PRIME-FACTOR",
+          "feedback": "You might have thought that 2 × 12 is finished, but 12 is not prime: 12 = 2 × 2 × 3."
         },
         {
           "text": "3 × 8",
           "correct": false,
-          "catches": "PROP-PRIME-FACTOR"
+          "catches": "PROP-PRIME-FACTOR",
+          "feedback": "You might have thought that 3 × 8 is finished, but 8 is not prime: 8 = 2 × 2 × 2."
         }
       ],
       "explanation": "Every factor in a prime factorisation must itself be prime. 2 × 2 × 2 × 3 uses only primes, and it equals 24. 4 × 6, 2 × 12 and 3 × 8 all equal 24, but none is finished: 4, 6, 12 and 8 are all composite."
@@ -194,17 +211,20 @@
         {
           "text": "14",
           "correct": false,
-          "catches": "PROP-LCM-ADDITIVE"
+          "catches": "PROP-LCM-ADDITIVE",
+          "feedback": "You might have thought that adding 6 and 8 gives the lowest common multiple, but 14 is not a multiple of either."
         },
         {
           "text": "48",
           "correct": false,
-          "catches": "PROP-HCF-LCM"
+          "catches": "PROP-HCF-LCM",
+          "feedback": "You might have thought that 48 is the lowest common multiple, but 24 is smaller and both 6 and 8 divide into it."
         },
         {
           "text": "2",
           "correct": false,
-          "catches": "PROP-HCF-LCM"
+          "catches": "PROP-HCF-LCM",
+          "feedback": "You might have thought that 2 is the lowest common multiple, but it is the highest common factor."
         }
       ],
       "explanation": "Multiples of 6 are 6, 12, 18, 24, … and multiples of 8 are 8, 16, 24, … so the lowest common multiple is 24. Adding 6 + 8 gives 14, which is not a multiple of either. 48 is a common multiple but not the lowest, and 2 is the highest common factor."
@@ -223,17 +243,20 @@
         {
           "text": "5",
           "correct": 0,
-          "catches": "PROP-FACTOR-PAIRS"
+          "catches": "PROP-FACTOR-PAIRS",
+          "feedback": "You might have thought that 5 is not a factor of 30, but 30 ÷ 5 = 6 exactly. 4 is the one that is not."
         },
         {
           "text": "6",
           "correct": 0,
-          "catches": "PROP-FACTOR-PAIRS"
+          "catches": "PROP-FACTOR-PAIRS",
+          "feedback": "You might have thought that 6 is not a factor of 30, but 30 ÷ 6 = 5 exactly. 4 is the one that is not."
         },
         {
           "text": "15",
           "correct": 0,
-          "catches": "PROP-FACTOR-PAIRS"
+          "catches": "PROP-FACTOR-PAIRS",
+          "feedback": "You might have thought that 15 is not a factor of 30, but 30 ÷ 15 = 2 exactly. 4 is the one that is not."
         }
       ],
       "explanation": "30 ÷ 5 = 6, 30 ÷ 6 = 5 and 30 ÷ 15 = 2, so 5, 6 and 15 are all factors of 30. 30 ÷ 4 = 7.5, which is not exact, so 4 is not a factor."
@@ -252,17 +275,20 @@
         {
           "text": "21",
           "correct": false,
-          "catches": "PROP-ONE-IS-PRIME"
+          "catches": "PROP-ONE-IS-PRIME",
+          "feedback": "You might have thought that 21 has exactly two factors, but 21 = 3 × 7, so it has four. 23 has two."
         },
         {
           "text": "25",
           "correct": false,
-          "catches": "PROP-ONE-IS-PRIME"
+          "catches": "PROP-ONE-IS-PRIME",
+          "feedback": "You might have thought that 25 has exactly two factors, but 25 = 5 × 5, so its factors are 1, 5 and 25. 23 has two."
         },
         {
           "text": "27",
           "correct": false,
-          "catches": "PROP-ONE-IS-PRIME"
+          "catches": "PROP-ONE-IS-PRIME",
+          "feedback": "You might have thought that 27 has exactly two factors, but 27 = 3 × 9. 23 is the prime."
         }
       ],
       "explanation": "Exactly two factors means prime. 23 has only 1 and 23. 21 = 3 × 7, 25 = 5 × 5 and 27 = 3 × 9, so each has more than two factors. Being odd is not enough to be prime."
@@ -281,17 +307,20 @@
         {
           "text": "2 × 3 × 15",
           "correct": false,
-          "catches": "PROP-PRIME-FACTOR"
+          "catches": "PROP-PRIME-FACTOR",
+          "feedback": "You might have thought that 2 × 3 × 15 is complete, but 15 is not prime: 15 = 3 × 5."
         },
         {
           "text": "9 × 10",
           "correct": false,
-          "catches": "PROP-PRIME-FACTOR"
+          "catches": "PROP-PRIME-FACTOR",
+          "feedback": "You might have thought that 9 × 10 is a prime factorisation, but neither 9 nor 10 is prime."
         },
         {
           "text": "3 × 30",
           "correct": false,
-          "catches": "PROP-PRIME-FACTOR"
+          "catches": "PROP-PRIME-FACTOR",
+          "feedback": "You might have thought that 3 × 30 is complete, but 30 is not prime: 30 = 2 × 3 × 5."
         }
       ],
       "explanation": "Keep factorising until every factor is prime. 90 = 2 × 45 = 2 × 3 × 15 = 2 × 3 × 3 × 5, and 2, 3, 3 and 5 are all prime. The other three all equal 90, but each still contains a composite number (15, 9, 10 or 30), so none is complete."
@@ -310,12 +339,14 @@
         {
           "text": "Sometimes",
           "correct": false,
-          "catches": "PROP-FACTOR-MULTIPLE"
+          "catches": "PROP-FACTOR-MULTIPLE",
+          "feedback": "You might have thought that it is only sometimes true, but 4 = 2 × 2, so anything built from 4s is built from 2s. It is always true."
         },
         {
           "text": "Never",
           "correct": false,
-          "catches": "PROP-FACTOR-MULTIPLE"
+          "catches": "PROP-FACTOR-MULTIPLE",
+          "feedback": "You might have thought that it is never true, but every multiple of 4 is even, so every one of them is a multiple of 2."
         }
       ],
       "explanation": "Always, because 4 = 2 × 2: any number built from 4s is also built from 2s. 4, 8, 12, 16, … are all even. A number such as 6 is a multiple of 2 but not of 4, so not every multiple of 2 is a multiple of 4 — but the question asks the other way round."
@@ -335,17 +366,20 @@
         {
           "text": "2",
           "correct": false,
-          "catches": "PROP-HCF-PARTIAL"
+          "catches": "PROP-HCF-PARTIAL",
+          "feedback": "You might have thought that 2 is the largest square tile, but 4 does not divide 18, and 6 divides both, so 6 is larger."
         },
         {
           "text": "3",
           "correct": false,
-          "catches": "PROP-HCF-PARTIAL"
+          "catches": "PROP-HCF-PARTIAL",
+          "feedback": "You might have thought that 3 is the largest, but 6 is larger and also divides both 24 and 18."
         },
         {
           "text": "72",
           "correct": false,
-          "catches": "PROP-HCF-LCM"
+          "catches": "PROP-HCF-LCM",
+          "feedback": "You might have thought that 72 is the answer, but that is the lowest common multiple, not the highest common factor."
         }
       ],
       "explanation": "The side of the tile must divide both 24 and 18, and we want the largest such number: the highest common factor. 24 = 2³ × 3 and 18 = 2 × 3², so the HCF is 2 × 3 = 6. 2 and 3 are common factors but not the highest, and 72 is the lowest common multiple."
@@ -364,17 +398,20 @@
         {
           "text": "16",
           "correct": false,
-          "catches": "PROP-SQUARE-DOUBLE"
+          "catches": "PROP-SQUARE-DOUBLE",
+          "feedback": "You might have thought that 16 is not a square number, but 16 = 4 × 4. 12 is the one that is not."
         },
         {
           "text": "25",
           "correct": false,
-          "catches": "PROP-SQUARE-DOUBLE"
+          "catches": "PROP-SQUARE-DOUBLE",
+          "feedback": "You might have thought that 25 is not a square number, but 25 = 5 × 5. 12 is the one that is not."
         },
         {
           "text": "36",
           "correct": false,
-          "catches": "PROP-SQUARE-DOUBLE"
+          "catches": "PROP-SQUARE-DOUBLE",
+          "feedback": "You might have thought that 36 is not a square number, but 36 = 6 × 6. 12 is the one that is not."
         }
       ],
       "explanation": "Square numbers are made by multiplying a whole number by itself: 16 = 4 × 4, 25 = 5 × 5 and 36 = 6 × 6. 12 is not: it lies between 9 and 16, and no whole number multiplied by itself gives 12."
@@ -393,17 +430,20 @@
         {
           "text": "1",
           "correct": 0,
-          "catches": "PROP-FACTOR-PAIRS"
+          "catches": "PROP-FACTOR-PAIRS",
+          "feedback": "You might have thought that 1 is not a factor of 12, but it divides exactly — and it is easy to forget. 5 is the one that is not."
         },
         {
           "text": "3",
           "correct": 0,
-          "catches": "PROP-FACTOR-PAIRS"
+          "catches": "PROP-FACTOR-PAIRS",
+          "feedback": "You might have thought that 3 is not a factor of 12, but 12 ÷ 3 = 4 exactly. 5 is the one that is not."
         },
         {
           "text": "4",
           "correct": 0,
-          "catches": "PROP-FACTOR-PAIRS"
+          "catches": "PROP-FACTOR-PAIRS",
+          "feedback": "You might have thought that 4 is not a factor of 12, but 12 ÷ 4 = 3 exactly. 5 is the one that is not."
         }
       ],
       "explanation": "The factors of 12 are 1, 2, 3, 4, 6 and 12. 12 ÷ 1, 12 ÷ 3 and 12 ÷ 4 are exact, so those are factors; 12 ÷ 5 = 2.4, so 5 is not.",
@@ -423,17 +463,20 @@
         {
           "text": "24.5 m",
           "correct": false,
-          "catches": "PROP-SQUARE-ROOT-HALVE"
+          "catches": "PROP-SQUARE-ROOT-HALVE",
+          "feedback": "You might have thought that halving 49 gives the side, but the side is the number that multiplies by itself: 7 × 7 = 49."
         },
         {
           "text": "14 m",
           "correct": false,
-          "catches": "PROP-SQUARE-ROOT-HALVE"
+          "catches": "PROP-SQUARE-ROOT-HALVE",
+          "feedback": "You might have thought that dividing 49 by 3.5 gives the side, but a square root is not a fixed division: 7 × 7 = 49."
         },
         {
           "text": "9 m",
           "correct": false,
-          "catches": "PROP-SQUARE-ROOT-HALVE"
+          "catches": "PROP-SQUARE-ROOT-HALVE",
+          "feedback": "You might have thought that 9 m is close enough, but 9 × 9 = 81. The side is 7 m, since 7 × 7 = 49."
         }
       ],
       "explanation": "The area of a square is side × side, so the side is √49 = 7, because 7 × 7 = 49. A square root is not halving (24.5) or dividing by 3.5 (14). 9 × 9 = 81, which is too big."

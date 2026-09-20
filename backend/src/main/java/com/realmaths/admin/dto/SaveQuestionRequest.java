@@ -56,5 +56,8 @@ public record SaveQuestionRequest(
             // The misconception code this option catches, or null. The 60-character ceiling matches
             // the answer_options.misconception_code column, so a code that fits the register cannot
             // be rejected by the database.
-            @Size(max = 60, message = "Misconception codes are limited to 60 characters.") String misconceptionCode) {}
+            @Size(max = 60, message = "Misconception codes are limited to 60 characters.") String misconceptionCode,
+            // What the student is told if they pick this option, or null to fall back to the
+            // register's line for the code. The ceiling matches answer_options.feedback.
+            @Size(max = 500, message = "Feedback is limited to 500 characters.") String feedback) {}
 }

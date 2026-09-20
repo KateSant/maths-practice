@@ -21,17 +21,20 @@
         {
           "text": "y = x + 3",
           "correct": false,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that the equation is y = x + 3, but the 3 is multiplied by x. Check it: 2 km costs £7, and 2 + 3 = 5."
         },
         {
           "text": "y = 3x − 1",
           "correct": false,
-          "catches": "GRPH-M-IS-C"
+          "catches": "GRPH-M-IS-C",
+          "feedback": "You might have thought that y = 3x − 1 fits, but it takes the £1 off instead of adding it. At 0 km the cost is £1."
         },
         {
           "text": "y = 4x",
           "correct": false,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that y = 4x fits, but it folds the £1 into the 3. The booking fee is separate: y = 3x + 1."
         }
       ],
       "explanation": "For x kilometres the cost is 3x, and the £1 booking adds on, so y = 3x + 1. Check it: 0 km costs £1 and 2 km costs £7. y = x + 3 adds 3 instead of multiplying by 3, and y = 3x − 1 subtracts the booking fee."
@@ -50,17 +53,20 @@
         {
           "text": "Gradient −3, crossing at (0, 5)",
           "correct": false,
-          "catches": "GRPH-M-IS-C"
+          "catches": "GRPH-M-IS-C",
+          "feedback": "You might have thought that the gradient is −3, but the 5 and the −3 are swapped. In y = mx + c, m = 5."
         },
         {
           "text": "Gradient 5, crossing at (0, 3)",
           "correct": false,
-          "catches": "GRPH-M-IS-C"
+          "catches": "GRPH-M-IS-C",
+          "feedback": "You might have thought that the line crosses at (0, 3), but it is (0, −3) — the sign matters."
         },
         {
           "text": "Gradient 3, crossing at (0, 5)",
           "correct": false,
-          "catches": "GRPH-M-IS-C"
+          "catches": "GRPH-M-IS-C",
+          "feedback": "You might have thought that the gradient is 3 and it crosses at (0, 5), but both are swapped and a sign is dropped."
         }
       ],
       "explanation": "In y = mx + c the gradient is m and the crossing point is (0, c). Here m = 5 and c = −3, so the gradient is 5 and the line crosses the y-axis at (0, −3). Swapping the 5 and the −3 confuses the gradient with the intercept."
@@ -79,17 +85,20 @@
         {
           "text": "y = 4x + 2",
           "correct": false,
-          "catches": "GRPH-M-IS-C"
+          "catches": "GRPH-M-IS-C",
+          "feedback": "You might have thought that y = 4x + 2 crosses at (0, 4), but it crosses at (0, 2) — there the 4 is the gradient."
         },
         {
           "text": "y = 4x",
           "correct": false,
-          "catches": "GRPH-M-IS-C"
+          "catches": "GRPH-M-IS-C",
+          "feedback": "You might have thought that y = 4x crosses at (0, 4), but it crosses at (0, 0)."
         },
         {
           "text": "y = x + 2",
           "correct": false,
-          "catches": "GRPH-M-IS-C"
+          "catches": "GRPH-M-IS-C",
+          "feedback": "You might have thought that y = x + 2 crosses at (0, 4), but it crosses at (0, 2)."
         }
       ],
       "explanation": "The line crosses the y-axis where x = 0, so the constant term is the y-value: (0, 4) needs c = 4. Only y = 2x + 4 has that. y = 4x + 2 crosses at (0, 2) and has gradient 4, and y = 4x also crosses at (0, 0)."
@@ -108,17 +117,20 @@
         {
           "text": "(−2, 3)",
           "correct": false,
-          "catches": "GRPH-COORD-ORDER"
+          "catches": "GRPH-COORD-ORDER",
+          "feedback": "You might have thought that the coordinates are (−2, 3), but they are the wrong way round. x comes first: (3, −2)."
         },
         {
           "text": "(3, 2)",
           "correct": false,
-          "catches": "GRPH-COORD-ORDER"
+          "catches": "GRPH-COORD-ORDER",
+          "feedback": "You might have thought that the coordinates are (3, 2), but 2 below the origin is negative."
         },
         {
           "text": "(−3, 2)",
           "correct": false,
-          "catches": "GRPH-COORD-ORDER"
+          "catches": "GRPH-COORD-ORDER",
+          "feedback": "You might have thought that the coordinates are (−3, 2), but 3 to the right is positive and 2 below is negative."
         }
       ],
       "explanation": "Coordinates are written (x, y): 3 to the right is x = 3, and 2 below the origin is y = −2, so the point is (3, −2). Writing (−2, 3) swaps the order. 2 below the origin is negative, so (3, 2) is above the axis."
@@ -137,17 +149,20 @@
         {
           "text": "(4 − 1) ÷ (11 − 2)",
           "correct": false,
-          "catches": "GRPH-GRADIENT"
+          "catches": "GRPH-GRADIENT",
+          "feedback": "You might have thought that the gradient is the run over the rise, but it is the rise over the run: 9 ÷ 3 = 3."
         },
         {
           "text": "(11 + 2) ÷ (4 + 1)",
           "correct": false,
-          "catches": "GRPH-GRADIENT"
+          "catches": "GRPH-GRADIENT",
+          "feedback": "You might have thought that you add the coordinates, but the changes come from subtracting: 9 ÷ 3 = 3."
         },
         {
           "text": "(11 − 2) × (4 − 1)",
           "correct": false,
-          "catches": "GRPH-GRADIENT"
+          "catches": "GRPH-GRADIENT",
+          "feedback": "You might have thought that you multiply the rise by the run, but the gradient divides one by the other: 9 ÷ 3 = 3."
         }
       ],
       "explanation": "Gradient is the change in y divided by the change in x: (11 − 2) ÷ (4 − 1) = 9 ÷ 3 = 3. Dividing the other way up gives 1/3, adding instead of subtracting changes both values, and multiplying gives 27."
@@ -166,17 +181,20 @@
         {
           "text": "2",
           "correct": false,
-          "catches": "GRPH-GRADIENT"
+          "catches": "GRPH-GRADIENT",
+          "feedback": "You might have thought that the gradient is 2, but the line goes down from left to right, so it is −2."
         },
         {
           "text": "−12",
           "correct": false,
-          "catches": "GRPH-GRADIENT"
+          "catches": "GRPH-GRADIENT",
+          "feedback": "You might have thought that the gradient is −12, but that divides by the wrong number: (1 − 5) ÷ (2 − 0) = −2."
         },
         {
           "text": "4",
           "correct": false,
-          "catches": "GRPH-GRADIENT"
+          "catches": "GRPH-GRADIENT",
+          "feedback": "You might have thought that the gradient is 4, but that is the change in y on its own: −4 ÷ 2 = −2."
         }
       ],
       "explanation": "The gradient is (1 − 5) ÷ (2 − 0) = −4 ÷ 2 = −2. The line goes down from left to right, so the gradient must be negative. Dropping the sign gives 2, and other divisions give the wrong size."
@@ -196,17 +214,20 @@
         {
           "text": "(6, 8)",
           "correct": false,
-          "catches": "GRPH-MIDPOINT"
+          "catches": "GRPH-MIDPOINT",
+          "feedback": "You might have thought that the midpoint is (6, 8), but that subtracts instead of averaging: ((2 + 8) ÷ 2, (3 + 11) ÷ 2) = (5, 7)."
         },
         {
           "text": "(10, 14)",
           "correct": false,
-          "catches": "GRPH-MIDPOINT"
+          "catches": "GRPH-MIDPOINT",
+          "feedback": "You might have thought that the midpoint is (10, 14), but that adds the two ends without halving them."
         },
         {
           "text": "(3, 4)",
           "correct": false,
-          "catches": "GRPH-MIDPOINT"
+          "catches": "GRPH-MIDPOINT",
+          "feedback": "You might have thought that the midpoint is (3, 4), but that halves the starting point on its own."
         }
       ],
       "explanation": "The midpoint is the average of the coordinates: ((2 + 8) ÷ 2, (3 + 11) ÷ 2) = (5, 7). Subtracting gives (6, 8), and adding without halving gives (10, 14). Halving 2 and 3 alone gives (1, 1.5), not (3, 4)."
@@ -225,17 +246,20 @@
         {
           "text": "(2, 3)",
           "correct": false,
-          "catches": "GRPH-INTEGER-ONLY"
+          "catches": "GRPH-INTEGER-ONLY",
+          "feedback": "You might have thought that (2, 3) is on the line, but 2 × 2 + 1 = 5. Lines pass through points that are not whole numbers too, like (1.5, 4)."
         },
         {
           "text": "(3, 5)",
           "correct": false,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that (3, 5) is on the line, but 2 × 3 + 1 = 7."
         },
         {
-          "text": "(0.5, 2)",
+          "text": "(2.5, 3.5)",
           "correct": false,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that (2.5, 3.5) is on the line, but 2 × 2.5 + 1 = 6. That answer comes from 2.5 + 1."
         }
       ],
       "explanation": "Substitute each x: 2 × 1.5 + 1 = 4, so (1.5, 4) is on the line. A line is not only whole-number points. (2, 3) is wrong because 2 × 2 + 1 = 5, and (3, 5) uses 3 + 1 + 1 instead of 2 × 3 + 1."
@@ -254,17 +278,20 @@
         {
           "text": "x = 3",
           "correct": false,
-          "catches": "GRPH-HORIZONTAL"
+          "catches": "GRPH-HORIZONTAL",
+          "feedback": "You might have thought that x = 3 is horizontal, but it is vertical — every point on it has x-value 3. y = 3 is the horizontal one."
         },
         {
           "text": "y = 3x",
           "correct": false,
-          "catches": "GRPH-HORIZONTAL"
+          "catches": "GRPH-HORIZONTAL",
+          "feedback": "You might have thought that y = 3x is horizontal, but it slopes — it passes through (0, 0) and (1, 3)."
         },
         {
           "text": "x + y = 3",
           "correct": false,
-          "catches": "GRPH-HORIZONTAL"
+          "catches": "GRPH-HORIZONTAL",
+          "feedback": "You might have thought that x + y = 3 is horizontal, but it slopes downwards."
         }
       ],
       "explanation": "y = 3 means every point on the line has y-value 3, whatever x is, so the line runs left to right and is horizontal. x = 3 is vertical, because every point has x-value 3. y = 3x and x + y = 3 both slope."
@@ -291,12 +318,14 @@
         {
           "text": "(2, 3)",
           "correct": false,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that (2, 3) is on the line, but 2 + 2 = 4."
         },
         {
           "text": "(3, 6)",
           "correct": false,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that (3, 6) is on the line, but 3 + 2 = 5."
         }
       ],
       "explanation": "Substitute x into y = x + 2: (0, 2), (1, 3) and (4, 6) all work. (2, 3) would need 2 + 2 = 3, and (3, 6) would need 3 + 2 = 6. Add 2 to the x-value, do not multiply."
@@ -315,17 +344,20 @@
         {
           "text": "(0, −2)",
           "correct": 0,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that (0, −2) is not on the line, but 3 × 0 − 2 = −2. (2, 6) is the one that is not."
         },
         {
           "text": "(1, 1)",
           "correct": 0,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that (1, 1) is not on the line, but 3 × 1 − 2 = 1. (2, 6) is not."
         },
         {
           "text": "(2, 4)",
           "correct": 0,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that (2, 4) is not on the line, but 3 × 2 − 2 = 4. (2, 6) is not."
         }
       ],
       "explanation": "Work out 3x − 2 for each x: x = 0 gives −2, x = 1 gives 1 and x = 2 gives 4, so those three points are on the line. For (2, 6), 3 × 2 − 2 = 4, not 6."
@@ -353,12 +385,14 @@
         {
           "text": "(0, 2)",
           "correct": false,
-          "catches": "GRPH-COORD-ORDER"
+          "catches": "GRPH-COORD-ORDER",
+          "feedback": "You might have thought that (0, 2) is on the x-axis, but it is on the y-axis. On the x-axis the y-value is 0."
         },
         {
           "text": "(2, 3)",
           "correct": false,
-          "catches": "GRPH-COORD-ORDER"
+          "catches": "GRPH-COORD-ORDER",
+          "feedback": "You might have thought that (2, 3) is on the x-axis, but neither coordinate is 0."
         }
       ],
       "explanation": "On the x-axis the y-coordinate is 0, so (3, 0), (−5, 0) and the origin (0, 0) are all on it. (0, 2) is on the y-axis, and (2, 3) is in neither axis: the first number is the x-value."
@@ -377,17 +411,20 @@
         {
           "text": "y = 5x − 2",
           "correct": false,
-          "catches": "GRPH-M-IS-C"
+          "catches": "GRPH-M-IS-C",
+          "feedback": "You might have thought that the equation is y = 5x − 2, but that swaps them. The gradient is −2 and it crosses at (0, 5)."
         },
         {
           "text": "y = −2x",
           "correct": false,
-          "catches": "GRPH-M-IS-C"
+          "catches": "GRPH-M-IS-C",
+          "feedback": "You might have thought that the equation is y = −2x, but that crosses at (0, 0). This line passes through (0, 5)."
         },
         {
           "text": "y = 2x + 5",
           "correct": false,
-          "catches": "GRPH-GRADIENT"
+          "catches": "GRPH-GRADIENT",
+          "feedback": "You might have thought that the equation is y = 2x + 5, but the gradient is negative — the line goes down."
         }
       ],
       "explanation": "The gradient is −2 and the line crosses the y-axis at (0, 5), so the equation is y = −2x + 5, written y = 5 − 2x. Swapping the gradient and intercept gives y = 5x − 2. y = −2x crosses at (0, 0), and y = 2x + 5 has the wrong sign on the gradient."
@@ -406,17 +443,20 @@
         {
           "text": "12",
           "correct": false,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that y = 12, but that is 4 × 3 without the −1."
         },
         {
           "text": "13",
           "correct": false,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that y = 13, but that adds the 1 instead of taking it away."
         },
         {
           "text": "8",
           "correct": false,
-          "catches": "GRPH-ADD-NOT-TIMES"
+          "catches": "GRPH-ADD-NOT-TIMES",
+          "feedback": "You might have thought that y = 8, but that is 4 + 3 + 1. Substitute: 4 × 3 − 1 = 11."
         }
       ],
       "explanation": "Substitute x = 3: 4 × 3 − 1 = 11. Forgetting the − 1 gives 12, and adding it gives 13. 8 comes from 4 + 3 + 1 instead of 4 × 3 − 1."
@@ -431,12 +471,14 @@
         {
           "text": "Always",
           "correct": false,
-          "catches": "GRPH-INTEGER-ONLY"
+          "catches": "GRPH-INTEGER-ONLY",
+          "feedback": "You might have thought that a line passes only through whole-number points, but between (0, 2) and (1, 4) lies (0.5, 3), which is on the line."
         },
         {
           "text": "Sometimes",
           "correct": false,
-          "catches": "GRPH-INTEGER-ONLY"
+          "catches": "GRPH-INTEGER-ONLY",
+          "feedback": "You might have thought that some lines do, but no line does — there are always points in between."
         },
         {
           "text": "Never",

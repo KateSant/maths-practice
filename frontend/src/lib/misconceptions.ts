@@ -26,12 +26,6 @@ export interface Misconception {
   topic: string
   /** One sentence naming the error, for a teacher. */
   misconception: string
-  /**
-   * The same error said to the student who made it: what they probably thought, and what is true
-   * instead. This is the one register field a student ever sees, and it exists because the
-   * teacher's sentence reads as jargon to an eleven-year-old.
-   */
-  student?: string
   /** What a student holding the error would produce. */
   example?: string
   /** Where the row came from. Round-one rows carry none yet. */
@@ -68,19 +62,6 @@ export function misconception(code: string | null | undefined): Misconception | 
  */
 export function describeMisconception(code: string | null | undefined): string | undefined {
   return misconception(code)?.misconception
-}
-
-/**
- * The error said to the student who made it, or undefined when there is nothing to say.
- *
- * Separate from {@link describeMisconception} on purpose. That sentence is written for a teacher
- * ("is not recognised as the same value", "precedence is misapplied"), which is not how you would
- * say it to the person who got it wrong. This one addresses them directly: you went by how many
- * digits there are, and here is why that is not the test.
- */
-export function studentFeedback(code: string | null | undefined): string | undefined {
-  const line = misconception(code)?.student
-  return line && line.trim() ? line : undefined
 }
 
 /**

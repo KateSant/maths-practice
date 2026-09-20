@@ -83,14 +83,6 @@ def load_topics():
 def validate():
     register = load_register()
     errors = []
-
-    # Every row needs the line a student reads when they pick that option. Without it the quiz can
-    # only show the generic explanation, which names every error the item catches rather than the
-    # one the student made - so a row that loses its student line is a silent regression in the
-    # feedback, not a cosmetic gap in the file.
-    for code, entry in register.items():
-        if not str(entry.get("student", "")).strip():
-            errors.append(f"register: {code} has no student line")
     seen_keys = {}
     totals = Counter()
     bands = Counter()
@@ -159,6 +151,16 @@ def validate():
                     errors.append(f"{where}: wrong option {option.get('text')!r} has no catches")
                 elif code not in register:
                     errors.append(f"{where}: catches {code!r} is not in the register")
+                # The message the student reads, written for this option rather than for its code:
+                # one code can cover two options in a question that are different misreadings.
+                feedback = str(option.get("feedback", "")).strip()
+                if not feedback:
+                    errors.append(f"{where}: wrong option {option.get('text')!r} has no feedback")
+                elif not re.search(r"\byou\b|\byour\b", feedback, re.I):
+                    # The voice is the point: the student is being told what they probably thought,
+                    # not read a correction. 'You might have thought that …, but …' is the usual
+                    # shape and not a straitjacket, so only the second person is enforced.
+                    errors.append(f"{where}: feedback for {option.get('text')!r} does not address the student")
 
             totals["questions"] += 1
             bands[question["band"]] += 1
@@ -202,8 +204,11 @@ def render(topic_filter=None):
                 else:
                     entry = register.get(option["catches"], {})
                     lines.append(f"- {label}. {option['text']} — *{option['catches']}*: {entry.get('misconception', '')}")
-                    if entry.get("student"):
-                        lines.append(f"    - *the student reads:* {entry['student']}")
+                    # What the student reads: the message written for this option. It belongs to
+                    # the option rather than to the code, because one code can cover two options in
+                    # a question that are different misreadings.
+                    if option.get("feedback"):
+                        lines.append(f"    - *the student reads:* {option['feedback']}")
             lines.append("")
             lines.append(f"> {question['explanation']}")
             lines.append("")

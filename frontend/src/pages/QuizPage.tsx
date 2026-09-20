@@ -8,7 +8,6 @@ import { QuestionCard, type OptionState, type QuestionVariant } from '../compone
 import { difficultyLabel } from '../lib/format'
 import { isYearGroup, readYearGroup, yearGroupLabel, type YearGroup } from '../lib/yearGroups'
 import { optionState, toggleSelection } from '../lib/answerState'
-import { studentFeedback } from '../lib/misconceptions'
 
 const DEFAULT_QUESTIONS = 5
 const MAX_QUESTIONS = 20
@@ -48,11 +47,12 @@ export function QuizPage() {
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [result, setResult] = useState<AnswerResult | null>(null)
 
-  // The register's line for whichever wrong option the student picked, so the feedback names the
-  // error they made rather than listing every error the question catches. Two at most: a tick-all
-  // can be wrong in several ways at once, and a wall of text teaches nothing.
-  const caughtFeedback = (result?.misconceptionCodes ?? [])
-    .map(studentFeedback)
+  // What the student's wrong picks caught: the message written for the option they chose. Two at
+  // most, because a tick-all can be wrong in several ways at once and a wall of text teaches
+  // nothing. An option with no message of its own shows none - the register's line for its code is
+  // not shown to students, because it is written for a teacher.
+  const caughtFeedback = (result?.caught ?? [])
+    .map((error) => error.feedback?.trim())
     .filter((line): line is string => Boolean(line))
     .slice(0, 2)
   const [submitting, setSubmitting] = useState(false)

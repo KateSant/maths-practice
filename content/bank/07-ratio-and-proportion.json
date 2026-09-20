@@ -21,17 +21,20 @@
         {
           "text": "2/5",
           "correct": false,
-          "catches": "RATIO-PART-WHOLE"
+          "catches": "RATIO-PART-WHOLE",
+          "feedback": "You might have thought that the fraction is 2/5, but that compares red with blue. The whole box is 7 parts, so red is 2/7."
         },
         {
           "text": "5/7",
           "correct": false,
-          "catches": "RATIO-PART-WHOLE"
+          "catches": "RATIO-PART-WHOLE",
+          "feedback": "You might have thought that red is 5/7, but that is the blue fraction. Red is 2/7."
         },
         {
           "text": "5/2",
           "correct": false,
-          "catches": "RATIO-PART-WHOLE"
+          "catches": "RATIO-PART-WHOLE",
+          "feedback": "You might have thought that the fraction is 5/2, but it is upside down — blue compared with red."
         }
       ],
       "explanation": "The ratio 2:5 compares red with blue, but the question asks about the whole box. There are 2 + 5 = 7 parts, of which 2 are red, so the fraction is 2/7. Writing 2/5 reads the ratio itself as a fraction of the whole, and 5/7 finds the blue fraction."
@@ -50,17 +53,20 @@
         {
           "text": "120 g",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-SCALE-ONE",
+          "feedback": "You might have thought that 10 people need 120 g, but that divides instead of multiplying. It is 75 g each, so 750 g."
         },
         {
           "text": "600 g",
           "correct": false,
-          "catches": "RATIO-ADDITIVE"
+          "catches": "RATIO-ADDITIVE",
+          "feedback": "You might have thought that 600 g is right, but that is the amount for 8 people. For 10 it is 750 g."
         },
         {
           "text": "306 g",
           "correct": false,
-          "catches": "RATIO-ADDITIVE"
+          "catches": "RATIO-ADDITIVE",
+          "feedback": "You might have thought that you add 6 g for the extra 6 people, but each person needs 75 g."
         }
       ],
       "explanation": "Scale by the same factor: 300 g for 4 people is 75 g each, and 10 × 75 = 750 g. Dividing instead of multiplying gives 120 g. 600 g adds 300 for the extra 6 people as if each extra person needed a whole recipe, and 306 g adds 6 g for 6 people."
@@ -79,17 +85,20 @@
         {
           "text": "8 days",
           "correct": false,
-          "catches": "RATIO-INVERSE"
+          "catches": "RATIO-INVERSE",
+          "feedback": "You might have thought that more workers means more time, but twice the workers take half the time: 2 days."
         },
         {
           "text": "3 days",
           "correct": false,
-          "catches": "RATIO-INVERSE"
+          "catches": "RATIO-INVERSE",
+          "feedback": "You might have thought that 3 days is about right, but twelve workers are twice six, so the time halves to 2 days."
         },
         {
           "text": "24 days",
           "correct": false,
-          "catches": "RATIO-INVERSE"
+          "catches": "RATIO-INVERSE",
+          "feedback": "You might have thought that you multiply the time by the number of workers, but more workers means less time."
         }
       ],
       "explanation": "Twice as many workers take half the time, so 12 workers take 2 days. Treating it as direct proportion gives 8 days: more workers means less time, not more. The total work is the same, so workers × days stays constant."
@@ -108,17 +117,20 @@
         {
           "text": "12",
           "correct": false,
-          "catches": "RATIO-TOTAL-PARTS"
+          "catches": "RATIO-TOTAL-PARTS",
+          "feedback": "You might have thought that the first child gets 12, but that is the second child's share. The first gets 3 of the 5 parts: 18."
         },
         {
           "text": "15",
           "correct": false,
-          "catches": "RATIO-TOTAL-PARTS"
+          "catches": "RATIO-TOTAL-PARTS",
+          "feedback": "You might have thought that each child gets half, but the ratio 3:2 makes 5 parts, so each part is 6."
         },
         {
           "text": "20",
           "correct": false,
-          "catches": "RATIO-ADDITIVE"
+          "catches": "RATIO-ADDITIVE",
+          "feedback": "You might have thought that the shares differ by one part, but there are 5 parts and 30 sweets, so each part is 6."
         }
       ],
       "explanation": "The ratio 3:2 gives 3 + 2 = 5 parts, and 30 ÷ 5 = 6 sweets in each part. The first child gets 3 × 6 = 18. 12 is the second child's share, 15 is half, and 20 treats the ratio as a difference."
@@ -137,17 +149,20 @@
         {
           "text": "20:1",
           "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that you divide 40 by 2, but the two parts have to be in the same unit. In minutes it is 40:120 = 1:3."
         },
         {
           "text": "1:20",
           "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that the ratio is 1:20, but it is upside down. 40 minutes : 120 minutes is 1:3."
         },
         {
           "text": "40:2",
           "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that 40:2 is simplified, but the two parts are in different units and nothing has been divided."
         }
       ],
       "explanation": "Write both in the same unit first: 40 minutes : 120 minutes. Divide both by 40 to get 1:3. Leaving the units different and dividing 40 by 2 gives 20:1, and 40:2 is not simplified at all."
@@ -166,17 +181,20 @@
         {
           "text": "3:5",
           "correct": false,
-          "catches": "RATIO-PART-WHOLE"
+          "catches": "RATIO-PART-WHOLE",
+          "feedback": "You might have thought that the ratio is 3:5, but that compares red with the whole. Blue is 2/5, so red to blue is 3:2."
         },
         {
           "text": "2:3",
           "correct": false,
-          "catches": "RATIO-PART-WHOLE"
+          "catches": "RATIO-PART-WHOLE",
+          "feedback": "You might have thought that the ratio is 2:3, but that is blue to red. Red to blue is 3:2."
         },
         {
           "text": "5:3",
           "correct": false,
-          "catches": "RATIO-PART-WHOLE"
+          "catches": "RATIO-PART-WHOLE",
+          "feedback": "You might have thought that the ratio is 5:3, but that puts the whole first and reverses the order."
         }
       ],
       "explanation": "The fraction 3/5 is red out of the whole, so 2/5 is blue. Red to blue is therefore 3:2. 3:5 compares red with the whole rather than with blue, 2:3 reverses the order, and 5:3 reverses both."
@@ -195,17 +213,20 @@
         {
           "text": "£72",
           "correct": false,
-          "catches": "RATIO-TOTAL-PARTS"
+          "catches": "RATIO-TOTAL-PARTS",
+          "feedback": "You might have thought that the largest share is £72, but that is the 3-part share. The largest is 5 parts: 5 × £24 = £120."
         },
         {
           "text": "£48",
           "correct": false,
-          "catches": "RATIO-TOTAL-PARTS"
+          "catches": "RATIO-TOTAL-PARTS",
+          "feedback": "You might have thought that the largest share is £48, but that is the 2-part share. The largest is £120."
         },
         {
           "text": "£24",
           "correct": false,
-          "catches": "RATIO-TOTAL-PARTS"
+          "catches": "RATIO-TOTAL-PARTS",
+          "feedback": "You might have thought that the largest share is £24, but that is a single part. The largest is 5 of them."
         }
       ],
       "explanation": "The parts are 2 + 3 + 5 = 10, so each part is £240 ÷ 10 = £24. The largest share is 5 parts: 5 × £24 = £120. £72 is 3 parts, £48 is 2 parts, and £24 is a single part."
@@ -224,17 +245,20 @@
         {
           "text": "14.4",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-SCALE-ONE",
+          "feedback": "You might have thought that the number of adults is 14.4, but that scales the wrong way. Three parts are 24 children, so one part is 8, and adults are 40."
         },
         {
           "text": "45",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-SCALE-ONE",
+          "feedback": "You might have thought that the number of adults is 45, but that treats the children as 5 parts. Adults are 40."
         },
         {
           "text": "8",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-SCALE-ONE",
+          "feedback": "You might have thought that the number of adults is 8, but that is the value of one part."
         }
       ],
       "explanation": "3 parts are 24 children, so each part is 24 ÷ 3 = 8. Adults are 5 parts: 5 × 8 = 40. Scaling by 5/3 or dividing by 5 gives the wrong part; 8 is the value of one part, not the number of adults."
@@ -254,17 +278,20 @@
         {
           "text": "1,500 ml",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-SCALE-ONE",
+          "feedback": "You might have thought that you multiply the white by 2.5, but five parts are 600 ml, so one part is 120 ml and red is 240 ml."
         },
         {
           "text": "300 ml",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-SCALE-ONE",
+          "feedback": "You might have thought that red is half the white, but red is 2 of the 5 parts: 240 ml."
         },
         {
           "text": "1,200 ml",
           "correct": false,
-          "catches": "RATIO-ADDITIVE"
+          "catches": "RATIO-ADDITIVE",
+          "feedback": "You might have thought that red is twice the white, but red is 2 parts out of 5: 240 ml."
         }
       ],
       "explanation": "5 parts of white are 600 ml, so one part is 600 ÷ 5 = 120 ml. Red is 2 parts: 2 × 120 = 240 ml. Multiplying by 5 or halving gives the wrong scaling, and 1,200 ml doubles the white instead of finding the red."
@@ -283,17 +310,20 @@
         {
           "text": "She swapped the two parts of the ratio",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-SCALE-ONE",
+          "feedback": "You might have thought that Bella swapped the parts, but she kept the ratio the right way round — 4 parts are £20. The trouble is the halving and adding."
         },
         {
           "text": "She used the wrong total number of parts",
           "correct": false,
-          "catches": "RATIO-TOTAL-PARTS"
+          "catches": "RATIO-TOTAL-PARTS",
+          "feedback": "You might have thought that Bella used the wrong number of parts, but she did not add the parts at all."
         },
         {
           "text": "She treated the ratio as inverse proportion",
           "correct": false,
-          "catches": "RATIO-INVERSE"
+          "catches": "RATIO-INVERSE",
+          "feedback": "You might have thought that Bella used inverse proportion, but she scaled £20 downwards. Her method is additive where it should be multiplicative."
         }
       ],
       "explanation": "4 parts are £20, so one part is £5, and Brenda's 3 parts are £15 — the answer happens to be right, but the method is not: halving and adding only works because the numbers are convenient. Scaling by 3/4 (£20 × 3/4 = £15) is the multiplicative method that works for any numbers."
@@ -320,12 +350,14 @@
         {
           "text": "3:4",
           "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that 3:4 is equivalent to 2:3, but it comes from adding 1 to each part. 2:3 multiplied by 2 is 4:6."
         },
         {
           "text": "4:5",
           "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that 4:5 is equivalent, but it adds 2 to each part. Equivalent ratios multiply both parts by the same number."
         }
       ],
       "explanation": "Multiplying both parts by the same number keeps a ratio equivalent: 2:3 = 4:6 = 6:9 = 10:15. 3:4 and 4:5 come from adding 1 to each part, which changes the ratio."
@@ -344,17 +376,20 @@
         {
           "text": "40 ÷ 3 × 5",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-SCALE-ONE",
+          "feedback": "You might have thought that you divide by 3, but that divides by the children's parts. Five parts are 40 adults, so one part is 8 and children are 24."
         },
         {
           "text": "40 × 5/3",
           "correct": false,
-          "catches": "RATIO-SCALE-ONE"
+          "catches": "RATIO-SCALE-ONE",
+          "feedback": "You might have thought that 40 × 5/3 gives the children, but it scales the wrong way. Divide by 5, then multiply by 3."
         },
         {
           "text": "40 ÷ 8 × 3",
           "correct": false,
-          "catches": "RATIO-TOTAL-PARTS"
+          "catches": "RATIO-TOTAL-PARTS",
+          "feedback": "You might have thought that you divide by 8, but that is the total number of parts. Divide by the adults' 5 instead."
         }
       ],
       "explanation": "5 parts are 40 adults, so one part is 40 ÷ 5 = 8, and children are 3 parts: 8 × 3 = 24. Dividing by 3 first finds the wrong part, multiplying by 5/3 scales the wrong way, and dividing by 8 uses the total number of parts instead of the adults' parts."
@@ -373,17 +408,20 @@
         {
           "text": "2:4",
           "correct": 0,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that 2:4 is not equivalent to 1:2, but it is 1:2 multiplied by 2. 2:3 is the one that is not."
         },
         {
           "text": "3:6",
           "correct": 0,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that 3:6 is not equivalent to 1:2, but it is 1:2 multiplied by 3. 2:3 is the odd one out."
         },
         {
           "text": "5:10",
           "correct": 0,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that 5:10 is not equivalent to 1:2, but it is 1:2 multiplied by 5. 2:3 is not equivalent."
         }
       ],
       "explanation": "1:2 means the second amount is double the first, and 2:4, 3:6 and 5:10 all keep that relationship. In 2:3 the second number is not twice the first.",
@@ -399,7 +437,8 @@
         {
           "text": "Always",
           "correct": false,
-          "catches": "RATIO-INVERSE"
+          "catches": "RATIO-INVERSE",
+          "feedback": "You might have thought that the other quantity always doubles, but in inverse proportion it halves — twice the workers take half the time."
         },
         {
           "text": "Sometimes",
@@ -408,7 +447,8 @@
         {
           "text": "Never",
           "correct": false,
-          "catches": "RATIO-INVERSE"
+          "catches": "RATIO-INVERSE",
+          "feedback": "You might have thought that it never doubles, but twice the rice does serve twice the people. So sometimes."
         }
       ],
       "explanation": "Sometimes. In direct proportion it does: twice the rice serves twice the people. But in inverse proportion it halves: twice the workers take half the time. You have to know whether the relationship is direct or inverse."
@@ -427,17 +467,20 @@
         {
           "text": "6:8",
           "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that 6:8 is not equivalent to 3:4, but it is 3:4 multiplied by 2. 4:5 is the one that is not."
         },
         {
           "text": "9:12",
           "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that 9:12 is not equivalent to 3:4, but it is 3:4 multiplied by 3. 4:5 is the odd one out."
         },
         {
           "text": "15:20",
           "correct": false,
-          "catches": "RATIO-SIMPLIFY-ADD"
+          "catches": "RATIO-SIMPLIFY-ADD",
+          "feedback": "You might have thought that 15:20 is not equivalent to 3:4, but it is 3:4 multiplied by 5. 4:5 is not equivalent."
         }
       ],
       "explanation": "6:8, 9:12 and 15:20 are 3:4 multiplied by 2, 3 and 5. 4:5 comes from adding 1 to each part, which changes the ratio: in 3:4 the second part is 4/3 of the first, and 5/4 is not 4/3."

@@ -150,7 +150,11 @@ public class AdminQuestionService {
             // cannot end up disagreeing.
             String label = String.valueOf((char) ('A' + index));
             question.addOption(
-                    label, submitted.get(index).text(), submitted.get(index).correct(), codeOrNull(submitted.get(index)));
+                    label,
+                    submitted.get(index).text(),
+                    submitted.get(index).correct(),
+                    codeOrNull(submitted.get(index)),
+                    blankToNull(submitted.get(index).feedback()));
         }
     }
 

@@ -266,13 +266,15 @@ public class QuizService {
         User user = session.getUser();
         Question question = answer.getQuestion();
 
-        // The errors the student actually made, for feedback that names them. Read from the saved
+        // What the student's wrong picks caught, for feedback that names them. Read from the saved
         // answer rather than the request, so a replayed result says the same as the first one did.
-        List<String> caught = answer.getSelectedOptions().stream()
+        // The code is kept alongside the message because a teacher-authored option may carry only a
+        // code, and then the register's line for it stands in.
+        List<AnswerResult.CaughtError> caught = answer.getSelectedOptions().stream()
                 .filter(option -> !option.isCorrect())
-                .map(AnswerOption::getMisconceptionCode)
-                .filter(code -> code != null && !code.isBlank())
-                .distinct()
+                .map(option -> new AnswerResult.CaughtError(
+                        option.getMisconceptionCode(), option.getFeedback()))
+                .filter(error -> error.misconceptionCode() != null || error.feedback() != null)
                 .toList();
 
         return new AnswerResult(

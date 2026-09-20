@@ -21,17 +21,20 @@
         {
           "text": "4x + 5",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 4(x + 5) is 4x + 5, but the 4 multiplies the 5 as well: 4x + 20."
         },
         {
           "text": "4x + 9",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 4x + 9 is right, but that adds 4 and 5. The 4 multiplies: 4x + 20."
         },
         {
           "text": "x + 20",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that the x is untouched, but it is multiplied by 4 as well: 4x + 20."
         }
       ],
       "explanation": "The 4 multiplies every term inside the bracket: 4 × x = 4x and 4 × 5 = 20, so 4(x + 5) = 4x + 20. Multiplying only the x by 4 gives 4x + 5, and adding 4 + 5 gives 4x + 9. Every term inside gets multiplied."
@@ -50,17 +53,20 @@
         {
           "text": "−x + 4",
           "correct": false,
-          "catches": "EXP-MINUS-BRACKET"
+          "catches": "EXP-MINUS-BRACKET",
+          "feedback": "You might have thought that only the x changes sign, but the minus in front applies to both terms: −x − 4."
         },
         {
           "text": "x − 4",
           "correct": false,
-          "catches": "EXP-MINUS-BRACKET"
+          "catches": "EXP-MINUS-BRACKET",
+          "feedback": "You might have thought that the x keeps its sign, but the whole bracket is subtracted: −x − 4."
         },
         {
           "text": "x + 4",
           "correct": false,
-          "catches": "EXP-MINUS-BRACKET"
+          "catches": "EXP-MINUS-BRACKET",
+          "feedback": "You might have thought that the bracket can simply be removed, but the minus sign in front changes both signs: −x − 4."
         }
       ],
       "explanation": "The minus sign in front multiplies every term by −1: −(x + 4) = −x − 4. It does not only affect the x. −x + 4 changes the sign of the first term but not the second, and x − 4 or x + 4 drops the minus altogether."
@@ -79,17 +85,20 @@
         {
           "text": "x² + 3",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that x(x + 3) is x² + 3, but the x multiplies the 3 too: x² + 3x."
         },
         {
           "text": "x² + 3x²",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that x × 3 is 3x², but it is 3x."
         },
         {
           "text": "x + 3x",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that x × x is x, but it is x²."
         }
       ],
       "explanation": "The x multiplies both terms: x × x = x² and x × 3 = 3x, so x(x + 3) = x² + 3x. Multiplying only the first term gives x² + 3. x × 3x is 3x², not 3x² added to x², and x + 3x does not multiply the x by itself."
@@ -108,17 +117,20 @@
         {
           "text": "5x + 8",
           "correct": false,
-          "catches": "EXP-COLLECT"
+          "catches": "EXP-COLLECT",
+          "feedback": "You might have thought that the answer is 5x + 8, but the 2 inside the bracket is multiplied by 3: 3x + 6 + 2x = 5x + 6."
         },
         {
           "text": "3x + 6 + 2x",
           "correct": false,
-          "catches": "EXP-COLLECT"
+          "catches": "EXP-COLLECT",
+          "feedback": "You might have thought that 3x + 6 + 2x is simplified, but 3x + 2x = 5x."
         },
         {
           "text": "5x + 2",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that the 2 inside stays as it is, but 3 × 2 = 6."
         }
       ],
       "explanation": "First expand: 3(x + 2) = 3x + 6, so the expression is 3x + 6 + 2x. Then collect the like terms: 3x + 2x = 5x, giving 5x + 6. Leaving 3x + 6 + 2x uncollected is not simplified; 5x + 8 multiplies the 2 by 3 as well as adding it."
@@ -137,17 +149,20 @@
         {
           "text": "Added the 5 instead of multiplying",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that Rob added the 5, but he multiplied the x by it. It is the 2 he left alone."
         },
         {
           "text": "Collected the terms too early",
           "correct": false,
-          "catches": "EXP-COLLECT"
+          "catches": "EXP-COLLECT",
+          "feedback": "You might have thought that Rob collected terms, but there was nothing to collect — the slip is inside the bracket."
         },
         {
           "text": "Changed the sign of the second term",
           "correct": false,
-          "catches": "EXP-MINUS-BRACKET"
+          "catches": "EXP-MINUS-BRACKET",
+          "feedback": "You might have thought that Rob changed the sign of the 2, but it kept its sign. It needed multiplying by 5."
         }
       ],
       "explanation": "The 5 must multiply both terms: 5(x + 2) = 5x + 10. Rob multiplied the x by 5 but left the 2 as it was. The 2 was 2, and after multiplying by 5 it is 10."
@@ -166,17 +181,20 @@
         {
           "text": "6x + 4",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 2(3x + 4) is 6x + 4, but the 4 is multiplied by 2 as well: 6x + 8."
         },
         {
           "text": "5x + 8",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 2 × 3x is 5x, but it is 6x."
         },
         {
           "text": "6x + 6",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 2 × 4 is 6, but it is 8."
         }
       ],
       "explanation": "Multiply both terms by 2: 2 × 3x = 6x and 2 × 4 = 8, so 2(3x + 4) = 6x + 8. 6x + 4 multiplies only the first term, 5x + 8 adds 2 and 3 instead of multiplying, and 6x + 6 adds 2 and 4."
@@ -195,17 +213,20 @@
         {
           "text": "3(6x + 9)",
           "correct": false,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that 3(6x + 9) is fully factorised, but 3 still divides 6x + 9. It is 9(2x + 3)."
         },
         {
           "text": "3(6x + 27)",
           "correct": false,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that 3(6x + 27) is equivalent, but 3 × 27 = 81, not 27."
         },
         {
           "text": "18(x + 27)",
           "correct": false,
-          "catches": "FAC-COMMON-TERM"
+          "catches": "FAC-COMMON-TERM",
+          "feedback": "You might have thought that 18(x + 27) is equivalent, but 18 × 27 is far too big, and 27 ÷ 18 is not a whole number."
         }
       ],
       "explanation": "The highest common factor of 18 and 27 is 9, so 18x + 27 = 9(2x + 3). 3(6x + 9) is equivalent but not fully factorised: 3 can still come out of 6x + 9. 3(6x + 27) and 18(x + 27) do not multiply back to 18x + 27."
@@ -224,17 +245,20 @@
         {
           "text": "2(x + 4)",
           "correct": false,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that 2x + 4 is 2(x + 4), but 2 × 4 = 8. It is 2(x + 2)."
         },
         {
           "text": "x(x + 4)",
           "correct": false,
-          "catches": "FAC-COMMON-TERM"
+          "catches": "FAC-COMMON-TERM",
+          "feedback": "You might have thought that x comes out of both terms, but x does not divide 4."
         },
         {
           "text": "2(x + 1)",
           "correct": false,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that 4 ÷ 2 = 1, but it is 2."
         }
       ],
       "explanation": "Both terms divide by 2: 2x ÷ 2 = x and 4 ÷ 2 = 2, so 2x + 4 = 2(x + 2). Factorising is the inverse of expanding, so check by multiplying back: 2(x + 2) = 2x + 4. 2(x + 4) gives 2x + 8, and x(x + 4) is not equivalent."
@@ -254,17 +278,20 @@
         {
           "text": "3x + 5",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that the area is 3x + 5, but the 3 multiplies the 5 as well: 3x + 15."
         },
         {
           "text": "3x + 8",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 3x + 8 is the area, but that adds 3 and 5. It is a multiplication."
         },
         {
           "text": "x + 15",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that the x is untouched, but it is multiplied by 3: 3x + 15."
         }
       ],
       "explanation": "Area is length × width, so it is 3(x + 5) = 3x + 15. The 3 multiplies both terms. 3x + 5 multiplies only the length term, and 3x + 8 adds the 3 and the 5 instead of multiplying."
@@ -287,17 +314,20 @@
         {
           "text": "3x + 4",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 3(x + 4) is 3x + 4, but the 4 is multiplied by 3: 3x + 12."
         },
         {
           "text": "3x + 7",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 3x + 7 is equivalent, but that adds 3 and 4. Multiplying gives 12."
         },
         {
           "text": "3x + 3",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 3 × 4 is 3, but it is 12."
         }
       ],
       "explanation": "3(x + 4) = 3x + 12, and addition can be written in either order, so 12 + 3x is the same. The others multiply only the x by 3 and leave the 4 alone, or add instead of multiplying."
@@ -316,12 +346,14 @@
         {
           "text": "4(x + 2)",
           "correct": 0,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that 4(x + 2) is not equivalent to 4x + 8, but it is: 4(x + 2) = 4x + 8. 4(x + 8) = 4x + 32 is the one that is not."
         },
         {
           "text": "2(2x + 4)",
           "correct": 0,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that 2(2x + 4) is not equivalent, but it is 4x + 8 too. 4(x + 8) is the odd one out."
         }
       ],
       "explanation": "4(x + 2) = 4x + 8 and 2(2x + 4) = 4x + 8, so both are equivalent to 4x + 8. 4(x + 8) = 4x + 32, which is not."
@@ -340,17 +372,20 @@
         {
           "text": "6(x + 2)",
           "correct": 0,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that 6(x + 2) is not equivalent to 6x + 12, but it is. 12(x + 1) = 12x + 12 is the one that is not."
         },
         {
           "text": "3(2x + 4)",
           "correct": 0,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that 3(2x + 4) is not equivalent, but it is 6x + 12. 12(x + 1) is the odd one out."
         },
         {
           "text": "2(3x + 6)",
           "correct": 0,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that 2(3x + 6) is not equivalent, but it is 6x + 12 as well. 12(x + 1) = 12x + 12."
         }
       ],
       "explanation": "6(x + 2), 3(2x + 4) and 2(3x + 6) all multiply back to 6x + 12, even though they use different common factors. 12(x + 1) = 12x + 12, which is not the same."
@@ -365,12 +400,14 @@
         {
           "text": "Always",
           "correct": false,
-          "catches": "FAC-COMMON-TERM"
+          "catches": "FAC-COMMON-TERM",
+          "feedback": "You might have thought that factorising changes the value, but it keeps it the same — that is the point. 6x + 9 and 3(2x + 3) agree for every x."
         },
         {
           "text": "Sometimes",
           "correct": false,
-          "catches": "FAC-PARTIAL"
+          "catches": "FAC-PARTIAL",
+          "feedback": "You might have thought that it changes the value sometimes, but it never does. Multiplying the bracket back out returns the expression you started with."
         },
         {
           "text": "Never",
@@ -398,17 +435,20 @@
         {
           "text": "2x + 1",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 2(x + 1) is 2x + 1, but the 1 is multiplied by 2 as well: 2x + 2."
         },
         {
           "text": "2x + 3",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 2x + 3 is equivalent, but that adds 2 and 1. Multiplying gives 2."
         },
         {
           "text": "x + 2",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that the x is untouched, but it is multiplied by 2: 2x + 2."
         }
       ],
       "explanation": "2(x + 1) means two lots of (x + 1), so it is x + 1 + x + 1 = 2x + 2. Multiplying only the x by 2 gives 2x + 1. Adding 2 + 1 gives 2x + 3, and x + 2 multiplies nothing by 2 except the 1."
@@ -427,17 +467,20 @@
         {
           "text": "6x − 5",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that 3(2x − 5) is 6x − 5, but the −5 is multiplied by 3 too: 6x − 15."
         },
         {
           "text": "6x + 15",
           "correct": false,
-          "catches": "EXP-MINUS-BRACKET"
+          "catches": "EXP-MINUS-BRACKET",
+          "feedback": "You might have thought that the −5 becomes positive, but it stays negative: 6x − 15."
         },
         {
           "text": "2x − 15",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY"
+          "catches": "EXP-FIRST-TERM-ONLY",
+          "feedback": "You might have thought that the 2x is untouched, but it is multiplied by 3 as well."
         }
       ],
       "explanation": "Multiply both terms by 3: 3 × 2x = 6x and 3 × (−5) = −15, so the answer is 6x − 15. Leaving −5 unchanged gives 6x − 5, changing its sign gives 6x + 15, and multiplying only the second term gives 2x − 15."
