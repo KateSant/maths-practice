@@ -277,12 +277,12 @@ export function QuizPage() {
         {result ? (
           <div
             className={`mt-6 animate-pop rounded-xl px-5 py-4 ${
-              result.correct ? 'bg-emerald-50 text-emerald-900' : 'bg-rose-50 text-rose-900'
+              result.correct ? 'bg-emerald-50 text-emerald-900' : 'bg-orange-50 text-orange-900'
             }`}
           >
             <p className="flex items-center gap-2 font-semibold">
               <span aria-hidden="true">{result.correct ? '🎉' : '💡'}</span>
-              {result.correct ? `Correct! +${result.pointsAwarded} points` : 'Not quite'}
+              {result.correct ? `Correct! +${result.pointsAwarded} points` : 'Good try'}
             </p>
             {caughtFeedback.map((line) => (
               <p key={line} className="mt-2 text-sm font-medium leading-relaxed">

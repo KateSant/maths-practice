@@ -154,12 +154,12 @@ export function ResultsPage({ previewSummary }: { previewSummary?: SessionSummar
           {summary.review.map((item, position) => (
             <Card
               key={item.questionId}
-              className={`border-l-4 p-5 ${item.correct ? 'border-l-emerald-500' : 'border-l-rose-500'}`}
+              className={`border-l-4 p-5 ${item.correct ? 'border-l-emerald-500' : 'border-l-orange-400'}`}
             >
               <div className="flex items-start gap-3">
                 <span
                   className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs font-bold text-white ${
-                    item.correct ? 'bg-emerald-500' : 'bg-rose-500'
+                    item.correct ? 'bg-emerald-500' : 'bg-orange-500'
                   }`}
                   aria-hidden="true"
                 >
@@ -174,7 +174,7 @@ export function ResultsPage({ previewSummary }: { previewSummary?: SessionSummar
                   ) : null}
 
                   <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm">
-                    <span className={item.correct ? 'text-emerald-700' : 'text-rose-700'}>
+                    <span className={item.correct ? 'text-emerald-700' : 'text-orange-700'}>
                       Your answer: {renderAnswer(item.selectedOptions)}
                     </span>
                     {!item.correct ? (

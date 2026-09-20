@@ -49,7 +49,7 @@ export function AboutPage() {
       <p className="mt-3 leading-relaxed text-slate-600">
         So when we design a question, the “wrong” answers in the multiple choice are not random. Each
         one is the right answer to the question a student thinks they were asked. Knowing that unlocks
-        learning. We can give feedback to the student: “you might have thought that… but…”
+        learning. We can give feedback to the student: “you might have thought that…? but…”
       </p>
       <p className="mt-3 leading-relaxed text-slate-600">
         Each “misconception” comes from the DfE and NCETM’s{' '}
@@ -109,10 +109,18 @@ export function AboutPage() {
       <p className="mt-3 leading-relaxed text-slate-600">
         A student who reads the 2 as filling the tenths column is not making a slip. On the question
         they think they were asked, <span className="font-medium text-slate-800">0.2</span> is the right
-        answer. The explanation says that, and then what the column is: “After the point come tenths,
-        then hundredths, then thousandths. In 5.320 the 2 is in the hundredths column, so it is worth 2
-        hundredths, 0.02.”
+        answer. This is what the app says when they pick it:
       </p>
+      <div className="mt-3 rounded-xl bg-orange-50 px-5 py-4 text-orange-900">
+        <p className="flex items-center gap-2 font-semibold">
+          <span aria-hidden="true">💡</span> Good try
+        </p>
+        <p className="mt-1.5 text-sm leading-relaxed opacity-90">
+          You might have thought that the 2 fills the tenths column, so it is worth 0.2? But after
+          the point come tenths, then hundredths, then thousandths: the 2 is in the hundredths
+          column, so it is worth 0.02.
+        </p>
+      </div>
 
       <h2 className="mt-10 text-lg font-semibold text-slate-900">Where they come from</h2>
       <ul className="mt-4 space-y-2 text-sm">

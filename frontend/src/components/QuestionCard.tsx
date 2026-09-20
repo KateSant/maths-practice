@@ -30,11 +30,19 @@ export type QuestionVariant = 'single' | 'multi'
  * The option rows stay <button> elements even when nothing is clickable, so the preview is the
  * same markup rather than a lookalike.
  */
+/**
+ * A wrong answer is orange, not red.
+ *
+ * Red is kept for things that actually broke - a failed sign-in, a rejected form, a submit error
+ * - which is a verdict on the software. A wrong answer is a verdict on a child's thinking, and the
+ * banner above it already says "Good try". Orange carries the same "look here" without the alarm.
+ * The colour is never the only signal either: the ✕ badge and the banner text say it in words.
+ */
 const OPTION_STYLES: Record<OptionState, string> = {
   idle: 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/40',
   selected: 'border-indigo-400 bg-indigo-50 ring-2 ring-indigo-500/20',
   correct: 'border-emerald-400 bg-emerald-50 ring-2 ring-emerald-500/20',
-  wrong: 'border-rose-400 bg-rose-50 ring-2 ring-rose-500/20',
+  wrong: 'border-orange-200 bg-orange-50 ring-2 ring-orange-400/20',
   muted: 'border-slate-200 bg-white opacity-55',
 }
 
@@ -42,7 +50,7 @@ const BADGE_STYLES: Record<OptionState, string> = {
   idle: 'bg-slate-100 text-slate-600 group-hover:bg-indigo-100 group-hover:text-indigo-700',
   selected: 'bg-indigo-600 text-white',
   correct: 'bg-emerald-600 text-white',
-  wrong: 'bg-rose-600 text-white',
+  wrong: 'bg-orange-600 text-white',
   muted: 'bg-slate-100 text-slate-500',
 }
 
@@ -55,7 +63,7 @@ const MULTI_BADGE_STYLES: Record<OptionState, string> = {
   idle: 'border-2 border-slate-300 bg-white group-hover:border-indigo-400',
   selected: 'border-2 border-indigo-600 bg-indigo-600 text-white',
   correct: 'border-2 border-emerald-600 bg-emerald-600 text-white',
-  wrong: 'border-2 border-rose-600 bg-rose-600 text-white',
+  wrong: 'border-2 border-orange-600 bg-orange-600 text-white',
   muted: 'border-2 border-slate-200 bg-white',
 }
 
