@@ -2,17 +2,18 @@
 #
 # Grant the ADMIN role to an account.
 #
-# There is deliberately no UI for this and no allowlist in configuration. There is exactly one
-# administrator, she is promoted by hand, and the role lives in the users table where
-# JwtToUserPrincipalConverter reads it on every request. The practical consequence is that the
-# change takes effect on her next request: no re-login, no reissued token, no cache to clear.
+# There is deliberately no UI for this and no allowlist in configuration. Administrators are
+# promoted by hand with this script - there is no fixed number of them - and the role lives in
+# the users table where JwtToUserPrincipalConverter reads it on every request. The practical
+# consequence is that the change takes effect on her next request: no re-login, no reissued
+# token, no cache to clear.
 #
 #   ./scripts/make-admin.sh jo@example.com                  # promote an account that exists
 #   ./scripts/make-admin.sh --pre-register susan@gmail.com "Susan Watts"
 #
 # The account normally has to exist already, which means she signs in once (Google creates the
-# row) and then we promote it. Refusing to invent a row is the point: a role should attach to an
-# identity that has actually authenticated.
+# row) and then we promote it. Refusing to invent a row is the default: a role should attach to
+# an identity that has actually authenticated.
 #
 # --pre-register exists for the case where someone wants the account ready *before* first
 # sign-in. It creates the row with the role already set, and Google then adopts that row:
@@ -26,6 +27,11 @@
 #     where Google issued the address. Pre-registering a third-party address (a school address
 #     hosted elsewhere, say) makes sign-in fail outright with a conflict, because attaching it
 #     would hand the account to whoever controls that Google account. The script warns below.
+#
+#   * A row created here is NOT evidence that she has signed in. It exists from the moment this
+#     script runs, role and all, and is indistinguishable in the users table from an account in
+#     use. Her sign-in is recorded at her first successful Google login as a user_identities row
+#     carrying last_login_at; until that row exists she has never logged in, whatever users says.
 #
 # Against the deployed instance the database lives in a Docker volume and neither the host nor
 # the container ships sqlite3, so a temporary container is the least invasive way in:
@@ -115,6 +121,7 @@ if [ -z "$EXISTING_ROLE" ]; then
   sqlite3 "$DB" "insert into users (email, display_name, role) values ('$NORMALISED', '$(printf '%s' "$NAME" | sed "s/'/''/g")', 'ADMIN');"
   echo "$NORMALISED: created as ADMIN, display name '$NAME' (in $DB)"
   echo "Her first Google sign-in will adopt this account rather than creating a second one."
+  echo "Until then she has no user_identities row, so she has not signed in yet."
   exit 0
 fi
 
