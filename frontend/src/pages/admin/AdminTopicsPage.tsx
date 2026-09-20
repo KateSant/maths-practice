@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { ApiRequestError } from '../../api/client'
-import { adminApi, type AdminTopic, type SaveTopicRequest } from '../../api/admin'
+import { adminApi, type AdminTopic, type SaveTopicRequest, type TopicCoverage } from '../../api/admin'
 import { Button, Card, Spinner } from '../../components/ui'
 import { AdminHeader } from './adminUi'
+import { difficultyLabel } from '../../lib/format'
 import { fieldClass } from './AdminQuestionListPage'
 
 interface TopicRow extends SaveTopicRequest {
@@ -19,6 +20,7 @@ const EMPTY_NEW_TOPIC: SaveTopicRequest = { slug: '', name: '', description: '',
  */
 export function AdminTopicsPage() {
   const [rows, setRows] = useState<TopicRow[]>([])
+  const [coverage, setCoverage] = useState<TopicCoverage[]>([])
   const [loading, setLoading] = useState(true)
   const [busyId, setBusyId] = useState<number | null>(null)
   const [creating, setCreating] = useState(false)
@@ -30,10 +32,11 @@ export function AdminTopicsPage() {
 
   useEffect(() => {
     let cancelled = false
-    adminApi
-      .topics()
-      .then((loaded) => {
-        if (!cancelled) setRows(loaded.map(toRow))
+    Promise.all([adminApi.topics(), adminApi.coverage()])
+      .then(([loaded, loadedCoverage]) => {
+        if (cancelled) return
+        setRows(loaded.map(toRow))
+        setCoverage(loadedCoverage)
       })
       .catch((caught: unknown) => {
         if (!cancelled) setError(caught instanceof ApiRequestError ? caught.message : 'Could not load topics.')
@@ -45,6 +48,8 @@ export function AdminTopicsPage() {
       cancelled = true
     }
   }, [])
+
+  const coverageFor = (topicId: number) => coverage.find((entry) => entry.topicId === topicId)
 
   /** The server's field errors name the input; a conflict has only a message. */
   const reasonFor = (caught: unknown, fallback: string): string => {
@@ -187,6 +192,8 @@ export function AdminTopicsPage() {
                 {rowErrors[row.id]}
               </p>
             ) : null}
+
+            {coverageFor(row.id) ? <TopicCoverageRow coverage={coverageFor(row.id)!} /> : null}
           </Card>
         ))}
       </div>
@@ -252,4 +259,50 @@ function toRow(topic: AdminTopic): TopicRow {
     description: topic.description ?? '',
     sortOrder: topic.sortOrder,
   }
+}
+
+/**
+ * The bands this topic can actually serve, and the gaps.
+ *
+ * A zero is shown in red rather than omitted, because a band with no questions is a level the
+ * adaptive sets cannot aim at: a student working at it silently gets something else. That is the
+ * one thing this panel exists to make obvious.
+ */
+function TopicCoverageRow({ coverage }: { coverage: TopicCoverage }) {
+  const emptyBands = coverage.bands.filter((band) => band.questions === 0)
+
+  return (
+    <div className="mt-4 border-t border-slate-100 pt-3">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        {coverage.bands.map((band) => (
+          <span key={band.band} className="flex items-baseline gap-1.5 text-xs">
+            <span className={band.questions === 0 ? 'text-rose-400' : 'text-slate-500'}>
+              {difficultyLabel(band.band)}
+            </span>
+            <span
+              className={`font-semibold tabular-nums ${
+                band.questions === 0 ? 'text-rose-500' : 'text-slate-700'
+              }`}
+            >
+              {band.questions}
+            </span>
+          </span>
+        ))}
+        <span className="ml-auto text-xs text-slate-400">{coverage.published} published</span>
+      </div>
+
+      {!coverage.canFillASet ? (
+        <p className="mt-2 text-xs font-medium text-amber-700">
+          Not enough published questions here to fill a full set.
+        </p>
+      ) : null}
+
+      {coverage.canFillASet && emptyBands.length > 0 ? (
+        <p className="mt-2 text-xs text-slate-400">
+          No {emptyBands.map((band) => difficultyLabel(band.band)).join(' or ')} questions, so sets
+          cannot be aimed there.
+        </p>
+      ) : null}
+    </div>
+  )
 }

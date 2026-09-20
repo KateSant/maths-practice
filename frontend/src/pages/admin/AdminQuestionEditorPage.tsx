@@ -11,6 +11,7 @@ import {
 import { Button, Card, Spinner, buttonClasses } from '../../components/ui'
 import { QuestionCard, type OptionState } from '../../components/QuestionCard'
 import { AdminHeader, OriginBadge, StatusBadge } from './adminUi'
+import { DIFFICULTY_BANDS, difficultyLabel } from '../../lib/format'
 import { fieldClass } from './AdminQuestionListPage'
 
 const MAX_OPTIONS = 6
@@ -256,9 +257,9 @@ export function AdminQuestionEditorPage() {
                   onChange={(event) => setDifficulty(Number(event.target.value))}
                   className={fieldClass(fieldErrors['difficulty'])}
                 >
-                  {[1, 2, 3, 4, 5].map((value) => (
+                  {DIFFICULTY_BANDS.map((value) => (
                     <option key={value} value={value}>
-                      {value}
+                      {difficultyLabel(value)}
                     </option>
                   ))}
                 </select>

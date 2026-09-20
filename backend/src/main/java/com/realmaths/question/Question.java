@@ -40,7 +40,7 @@ public class Question {
     @Column(length = 1000)
     private String explanation;
 
-    /** 1 = easy up to 5 = hard. Rendered as an ore tier in the Minecraft theme. */
+    /** The band this question sits in, 1 (easiest) to 4 (hardest). The words for them live in the frontend. */
     @Column(nullable = false)
     private int difficulty;
 

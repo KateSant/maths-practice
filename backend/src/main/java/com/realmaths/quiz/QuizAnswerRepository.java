@@ -42,6 +42,39 @@ public interface QuizAnswerRepository extends JpaRepository<QuizAnswer, Long> {
             """)
     List<TopicAccuracy> accuracyByTopicForUser(@Param("userId") Long userId);
 
+    /**
+     * Recent form per topic: the newest {@code perTopic} answers in each, which is what decides
+     * the difficulty of the next set.
+     *
+     * <p>Recency rather than a calendar window, so "did badly last week" shapes this week's set
+     * without the query going empty the moment somebody takes a break. One query with a window
+     * function rather than one per topic, because the topic list wants all of them at once.
+     *
+     * <p>{@code excludeSessionId} answers "where was this student before the set I am summarising?"
+     * by ignoring that set's own answers. Null excludes nothing.
+     */
+    @Query(value = """
+            select topic_id as topicId,
+                   count(*) as answered,
+                   coalesce(sum(is_correct), 0) as correct
+            from (
+                select q.topic_id as topic_id,
+                       a.is_correct as is_correct,
+                       row_number() over (partition by q.topic_id order by a.id desc) as rn
+                from quiz_answers a
+                join questions q on q.id = a.question_id
+                join quiz_sessions s on s.id = a.session_id
+                where s.user_id = :userId
+                  and (:excludeSessionId is null or a.session_id <> :excludeSessionId)
+            )
+            where rn <= :perTopic
+            group by topic_id
+            """, nativeQuery = true)
+    List<RecentTopicAccuracy> recentAccuracyByTopic(
+            @Param("userId") Long userId,
+            @Param("perTopic") int perTopic,
+            @Param("excludeSessionId") Long excludeSessionId);
+
     interface TopicAccuracy {
         Long getTopicId();
 
@@ -50,5 +83,13 @@ public interface QuizAnswerRepository extends JpaRepository<QuizAnswer, Long> {
         long getAnswered();
 
         Long getCorrect();
+    }
+
+    interface RecentTopicAccuracy {
+        Long getTopicId();
+
+        long getAnswered();
+
+        long getCorrect();
     }
 }

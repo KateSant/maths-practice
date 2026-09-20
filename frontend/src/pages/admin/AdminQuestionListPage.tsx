@@ -10,6 +10,7 @@ import {
 } from '../../api/admin'
 import { Button, Card, EmptyState, Spinner, buttonClasses } from '../../components/ui'
 import { AdminHeader, DifficultyBadge, OriginBadge, StatusBadge } from './adminUi'
+import { DIFFICULTY_BANDS, difficultyLabel } from '../../lib/format'
 
 const PAGE_SIZE = 20
 
@@ -172,9 +173,9 @@ export function AdminQuestionListPage() {
               className={fieldClass()}
             >
               <option value="">Any difficulty</option>
-              {[1, 2, 3, 4, 5].map((value) => (
+              {DIFFICULTY_BANDS.map((value) => (
                 <option key={value} value={value}>
-                  {value}
+                  {difficultyLabel(value)}
                 </option>
               ))}
             </select>

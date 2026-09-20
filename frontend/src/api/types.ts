@@ -83,6 +83,10 @@ export interface SessionSummary {
   accuracyPercent: number
   startedAt: string
   completedAt?: string
+  /** The level the next set in this topic will be aimed at, given how this one went. */
+  level: number
+  /** The level this set was aimed at, so the two can be compared. */
+  setLevel: number
   review: QuestionReview[]
 }
 
@@ -92,6 +96,8 @@ export interface TopicStats {
   answered: number
   correct: number
   accuracyPercent: number
+  /** The level the next set in this topic will be aimed at, 1-5. */
+  level: number
 }
 
 export interface Stats {

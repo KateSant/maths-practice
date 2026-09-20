@@ -24,8 +24,8 @@ public record SaveQuestionRequest(
         @NotNull(message = "Choose a topic.") Long topicId,
         @Size(max = 1000, message = "Prompts are limited to 1000 characters.") String prompt,
         @Size(max = 1000, message = "Explanations are limited to 1000 characters.") String explanation,
-        @Min(value = 1, message = "Difficulty runs from 1 to 5.")
-                @Max(value = 5, message = "Difficulty runs from 1 to 5.")
+        @Min(value = 1, message = "Difficulty runs from 1 to 4.")
+                @Max(value = 4, message = "Difficulty runs from 1 to 4.")
                 int difficulty,
         @Size(max = 6, message = "A question can have at most six options.")
                 List<OptionDraft> options) {

@@ -11,27 +11,26 @@ import org.springframework.data.repository.query.Param;
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     /**
-     * Picks question ids at random in the database, avoiding the "order by random()
-     * with a fetched collection" trap (Hibernate would paginate in memory).
+     * Every published question's id and difficulty, optionally for one topic.
      *
-     * <p>Only {@code PUBLISHED} questions are dealt. Drafts are deliberately allowed to be
-     * half-written, so serving one would show a student an unanswerable question.
+     * <p>Deliberately not a random pick in SQL. Selection has to prefer the student's level and
+     * reach further out only to make up the numbers, which needs the difficulties in hand; a
+     * {@code limit :count} inside a widened difficulty window cannot express that, it just draws
+     * the whole set from the wider window. The bank is small, so reading it costs nothing.
      */
     @Query(value = """
-            select id from questions
+            select id as id, difficulty as difficulty
+            from questions
             where status = 'PUBLISHED'
-            order by random()
-            limit :count
+              and (:topicId is null or topic_id = :topicId)
             """, nativeQuery = true)
-    List<Long> pickRandomIds(@Param("count") int count);
+    List<QuestionDifficulty> listPublishedDifficulty(@Param("topicId") Long topicId);
 
-    @Query(value = """
-            select id from questions
-            where status = 'PUBLISHED' and topic_id = :topicId
-            order by random()
-            limit :count
-            """, nativeQuery = true)
-    List<Long> pickRandomIdsForTopic(@Param("topicId") Long topicId, @Param("count") int count);
+    interface QuestionDifficulty {
+        Long getId();
+
+        int getDifficulty();
+    }
 
     /** Loads the chosen questions and their options in one round trip. */
     @Query("select distinct q from Question q join fetch q.options where q.id in :ids")
@@ -45,6 +44,29 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             group by q.topic.id
             """)
     List<TopicQuestionCount> countByTopicWithStatus(@Param("status") QuestionStatus status);
+
+    /**
+     * Published questions per topic per band, for the coverage view.
+     *
+     * <p>Band by band rather than one total, because the adaptive sets are aimed at a band: a
+     * topic with thirty questions but none in two of the four bands cannot be practised at those
+     * levels at all, and a bare total hides that.
+     */
+    @Query(value = """
+            select topic_id as topicId, difficulty as difficulty, count(*) as total
+            from questions
+            where status = 'PUBLISHED'
+            group by topic_id, difficulty
+            """, nativeQuery = true)
+    List<TopicBandCount> countPublishedByTopicAndBand();
+
+    interface TopicBandCount {
+        Long getTopicId();
+
+        int getDifficulty();
+
+        long getTotal();
+    }
 
     /**
      * The admin question list.

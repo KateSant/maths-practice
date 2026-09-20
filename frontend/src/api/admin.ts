@@ -76,6 +76,20 @@ export interface AdminTopic {
   sortOrder: number
 }
 
+/** How many published questions a topic holds in each band. */
+export interface BandCount {
+  band: number
+  questions: number
+}
+
+export interface TopicCoverage {
+  topicId: number
+  topicName: string
+  bands: BandCount[]
+  published: number
+  canFillASet: boolean
+}
+
 export interface SaveTopicRequest {
   slug: string
   name: string
@@ -134,6 +148,9 @@ export const adminApi = {
     apiRequest<AdminQuestionDetail>(`/admin/questions/${id}/retire`, { method: 'POST' }),
 
   topics: () => apiRequest<AdminTopic[]>('/admin/topics'),
+
+  /** Published questions per topic per band, for the coverage panel on the Topics screen. */
+  coverage: () => apiRequest<TopicCoverage[]>('/admin/coverage'),
 
   createTopic: (body: SaveTopicRequest) => apiRequest<AdminTopic>('/admin/topics', { method: 'POST', body }),
 

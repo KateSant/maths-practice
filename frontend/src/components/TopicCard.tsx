@@ -1,12 +1,21 @@
 import type { Topic } from '../api/types'
 import { Badge, Card, buttonClasses } from './ui'
 import { Link } from 'react-router-dom'
-import { percent, pluralise } from '../lib/format'
+import { LevelMeter } from './LevelMeter'
+import { bandTone, percent } from '../lib/format'
 
-/** One topic tile. Practising a topic works through its whole set of questions. */
-export function TopicCard({ topic, accuracy }: { topic: Topic; accuracy?: number }) {
-  const href = `/quiz?topic=${encodeURIComponent(topic.slug)}&count=${topic.questionCount}`
-  const tone = accuracy === undefined ? null : accuracy >= 80 ? 'emerald' : accuracy >= 50 ? 'amber' : 'rose'
+/**
+ * One topic tile.
+ *
+ * The link carries no question count: the set is a sample drawn at the student's level, so how
+ * many questions the bank holds is not how many they will be asked. It is the level that decides
+ * which questions come back.
+ */
+export function TopicCard({ topic, accuracy, level }: { topic: Topic; accuracy?: number; level?: number }) {
+  const href = `/quiz?topic=${encodeURIComponent(topic.slug)}`
+  // One colour for the card, and it is the band's, not the percentage's: the badge and the meter
+  // then always agree with each other and with the word underneath them.
+  const tone = level === undefined ? null : bandTone(level)
 
   return (
     <Card className="flex flex-col p-5 transition hover:shadow-md hover:ring-indigo-200">
@@ -23,8 +32,14 @@ export function TopicCard({ topic, accuracy }: { topic: Topic; accuracy?: number
         <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{topic.description}</p>
       ) : null}
 
-      <div className="mt-auto flex items-center justify-between pt-5">
-        <span className="text-xs text-slate-400">{pluralise(topic.questionCount, 'question')} available</span>
+      {level !== undefined ? (
+        <div className="mt-3">
+          <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Working at</p>
+          <LevelMeter level={level} tone={tone ?? undefined} className="mt-1.5" />
+        </div>
+      ) : null}
+
+      <div className="mt-auto flex items-center justify-end pt-5">
         <Link to={href} className={buttonClasses('primary', 'sm')}>
           Practise
         </Link>

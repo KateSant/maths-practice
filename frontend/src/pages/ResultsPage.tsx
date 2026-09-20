@@ -3,9 +3,10 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import { ApiRequestError, api } from '../api/client'
 import type { SessionSummary } from '../api/types'
 import { AccuracyRing } from '../components/AccuracyRing'
+import { LevelMeter } from '../components/LevelMeter'
 import { MiningReward } from '../components/MiningReward'
 import { Card, Spinner, StatTile, buttonClasses } from '../components/ui'
-import { encouragement, formatDuration, percent, pluralise } from '../lib/format'
+import { difficultyLabel, formatDuration, percent, pluralise } from '../lib/format'
 
 interface ResultsLocationState {
   summary?: SessionSummary
@@ -64,8 +65,9 @@ export function ResultsPage() {
     <div className="mx-auto max-w-3xl animate-rise space-y-6">
       <Card className="overflow-hidden">
         <div className="bg-gradient-to-br from-indigo-600 to-violet-600 px-6 py-8 text-center text-white sm:px-10">
-          <p className="text-sm font-medium text-indigo-100">{summary.topicName}</p>
-          <h1 className="mt-1 text-2xl font-bold">{encouragement(summary.accuracyPercent, summary.correctCount, summary.questionCount)}</h1>
+          {/* The topic is the heading. There used to be an encouraging line under it, but a
+              sentence about a low score is worse than saying nothing. */}
+          <h1 className="text-2xl font-bold">{summary.topicName}</h1>
         </div>
 
         <div className="flex flex-col items-center gap-6 px-6 py-8 sm:flex-row sm:justify-center sm:gap-12">
@@ -84,6 +86,33 @@ export function ResultsPage() {
               hint={summary.answeredCount < summary.questionCount ? 'left blank' : 'all attempted'}
             />
           </div>
+        </div>
+      </Card>
+
+      {/* The graduation moment. `level` is where the next set will be aimed, `setLevel` is where
+          this one was, so a difference means the last few answers moved the student. */}
+      <Card className="p-5">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+              {summary.level > summary.setLevel
+                ? 'Moving up'
+                : summary.level < summary.setLevel
+                  ? 'Easing off'
+                  : 'Next set'}
+            </p>
+            <p className="mt-0.5 font-semibold text-slate-900">
+              {summary.level > summary.setLevel
+                ? `Nice work — your next ${summary.topicName} set will be ${difficultyLabel(summary.level)}.`
+                : summary.level < summary.setLevel
+                  ? `Your next set steps back to ${difficultyLabel(summary.level)} while you rebuild.`
+                  : `Your next set will stay at ${difficultyLabel(summary.level)}.`}
+            </p>
+            <p className="mt-1 text-sm text-slate-500">
+              Sets are aimed at how your last few answers went, so they move up as you do.
+            </p>
+          </div>
+          <LevelMeter level={summary.level} />
         </div>
       </Card>
 

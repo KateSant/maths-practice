@@ -3,6 +3,7 @@ package com.realmaths.quiz;
 import com.realmaths.common.ApiException;
 import com.realmaths.config.RealMathsProperties;
 import com.realmaths.question.AnswerOption;
+import com.realmaths.question.DifficultyBand;
 import com.realmaths.question.Question;
 import com.realmaths.question.QuestionCatalogService;
 import com.realmaths.question.Topic;
@@ -53,8 +54,9 @@ public class QuizService {
             topic = catalogService.requireTopicBySlug(request.topicSlug());
         }
 
+        Long topicId = topic == null ? null : topic.getId();
         List<Question> picked = catalogService.pickForSession(
-                topic == null ? null : topic.getId(), resolveQuestionCount(request.count()));
+                topicId, resolveQuestionCount(request.count()), targetLevelFor(userId, topicId, null));
 
         QuizSession session = new QuizSession(userRepository.getReferenceById(userId), topic, clock.instant());
         session.addQuestions(picked);
@@ -113,13 +115,13 @@ public class QuizService {
         if (!session.isCompleted()) {
             session.complete(clock.instant());
         }
-        return SessionSummary.from(session, answerRepository.findDetailedBySessionId(sessionId));
+        return summaryOf(session, userId);
     }
 
     @Transactional(readOnly = true)
     public SessionSummary getSession(Long userId, Long sessionId) {
         QuizSession session = requireSession(userId, sessionId);
-        return SessionSummary.from(session, answerRepository.findDetailedBySessionId(sessionId));
+        return summaryOf(session, userId);
     }
 
     @Transactional(readOnly = true)
@@ -132,6 +134,43 @@ public class QuizService {
     private QuizSession requireSession(Long userId, Long sessionId) {
         return sessionRepository.findByIdForUser(sessionId, userId)
                 .orElseThrow(() -> ApiException.notFound("Quiz session not found."));
+    }
+
+    /**
+     * The level to aim at, from the student's recent answers in this topic - or across every
+     * topic when the set is mixed. Answers just given count, so a summary describes the set the
+     * student is about to get rather than the one they have just finished.
+     *
+     * <p>{@code excludeSessionId} ignores one session's answers, which is how the summary reports
+     * the level a set was <em>aimed</em> at: recomputing without that set reproduces the band it
+     * was dealt from, which the questions themselves cannot be trusted to say, because the window
+     * is widened when the bank is thin at the target level.
+     */
+    private int targetLevelFor(Long userId, Long topicId, Long excludeSessionId) {
+        List<QuizAnswerRepository.RecentTopicAccuracy> recent =
+                answerRepository.recentAccuracyByTopic(userId, DifficultyBand.RECENT_ANSWERS, excludeSessionId);
+
+        if (topicId == null) {
+            long answered = recent.stream().mapToLong(QuizAnswerRepository.RecentTopicAccuracy::getAnswered).sum();
+            long correct = recent.stream().mapToLong(QuizAnswerRepository.RecentTopicAccuracy::getCorrect).sum();
+            return DifficultyBand.forAccuracy(answered, correct);
+        }
+
+        return recent.stream()
+                .filter(row -> topicId.equals(row.getTopicId()))
+                .findFirst()
+                .map(row -> DifficultyBand.forAccuracy(row.getAnswered(), row.getCorrect()))
+                // No answers in this topic yet, so there is nothing to go on.
+                .orElseGet(() -> DifficultyBand.forAccuracy(0, 0));
+    }
+
+    private SessionSummary summaryOf(QuizSession session, Long userId) {
+        Long topicId = session.getTopic() == null ? null : session.getTopic().getId();
+        return SessionSummary.from(
+                session,
+                answerRepository.findDetailedBySessionId(session.getId()),
+                targetLevelFor(userId, topicId, null),
+                targetLevelFor(userId, topicId, session.getId()));
     }
 
     private AnswerResult toResult(QuizSession session, QuizAnswer answer) {

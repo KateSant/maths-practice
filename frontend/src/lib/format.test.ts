@@ -53,8 +53,9 @@ describe('encouragement', () => {
     expect(encouragement(0, 0, 0)).not.toBe('Perfect score!')
   })
 
-  it('acknowledges a zero score kindly', () => {
-    expect(encouragement(0, 0, 5)).toBe('Tricky one. Have a look at the answers below.')
+  it('stays quiet about a low score, leaving it to the review', () => {
+    expect(encouragement(0, 0, 5)).toBe('')
+    expect(encouragement(33, 2, 6)).toBe('')
   })
 })
 

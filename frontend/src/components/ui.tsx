@@ -93,11 +93,13 @@ export function ProgressBar({
   )
 }
 
-export function Badge({ children, tone = 'slate' }: { children: ReactNode; tone?: 'slate' | 'indigo' | 'emerald' | 'amber' | 'rose' }) {
+export function Badge({ children, tone = 'slate' }: { children: ReactNode; tone?: 'slate' | 'indigo' | 'emerald' | 'green' | 'amber' | 'rose' }) {
   const tones = {
     slate: 'bg-slate-100 text-slate-600',
     indigo: 'bg-indigo-50 text-indigo-700',
     emerald: 'bg-emerald-50 text-emerald-700',
+    // Deeper than emerald on purpose: the top band has to look like more than the one below it.
+    green: 'bg-green-100 text-green-800',
     amber: 'bg-amber-50 text-amber-700',
     rose: 'bg-rose-50 text-rose-700',
   }

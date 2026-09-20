@@ -43,17 +43,21 @@ export function HomePage() {
 
   const stats = profile?.stats
   const firstName = profile?.user.displayName.split(' ')[0] ?? 'there'
+  // Only shown when there is something good to say; a low score gets the neutral line instead.
+  const encouragementMessage =
+    stats && stats.totalAnswered > 0
+      ? encouragement(stats.accuracyPercent, stats.totalCorrect, stats.totalAnswered)
+      : ''
   const tone = accuracyTone(stats?.accuracyPercent ?? 0)
   const accuracyById = new Map((stats?.byTopic ?? []).map((entry) => [entry.topicId, entry.accuracyPercent]))
+  const levelById = new Map((stats?.byTopic ?? []).map((entry) => [entry.topicId, entry.level]))
 
   return (
     <div className="animate-rise space-y-8">
       <section>
         <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">Hi {firstName} 👋</h1>
         <p className="mt-1 text-slate-500">
-          {stats && stats.totalAnswered > 0
-            ? encouragement(stats.accuracyPercent, stats.totalCorrect, stats.totalAnswered)
-            : 'Pick a topic below and answer a few questions to get started.'}
+          {encouragementMessage || 'Pick a topic below and answer a few questions to get started.'}
         </p>
       </section>
 
@@ -84,7 +88,7 @@ export function HomePage() {
       <section>
         <h2 className="text-lg font-semibold text-slate-900">Topics</h2>
         <p className="mt-0.5 text-sm text-slate-500">
-          Work through a topic's questions, with the working shown after each answer.
+          A short set from the topic, aimed at the level you are working at.
         </p>
 
         {error ? (
@@ -96,7 +100,12 @@ export function HomePage() {
         {topics ? (
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {topics.map((topic) => (
-              <TopicCard key={topic.id} topic={topic} accuracy={accuracyById.get(topic.id)} />
+              <TopicCard
+                key={topic.id}
+                topic={topic}
+                accuracy={accuracyById.get(topic.id)}
+                level={levelById.get(topic.id)}
+              />
             ))}
           </div>
         ) : null}

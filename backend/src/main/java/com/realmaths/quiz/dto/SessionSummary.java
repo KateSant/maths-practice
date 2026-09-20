@@ -17,9 +17,13 @@ public record SessionSummary(
         int accuracyPercent,
         Instant startedAt,
         Instant completedAt,
+        /** The level the next set in this topic will be aimed at, given how this one went. */
+        int level,
+        /** The level this set was aimed at, so the two can be compared and the move shown. */
+        int setLevel,
         List<QuestionReview> review) {
 
-    public static SessionSummary from(QuizSession session, List<QuizAnswer> answers) {
+    public static SessionSummary from(QuizSession session, List<QuizAnswer> answers, int level, int setLevel) {
         return new SessionSummary(
                 session.getId(),
                 session.getTopic() == null ? null : session.getTopic().getSlug(),
@@ -31,6 +35,8 @@ public record SessionSummary(
                 ScoreMath.percent(session.getCorrectCount(), session.getQuestionCount()),
                 session.getStartedAt(),
                 session.getCompletedAt(),
+                level,
+                setLevel,
                 answers.stream().map(QuestionReview::from).toList());
     }
 }
