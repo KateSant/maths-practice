@@ -376,6 +376,61 @@ class SchemaMigrationTest {
         }
     }
 
+    /**
+     * A migration must apply to a database that already holds authored content, not only to an
+     * empty one.
+     *
+     * <p>This is the regression test for the deploy that took the site down. V6 seeded a tick-all
+     * question with a hard-coded id 33, which is free on the fresh database every other test uses
+     * and occupied in production, where 33 questions of authored content already existed. The
+     * migration died on a primary key collision, the API crash-looped and Caddy answered 502.
+     *
+     * <p>Migrating part of the way and then occupying the id the seed wanted reproduces exactly
+     * that, on a database small enough to build in a test.
+     */
+    @Test
+    void migrationsApplyOverContentThatOccupiesTheIdTheSeedUsedToHardCode() throws Exception {
+        String url = "jdbc:sqlite:" + tempDir.resolve("upgrade-test.db") + "?foreign_keys=on";
+
+        // The prototype as it shipped before the multi-select work: schema and seed, no more.
+        Flyway.configure()
+                .dataSource(url, null, null)
+                .locations("classpath:db/migration")
+                .target("5")
+                .load()
+                .migrate();
+
+        try (Connection connection = DriverManager.getConnection(url);
+                Statement statement = connection.createStatement()) {
+            // The teacher's own content, already past the id the seed used to claim.
+            statement.executeUpdate("""
+                    insert into questions (id, topic_id, prompt, explanation, difficulty)
+                    values (33, 1, 'authored before the upgrade', 'x', 1)
+                    """);
+        }
+
+        // This is the step that failed in production.
+        Flyway.configure()
+                .dataSource(url, null, null)
+                .locations("classpath:db/migration")
+                .load()
+                .migrate();
+
+        try (Connection connection = DriverManager.getConnection(url);
+                Statement statement = connection.createStatement()) {
+            long seededId = scalar(
+                    statement, "select id from questions where origin = 'SEED' and answer_type = 'MULTI_SELECT'");
+            assertThat(seededId).as("the seed took an id of its own").isNotEqualTo(33);
+
+            assertThat(scalar(statement, """
+                    select count(*) from answer_options
+                    where question_id = %d and is_correct = 1
+                    """.formatted(seededId)))
+                    .as("its three correct options attached to it, not to the authored question")
+                    .isEqualTo(3);
+        }
+    }
+
     // ---------------------------------------------------------- year groups (V8) ---
 
     /**

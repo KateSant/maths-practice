@@ -82,21 +82,33 @@ alter table quiz_answers drop column selected_option_id;
 -- docs/content-admin-architecture.md that migrations never insert questions. That rule exists to
 -- stop a future deployment overwriting the teacher's content; this is prototype seed content,
 -- marked origin = 'SEED' so the same one-action sweep that clears the other 32 takes it too.
--- V2 says not to grow it, so this cannot live there, and editing an applied migration would break
--- every existing database on its checksum anyway.
+-- V2 says not to grow it, so this cannot live there.
 --
--- The database is disposable until a real student has a score, so use that freedom now.
+-- The ids are assigned by SQLite rather than written out, and that is a fix rather than a style
+-- choice. This insert originally said `id = 33`, which is free on a fresh database and occupied on
+-- a real one: production had already reached 33 questions of authored content, so the migration
+-- died on a PRIMARY KEY collision, the API crash-looped and the site served 502. No test caught it
+-- because every test migrated an empty database. SchemaMigrationTest now has a case that migrates
+-- part of the way and then applies the rest over content occupying the id the seed wanted.
+--
+-- Editing this file changes its checksum, which is normally the reason not to touch an applied
+-- migration. It is safe here because it never applied anywhere but disposable local databases:
+-- production failed on it and rolled back to V5, which is exactly why this fix can run there. A
+-- local database that did apply the old V6 will refuse to start on a checksum mismatch - delete it
+-- and let Flyway rebuild, which is the documented reset for a prototype database.
 -- ---------------------------------------------------------------------------------------------
 
-insert into questions (id, topic_id, prompt, explanation, difficulty, status, origin, answer_type) values
-  (33, 1, 'Tick every number below that is prime.',
+insert into questions (topic_id, prompt, explanation, difficulty, status, origin, answer_type) values
+  (1, 'Tick every number below that is prime.',
           'A prime number has exactly two factors, 1 and itself. 29, 37 and 47 are prime. '
           || '21 = 3 × 7 and 39 = 3 × 13, so both of those are composite.',
           2, 'PUBLISHED', 'SEED', 'MULTI_SELECT');
 
-insert into answer_options (id, question_id, position, label, text, is_correct) values
-  (331, 33, 1, 'A', '21', false),
-  (332, 33, 2, 'B', '29', true ),
-  (333, 33, 3, 'C', '37', true ),
-  (334, 33, 4, 'D', '39', false),
-  (335, 33, 5, 'E', '47', true );
+-- last_insert_rowid() is the question inserted immediately above, on this connection. It is what
+-- lets the options attach without naming an id that may already be taken.
+insert into answer_options (question_id, position, label, text, is_correct) values
+  ((select last_insert_rowid()), 1, 'A', '21', false),
+  ((select last_insert_rowid()), 2, 'B', '29', true ),
+  ((select last_insert_rowid()), 3, 'C', '37', true ),
+  ((select last_insert_rowid()), 4, 'D', '39', false),
+  ((select last_insert_rowid()), 5, 'E', '47', true );
