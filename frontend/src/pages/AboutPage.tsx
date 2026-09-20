@@ -115,10 +115,17 @@ export function AboutPage() {
         <p className="flex items-center gap-2 font-semibold">
           <span aria-hidden="true">💡</span> Good try
         </p>
+        {/* The two lines the quiz renders for this pick: the message hung on the wrong option in
+            content/bank/01-place-value.json, then the item's explanation. Kept in step with the
+            bank by hand, like EXAMPLE itself, because the page is public and the catalog is not. */}
+        <p className="mt-2 text-sm leading-relaxed">
+          <strong>You might have thought that</strong> the 2 fills the tenths column,{' '}
+          <strong>but</strong> it is in the hundredths column, so it is worth 0.02.
+        </p>
         <p className="mt-1.5 text-sm leading-relaxed opacity-90">
-          You might have thought that the 2 fills the tenths column, so it is worth 0.2? But after
-          the point come tenths, then hundredths, then thousandths: the 2 is in the hundredths
-          column, so it is worth 0.02.
+          After the point come tenths, then hundredths, then thousandths. In 5.320 the 2 is in the
+          hundredths column, so it is worth 2 hundredths, 0.02. Writing 0.2 puts it in the tenths
+          column, 0.002 puts it in the thousandths column, and 2 puts it in the units column.
         </p>
       </div>
 
