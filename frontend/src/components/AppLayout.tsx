@@ -142,10 +142,6 @@ export function AppLayout() {
         <Outlet />
       </main>
 
-      <footer className={`mx-auto ${shellWidth} px-4 pb-10 pt-4 text-center text-xs text-slate-400 sm:px-6`}>
-        <p>Questions are a starter set</p>
-      </footer>
-
       {/* Rendered here and in the sign-in shell, so it is present whether or not anyone is signed
           in. The footer used to say "prototype" as well; the badge is the one place for it now. */}
       <PrototypeBadge />
