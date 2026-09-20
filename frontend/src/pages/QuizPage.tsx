@@ -8,6 +8,7 @@ import { QuestionCard, type OptionState, type QuestionVariant } from '../compone
 import { difficultyLabel } from '../lib/format'
 import { isYearGroup, readYearGroup, yearGroupLabel, type YearGroup } from '../lib/yearGroups'
 import { optionState, toggleSelection } from '../lib/answerState'
+import { studentFeedback } from '../lib/misconceptions'
 
 const DEFAULT_QUESTIONS = 5
 const MAX_QUESTIONS = 20
@@ -46,6 +47,14 @@ export function QuizPage() {
    */
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [result, setResult] = useState<AnswerResult | null>(null)
+
+  // The register's line for whichever wrong option the student picked, so the feedback names the
+  // error they made rather than listing every error the question catches. Two at most: a tick-all
+  // can be wrong in several ways at once, and a wall of text teaches nothing.
+  const caughtFeedback = (result?.misconceptionCodes ?? [])
+    .map(studentFeedback)
+    .filter((line): line is string => Boolean(line))
+    .slice(0, 2)
   const [submitting, setSubmitting] = useState(false)
   const [finishing, setFinishing] = useState(false)
   const [askedAt, setAskedAt] = useState(() => Date.now())
@@ -275,6 +284,11 @@ export function QuizPage() {
               <span aria-hidden="true">{result.correct ? '🎉' : '💡'}</span>
               {result.correct ? `Correct! +${result.pointsAwarded} points` : 'Not quite'}
             </p>
+            {caughtFeedback.map((line) => (
+              <p key={line} className="mt-2 text-sm font-medium leading-relaxed">
+                {line}
+              </p>
+            ))}
             {result.explanation ? (
               <p className="mt-1.5 text-sm leading-relaxed opacity-90">{result.explanation}</p>
             ) : null}

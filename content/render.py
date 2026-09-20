@@ -83,6 +83,14 @@ def load_topics():
 def validate():
     register = load_register()
     errors = []
+
+    # Every row needs the line a student reads when they pick that option. Without it the quiz can
+    # only show the generic explanation, which names every error the item catches rather than the
+    # one the student made - so a row that loses its student line is a silent regression in the
+    # feedback, not a cosmetic gap in the file.
+    for code, entry in register.items():
+        if not str(entry.get("student", "")).strip():
+            errors.append(f"register: {code} has no student line")
     seen_keys = {}
     totals = Counter()
     bands = Counter()
@@ -194,6 +202,8 @@ def render(topic_filter=None):
                 else:
                     entry = register.get(option["catches"], {})
                     lines.append(f"- {label}. {option['text']} — *{option['catches']}*: {entry.get('misconception', '')}")
+                    if entry.get("student"):
+                        lines.append(f"    - *the student reads:* {entry['student']}")
             lines.append("")
             lines.append(f"> {question['explanation']}")
             lines.append("")

@@ -71,6 +71,13 @@ export interface AnswerResult {
   /** The whole key. One entry for a single choice, several for a tick-all. */
   correctOptionIds: number[]
   explanation?: string
+  /**
+   * The register code of each wrong option the student actually chose, so the feedback can name
+   * their error rather than list every error the question catches. Empty when they answered
+   * correctly, and for a wrong option carrying no code. Only ever sent after they have committed,
+   * never in the question they see beforehand, where it would mark the wrong options for them.
+   */
+  misconceptionCodes?: string[]
   pointsAwarded: number
   totalPoints: number
   currentStreak: number

@@ -11,7 +11,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Place value, exemplified key idea 1.1.1.2",
         "keyIdea": "1.1.1.2",
         "quote": "Students are likely familiar with place value charts and the column headings in both words (tens, ones, tenths, hundredths ...) and as decimals (10s, 1s, 0.1s, 0.01s ...) but may need to revisit column headings written as fractions and exponents."
-      }
+      },
+      "student": "You read the digit as filling a different column. Which column it sits in is what fixes its value — whether that is thousands, tens, tenths or hundredths."
     },
     {
       "code": "PV-SAME-VALUE",
@@ -23,7 +24,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Place value, exemplified key idea 1.1.1.2",
         "keyIdea": "1.1.1.2",
         "quote": "Understanding that a mathematical object can have the 'same value but a different appearance' is a key understanding in maths, and students may find it challenging to recognise that a column headed as tenths, 1/10, 0.1 or 10⁻¹ will represent digits of equal value."
-      }
+      },
+      "student": "You treated these as different values because they look different. A word, a fraction, a decimal and a power of ten can all name the same column."
     },
     {
       "code": "PV-POWER-TEN",
@@ -35,7 +37,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Place value, key idea 1.1.1.2",
         "keyIdea": "1.1.1.2",
         "quote": "each column value is a power of ten and ... multiplying or dividing by ten shifts digits from one column to the adjacent one"
-      }
+      },
+      "student": "You added or removed zeros instead of moving the digits. Multiplying or dividing by 10 shifts every digit one column along."
     },
     {
       "code": "PV-UNIT-COUNT",
@@ -47,7 +50,8 @@
         "unit": "DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Place value, Overview",
         "keyIdea": "1.1.1.2",
         "quote": "They need to appreciate that 43 872 has 438 hundreds; and later, that 43 872 is 438.72 hundreds or 438.72 × 100."
-      }
+      },
+      "student": "You gave the digit in that column rather than the number of that unit. A number has far more hundreds in it than the single digit sitting in the hundreds column."
     },
     {
       "code": "PV-MEASURE-PLACE",
@@ -59,7 +63,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Place value",
         "keyIdea": "1.1.1.3",
         "note": "The guidance names 'place value in the context of measure' as a key idea and asks that measures in real-life contexts be emphasised, but it does not name this error in a Common difficulties passage. Standard subject knowledge: the conversion error the key idea guards against."
-      }
+      },
+      "student": "You shifted the decimal point the wrong number of places. There are 1,000 g in a kilogram, so 0.05 kg is 50 g, not 5 g."
     },
     {
       "code": "PV-ZERO-PLACE",
@@ -71,7 +76,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'",
         "keyIdea": "1.1.1.2",
         "note": "Not named in a Common difficulties passage for place value; the standard error the place-value-chart structure guards against. The rounding statement 1.1.3.2 separately names the difficulty of telling when a zero digit is significant."
-      }
+      },
+      "student": "You ignored a zero inside the number. That zero is holding a column open, which keeps the digits after it in their places."
     },
     {
       "code": "PV-MORE-DIGITS",
@@ -83,7 +89,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'",
         "keyIdea": "1.1.1.2",
         "note": "Not named in a Common difficulties passage; the classic Key Stage 2 error that the named method - compare columns, not digit counts - guards against."
-      }
+      },
+      "student": "You went by how many digits there are. More digits does not make a decimal bigger — 0.45 is smaller than 0.5."
     },
     {
       "code": "PV-NEG-ORDER",
@@ -95,7 +102,8 @@
         "unit": "DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals, Common difficulties and misconceptions",
         "keyIdea": "1.1.1.4 / 1.3.2.1",
         "quote": "students may think that −591 is larger than −3 because it's further from zero, but agree that it's a lower value"
-      }
+      },
+      "student": "You compared the numerals and ignored the minus signs. On a number line −12 is further left than −3, so it is lower."
     },
     {
       "code": "PV-BETWEEN",
@@ -107,7 +115,8 @@
         "unit": "NCETM KS3 core concept 1.3 'Ordering and comparing', Overview",
         "keyIdea": "1.3.2.6",
         "quote": "an important aspect of infinity that students may not meet until Key Stage 3 is that of 'bounded infinity' - namely, that given any two numbers, there will always be another number ... that can be placed between them on a number line"
-      }
+      },
+      "student": "You looked only at the columns you were given. There is always another number in between — 0.605 sits between 0.6 and 0.61."
     },
     {
       "code": "PROP-FACTOR-MULTIPLE",
@@ -119,7 +128,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You swapped factors and multiples. A factor divides the number exactly; a multiple is in the number's times table."
     },
     {
       "code": "PROP-MULTIPLE-LIMIT",
@@ -131,7 +141,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "1.2.1.2",
         "quote": "students often find multiples of an integer by listing numbers in the specified times table. This strategy is efficient for small numbers of multiples but can lead to misconceptions, such as thinking that numbers have only 12 multiples or that numbers outside of the times tables do not have multiples"
-      }
+      },
+      "student": "You stopped at the end of the times table. The multiples carry on for ever — 7 × 20 = 140 is a multiple of 7 too."
     },
     {
       "code": "PROP-ONE-IS-PRIME",
@@ -143,7 +154,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "The guidance says a prime has exactly two factors and that students should know why one is not prime (unit overview). Not named in a Common difficulties passage."
-      }
+      },
+      "student": "You counted 1, or an odd number, as prime. A prime has exactly two factors, and being odd is not enough."
     },
     {
       "code": "PROP-POWER-AS-PRODUCT",
@@ -155,7 +167,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You multiplied the base by the index. The index says how many copies of the base to multiply together."
     },
     {
       "code": "PROP-INDEX-AS-NUMBER",
@@ -167,7 +180,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You read the index as a digit beside the base. 4³ means 4 × 4 × 4, not 43."
     },
     {
       "code": "PROP-SQUARE-DOUBLE",
@@ -179,7 +193,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for square and cube notation (1.2.2.1)."
-      }
+      },
+      "student": "You doubled the number instead of squaring it. Squaring multiplies the number by itself."
     },
     {
       "code": "PROP-CUBE-TRIPLE",
@@ -191,7 +206,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You multiplied by 3 instead of cubing. Cubing multiplies the number by itself twice."
     },
     {
       "code": "PROP-SQUARE-ROOT-HALVE",
@@ -203,7 +219,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for roots (1.2.2.2)."
-      }
+      },
+      "student": "You halved the number. A square root asks which number multiplied by itself gives the one you started with."
     },
     {
       "code": "PROP-HCF-LCM",
@@ -215,7 +232,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "1.2.3.4 / 1.2.3.5",
         "quote": "we cannot be sure that five is the highest common factor unless each number is written as the product of prime factors"
-      }
+      },
+      "student": "You swapped the highest common factor and the lowest common multiple, or multiplied the numbers together. The HCF divides both; the LCM is the smallest number both divide into."
     },
     {
       "code": "PROP-HCF-PARTIAL",
@@ -227,7 +245,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "1.2.3.4",
         "quote": "we cannot be sure that five is the highest common factor unless each number is written as the product of prime factors"
-      }
+      },
+      "student": "You stopped at a common factor instead of the highest one. Keep looking until no larger factor divides both numbers."
     },
     {
       "code": "PROP-LCM-ADDITIVE",
@@ -239,7 +258,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You added the two numbers. The lowest common multiple is a number that both of them divide into, not their sum."
     },
     {
       "code": "PROP-PRIME-FACTOR",
@@ -251,7 +271,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "Supported by the guidance's point that a common factor cannot be confirmed without writing each number as the product of prime factors (1.2.3.3)."
-      }
+      },
+      "student": "Your factorisation still had a composite number in it. Keep going until every factor is prime."
     },
     {
       "code": "PROP-FACTOR-PAIRS",
@@ -263,7 +284,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "Your factor list missed some out. Remember 1 and the number itself, and pair them up as you go."
     },
     {
       "code": "PROP-STRUCTURE-PRODUCT",
@@ -275,7 +297,8 @@
         "unit": "NCETM KS3 core concept 1.2 'Properties of number'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Properties of number: factors, multiples, squares and cubes",
         "keyIdea": "1.2.3.3",
         "quote": "students are at ease with the idea that 2 x 3 x 5 is just another way of expressing the number 30 and does not need to be calculated ... When asked whether 2 x 3 x 5 is a multiple of 10 or not, it is not uncommon for students to multiply the three factors together to obtain 30 before they are able to say that it is a multiple of 10"
-      }
+      },
+      "student": "You multiplied the factors out before reasoning about them. You can see that 2 × 3 × 5 is a multiple of 10 without working it out."
     },
     {
       "code": "INT-MULT-BIGGER",
@@ -287,7 +310,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "2.1.2.1",
         "quote": "Many Key Stage 3 students will have the misconception that 'multiplication makes bigger' when working with positive numbers"
-      }
+      },
+      "student": "You assumed multiplying makes a number bigger. Multiplying by a number less than 1 makes it smaller."
     },
     {
       "code": "INT-DIV-SMALLER",
@@ -299,7 +323,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You assumed dividing makes a number smaller. Dividing by a number less than 1 makes it bigger."
     },
     {
       "code": "INT-TWO-NEG",
@@ -311,7 +336,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "2.1.1.1",
         "quote": "When subtracting a negative integer, many students used the rule that 'two negatives make a positive'"
-      }
+      },
+      "student": "You turned both minus signs into a plus. Two negatives make a positive when they are multiplied or divided, not when they are added."
     },
     {
       "code": "INT-SUB-NEG",
@@ -323,7 +349,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "2.1.1.1",
         "quote": "When subtracting a negative integer, many students used the rule that 'two negatives make a positive'"
-      }
+      },
+      "student": "You subtracted as usual. Taking away a negative moves you to the right, which is the same as adding."
     },
     {
       "code": "INT-SIGN-PRODUCT",
@@ -335,7 +362,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You kept the minus sign. A negative multiplied or divided by a negative is positive."
     },
     {
       "code": "INT-LEFT-RIGHT",
@@ -347,7 +375,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You worked from left to right. Indices come first, then multiplication and division, then addition and subtraction."
     },
     {
       "code": "INT-INDICES-ORDER",
@@ -359,7 +388,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You did the addition before the index. The index applies only to the number it is written on."
     },
     {
       "code": "INT-SUB-ORDER",
@@ -371,7 +401,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "2.1.1.1",
         "quote": "when subtracting a positive integer from either a positive or negative number, many students simply subtract the numerals and then attempt to determine the sign for the answer"
-      }
+      },
+      "student": "You swapped the two numbers round. a − b and b − a are different unless the numbers are equal."
     },
     {
       "code": "INT-DEC-POINT",
@@ -383,7 +414,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "2.1.2.3",
         "quote": "students do not always make the connection with using the standard written multiplication algorithm for calculating with decimals in Key Stage 3 ... 24.3 x 1.2 = (243 x 12) x 0.1 x 0.1"
-      }
+      },
+      "student": "You put the decimal point in the wrong place. Count the decimal places in the numbers you multiplied to place it."
     },
     {
       "code": "INT-DEC-ALIGN",
@@ -395,7 +427,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "2.1.1.2",
         "quote": "the inclusion of decimals means that this now needs to be refined to an understanding that the decimal points need to be aligned. Aligning decimal points can also bring the additional challenge of using zero as a place holder"
-      }
+      },
+      "student": "You added digit by digit without lining up the points. Line the decimal points up first."
     },
     {
       "code": "INT-DEC-ADD",
@@ -407,7 +440,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You added the decimals when you should have multiplied them."
     },
     {
       "code": "INT-OP-CONFUSE",
@@ -419,7 +453,8 @@
         "unit": "NCETM KS3 core concept 2.1 'Arithmetic procedures'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Arithmetic procedures with integers and decimals",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You used a different operation from the one the calculation asked for."
     },
     {
       "code": "RND-PART-ROUND",
@@ -431,7 +466,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Estimation and rounding",
         "keyIdea": "1.1.4.2",
         "quote": "Since 0.5 rounds to one, many students may incorrectly assume that 0.512 will also round to one, when rounded to one significant figure"
-      }
+      },
+      "student": "You rounded each part separately. Round the number as a whole by looking at one digit."
     },
     {
       "code": "RND-LEADING-ZERO",
@@ -443,7 +479,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Estimation and rounding",
         "keyIdea": "1.1.3.1",
         "quote": "Students can also find it challenging to identify when a zero digit is significant"
-      }
+      },
+      "student": "You counted the leading zeros. Zeros before the first non-zero digit are never significant."
     },
     {
       "code": "RND-TRAILING-ZERO",
@@ -455,7 +492,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Estimation and rounding",
         "keyIdea": "1.1.3.1",
         "quote": "Students can also find it challenging to identify when a zero digit is significant"
-      }
+      },
+      "student": "You ignored a zero at the end. After a decimal point, a zero on the end does count."
     },
     {
       "code": "RND-EST-AFTER",
@@ -467,7 +505,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Estimation and rounding",
         "keyIdea": "1.1.4.2",
         "quote": "This can result in the misconception that estimation involves rounding the final result of a calculation, rather than rounding the numbers involved prior to calculating"
-      }
+      },
+      "student": "You worked out the exact answer and then rounded it. An estimate rounds the numbers before you calculate."
     },
     {
       "code": "RND-DIRECTION",
@@ -479,7 +518,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Estimation and rounding",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You rounded the same way every time. Round to the nearer value: up at 5 or more, down below it."
     },
     {
       "code": "RND-DP-VS-SF",
@@ -491,7 +531,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Estimation and rounding",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You mixed up decimal places and significant figures. Decimal places count from the point; significant figures count from the first non-zero digit."
     },
     {
       "code": "RND-TRUNCATE",
@@ -503,7 +544,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Estimation and rounding",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You cut the digits off. Look at the next digit — 5 or more rounds up."
     },
     {
       "code": "RND-WRONG-PLACE",
@@ -515,7 +557,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Estimation and rounding",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You rounded to the wrong place. Check which column the question is asking about."
     },
     {
       "code": "RND-REPEAT",
@@ -527,7 +570,8 @@
         "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Estimation and rounding",
         "keyIdea": "1.1.3.2",
         "quote": "students may keep on rounding until they achieve a number to one significant figure, thus: 3 472 -> 3 470 -> 3 500 -> 4 000 and not realise that 3 472 is closer to 3 000 than 4 000"
-      }
+      },
+      "student": "You rounded again and again until you reached one figure. Compare the original number with the two values either side of it."
     },
     {
       "code": "FRAC-ADD-ACROSS",
@@ -539,7 +583,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You added the tops and the bottoms. Fractions need the same denominator before you add them."
     },
     {
       "code": "FRAC-ADD-DENOM",
@@ -551,7 +596,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You added the denominators as well. Once the denominators match, only the numerators are added."
     },
     {
       "code": "FRAC-SUB-ACROSS",
@@ -563,7 +609,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You subtracted the tops and the bottoms. The denominators have to match first."
     },
     {
       "code": "FRAC-BIG-DENOM",
@@ -575,7 +622,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You went by the size of the denominator. A bigger denominator means smaller pieces, not a bigger fraction."
     },
     {
       "code": "FRAC-COMPARE-PARTS",
@@ -587,7 +635,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You compared the tops, or the bottoms, on their own. Compare the fractions as a whole."
     },
     {
       "code": "FRAC-EQUIV-ADD",
@@ -599,7 +648,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You added the same number to the top and the bottom. Equivalent fractions come from multiplying both by the same number."
     },
     {
       "code": "FRAC-EQUIV-MIXED",
@@ -611,7 +661,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You multiplied the top and the bottom by different numbers. They have to be the same number."
     },
     {
       "code": "FRAC-CANCEL-SUB",
@@ -623,7 +674,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "1.3.1.5",
         "quote": "Students may also think that a 'cancelled down' fraction can be obtained by subtracting from both the numerator and the denominator, rather than by dividing"
-      }
+      },
+      "student": "You subtracted from the top and the bottom. Simplifying means dividing both by the same factor."
     },
     {
       "code": "FRAC-SIMPLIFY-PARTIAL",
@@ -635,7 +687,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "1.3.1.5",
         "quote": "students may simplify 12/42 to 6/21 but not cancel further by three to arrive at 2/7"
-      }
+      },
+      "student": "You divided by a common factor and then stopped. Keep going until you reach the highest common factor."
     },
     {
       "code": "FRAC-BAR-DECIMAL",
@@ -647,7 +700,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "1.3.1.3",
         "quote": "students who may not fully understand decimal and fraction notation often try to convert fractions to decimals by replacing the fraction bar with a decimal point (e.g. writing five-thirds as 5.3)"
-      }
+      },
+      "student": "You read the fraction bar as a decimal point. It means divide."
     },
     {
       "code": "FRAC-DIVIDE-FIRST",
@@ -659,7 +713,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You turned the wrong fraction upside down, or none. To divide, multiply by the reciprocal of the fraction you are dividing by."
     },
     {
       "code": "FRAC-MULT-COMMON",
@@ -671,7 +726,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "2.1.4.1",
         "quote": "students' awareness can be directed to the idea ... that the product of two numbers can be smaller than either of those numbers. Students who see multiplication only as repeated addition (and, therefore, as always making something bigger) will find this difficult"
-      }
+      },
+      "student": "You brought in a common denominator. To multiply fractions, just multiply across."
     },
     {
       "code": "FRAC-OF-AMOUNT",
@@ -683,7 +739,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You stopped after one step. Divide by the denominator, then multiply by the numerator."
     },
     {
       "code": "FRAC-REVERSE",
@@ -695,7 +752,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You applied the fraction to the number again. To find the whole, divide by the fraction you were given."
     },
     {
       "code": "FRAC-MIXED-IMPROPER",
@@ -707,7 +765,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You used the wrong operation to convert. Multiply the whole number by the denominator, then add the numerator."
     },
     {
       "code": "FRAC-WHOLE-NUM",
@@ -719,7 +778,8 @@
         "unit": "NCETM KS3 core concepts 2.1 'Arithmetic procedures' and 1.3 'Ordering and comparing'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Arithmetic procedures including fractions",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You turned the fraction into its reciprocal. A fraction with the same top and bottom is worth 1."
     },
     {
       "code": "FDP-PERCENT-WHOLE",
@@ -731,7 +791,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You gave the percentage number itself. A percentage is a fraction of the amount."
     },
     {
       "code": "FDP-ADD-PERCENT",
@@ -743,7 +804,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "3.1.5.3",
         "quote": "Some students have difficulties using the additive method as they fail to find the final amount by adding or subtracting the increase/decrease to the original amount"
-      }
+      },
+      "student": "You added the percentage number on. Work out the percentage of the amount, then add that."
     },
     {
       "code": "FDP-DECREASE-MULT",
@@ -755,7 +817,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You subtracted the percentage number. Take the percentage of the amount off instead."
     },
     {
       "code": "FDP-INCREASE-MULT",
@@ -767,7 +830,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "3.1.5.3",
         "quote": "it is important for efficiency and depth of understanding that students understand there exists a single multiplier linked to any percentage change and recognise them as examples of multiplicative relationships"
-      }
+      },
+      "student": "You used the percentage itself as the multiplier. For an increase, add 1 to the decimal form: 15% is × 1.15."
     },
     {
       "code": "FDP-PCT-POINTS",
@@ -779,7 +843,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You mixed up percentages and percentage points. Going from 20% to 25% is a rise of 5 percentage points."
     },
     {
       "code": "FDP-REVERSE",
@@ -791,7 +856,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You applied the percentage to the new amount. The new amount is already the changed one — divide to get back."
     },
     {
       "code": "FDP-FRAC-100",
@@ -803,7 +869,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You moved the point one place. A percentage is out of 100, so it is two places."
     },
     {
       "code": "FDP-FRAC-PCT",
@@ -815,7 +882,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You converted the fraction the wrong way round. Multiply by 100 to turn it into a percentage."
     },
     {
       "code": "FDP-PCT-TO-DEC",
@@ -827,7 +895,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You used the wrong power of ten. Divide by 100 to turn a percentage into a decimal."
     },
     {
       "code": "FDP-PARTIAL-CHANGE",
@@ -839,7 +908,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You applied only part of the change. Each percentage acts on the amount at that moment."
     },
     {
       "code": "FDP-COMPARE-ORDER",
@@ -851,7 +921,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You compared them without converting. Put them all into the same form first."
     },
     {
       "code": "FDP-RECURRING",
@@ -863,7 +934,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 8 spring, percentages and proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You treated the recurring decimal as if it stopped."
     },
     {
       "code": "RATIO-ADDITIVE",
@@ -875,7 +947,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 7 summer fractions and ratio; Year 8 spring proportionality",
         "keyIdea": "3.1.4.3",
         "quote": "students may view a problem as a combination of multiplicative and additive processes ... it is common for students to work multiplicatively: halve Alice's 20 pounds to give 10 pounds, halve this again to give 5 pounds; and then additively combine these results to calculate that Brenda has 15 pounds"
-      }
+      },
+      "student": "You compared by difference instead of by scaling. Ratio questions multiply rather than add."
     },
     {
       "code": "RATIO-PART-WHOLE",
@@ -887,7 +960,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 7 summer fractions and ratio; Year 8 spring proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for the language and notation of ratio (3.1.2.2)."
-      }
+      },
+      "student": "You read the ratio as a fraction of the whole. A part-to-part ratio needs the total number of parts."
     },
     {
       "code": "RATIO-INVERSE",
@@ -899,7 +973,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 7 summer fractions and ratio; Year 8 spring proportionality",
         "keyIdea": "",
         "note": "The guidance names inverse proportionality as a key idea (3.1.6.3) without a misconception passage; the error is standard."
-      }
+      },
+      "student": "You treated it as direct proportion. With inverse proportion, more of one means less of the other."
     },
     {
       "code": "RATIO-SIMPLIFY-ADD",
@@ -911,7 +986,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 7 summer fractions and ratio; Year 8 spring proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You added to or subtracted from the parts. Simplifying multiplies both parts by the same number."
     },
     {
       "code": "RATIO-SCALE-ONE",
@@ -923,7 +999,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 7 summer fractions and ratio; Year 8 spring proportionality",
         "keyIdea": "",
         "note": "Supported by the guidance's unequal-sharing passage (3.1.4.3), which contrasts the additive and multiplicative methods."
-      }
+      },
+      "student": "You scaled only one part, or stopped at the value of one part. Both parts scale together."
     },
     {
       "code": "RATIO-TOTAL-PARTS",
@@ -935,7 +1012,8 @@
         "unit": "NCETM KS3 core concept 3.1 'Understanding multiplicative relationships'; DfE Mathematics guidance: Key Stage 3, Year 7 summer fractions and ratio; Year 8 spring proportionality",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You miscounted the parts. Add the numbers in the ratio to get the total."
     },
     {
       "code": "ALG-LETTER-OBJECT",
@@ -947,7 +1025,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "1.4.1.4",
         "quote": "Letter as object: shorthand for an object or treated as an object in its own right, for example, a = apple"
-      }
+      },
+      "student": "You treated the letter as an object. A letter stands for a number."
     },
     {
       "code": "ALG-UNLIKE-TERMS",
@@ -959,7 +1038,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for collecting like terms (1.4.2.1)."
-      }
+      },
+      "student": "You collected terms that are not alike. Only terms in the same letter, with the same power, can be combined."
     },
     {
       "code": "ALG-MULT-NOT-ADD",
@@ -971,7 +1051,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for collecting like terms (1.4.2.2)."
-      }
+      },
+      "student": "You multiplied the terms instead of adding them. 2a + 3a is five a's, not 6a."
     },
     {
       "code": "ALG-ADD-COEFFICIENT",
@@ -983,7 +1064,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You added the number and the letter together. 3 + a is not 3a."
     },
     {
       "code": "ALG-A-SQUARED-2A",
@@ -995,7 +1077,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You took a² to be 2a. a² is a × a, while 2a is a + a."
     },
     {
       "code": "ALG-LIKE-TERMS-POWER",
@@ -1007,7 +1090,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You collected a and a². Different powers of the same letter are not like terms."
     },
     {
       "code": "ALG-TERM-COUNT",
@@ -1019,7 +1103,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for the meaning of a coefficient (1.4.1.3)."
-      }
+      },
+      "student": "You read the coefficient as a power. 3a is three a's, not a × a × a."
     },
     {
       "code": "ALG-NOTATION-DIV",
@@ -1031,7 +1116,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You read the division the wrong way round. \"a divided by 2\" is a/2."
     },
     {
       "code": "ALG-WRITE-EXPRESSION",
@@ -1043,7 +1129,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "1.4.1.2",
         "quote": "an error such as rewriting 7 + m as 7m might not simply be a lack of understanding of notation"
-      }
+      },
+      "student": "You used the wrong operation. \"5 more than n\" is n + 5, not 5n."
     },
     {
       "code": "ALG-SUBSTITUTE-NEG",
@@ -1055,7 +1142,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You lost the sign when you substituted. Keep the minus sign with the number."
     },
     {
       "code": "ALG-OP-CONFUSE",
@@ -1067,7 +1155,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You used a different operation from the one in the expression."
     },
     {
       "code": "ALG-PARTIAL-SUBSTITUTION",
@@ -1079,7 +1168,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You substituted only some of the terms. Every letter gets its value."
     },
     {
       "code": "EXP-FIRST-TERM-ONLY",
@@ -1091,7 +1181,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "The guidance names the distributive law as the key idea (1.4.3.1) and warns it is often met as a symbol exercise with no link to the law. This error is the standard one."
-      }
+      },
+      "student": "You multiplied only the first term inside the bracket. The number outside multiplies everything inside."
     },
     {
       "code": "EXP-MINUS-BRACKET",
@@ -1103,7 +1194,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for the distributive law (1.4.3.1)."
-      }
+      },
+      "student": "You did not give the minus sign to every term. −(x + 4) is −x − 4."
     },
     {
       "code": "EXP-BRACKET-MULT",
@@ -1115,7 +1207,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You missed some of the products. Every term in the first bracket multiplies every term in the second."
     },
     {
       "code": "EXP-COLLECT",
@@ -1127,7 +1220,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You left like terms uncollected after expanding. Gather them up."
     },
     {
       "code": "FAC-PARTIAL",
@@ -1139,7 +1233,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for factorising with a common factor (1.4.3.2)."
-      }
+      },
+      "student": "You left a common factor behind. Take out the highest one."
     },
     {
       "code": "FAC-SUM-PRODUCT",
@@ -1151,7 +1246,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You swapped the sum and the product. You need two numbers that multiply to the last term and add to the middle one."
     },
     {
       "code": "FAC-COMMON-TERM",
@@ -1163,7 +1259,8 @@
         "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You took out a factor that does not divide every term."
     },
     {
       "code": "EQ-ONE-SIDE",
@@ -1175,7 +1272,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "",
         "note": "The guidance names maintaining balance as the key idea (2.2.1.2); this error is the standard one."
-      }
+      },
+      "student": "You changed only one side. Whatever you do to one side, you must do to the other."
     },
     {
       "code": "EQ-ORDER-INVERSE",
@@ -1187,7 +1285,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "2.2.3.3",
         "quote": "students are able to use a 'doing and undoing' strategy to think about the equation ... When the unknown is on both sides of the equation, then 'doing and undoing' strategies break down"
-      }
+      },
+      "student": "You undid the operations in the wrong order. Undo the addition or subtraction first, then the multiplication or division."
     },
     {
       "code": "EQ-SIGN-ERROR",
@@ -1199,7 +1298,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You moved a term across the equals sign without changing its sign."
     },
     {
       "code": "EQ-BALANCE-AS-ACTION",
@@ -1211,7 +1311,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "2.2.1.2",
         "quote": "Students might view an equation such as 4x + 3 = 7 as an invitation to start a process, subtracting three and dividing by four, without necessarily understanding what the process is leading to"
-      }
+      },
+      "student": "You read the equals sign as \"work out the answer\". It means the two sides balance."
     },
     {
       "code": "EQ-NO-NEGATIVE",
@@ -1223,7 +1324,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for what a solution is (2.2.1.3)."
-      }
+      },
+      "student": "You rejected a negative answer. A negative number is a perfectly good solution."
     },
     {
       "code": "EQ-BOTH-SIDES",
@@ -1235,7 +1337,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "2.2.3.3",
         "quote": "When the unknown is on both sides of the equation, then 'doing and undoing' strategies break down. Attention has to shift to maintaining equality as the equation is transformed"
-      }
+      },
+      "student": "You added the x terms instead of subtracting them. Move the x's to one side."
     },
     {
       "code": "EQ-FRACTION-COEFF",
@@ -1247,7 +1350,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You used the wrong operation on the fraction. x/3 = 4 means multiplying both sides by 3."
     },
     {
       "code": "EQ-DIVIDE-ALL",
@@ -1259,7 +1363,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You applied the operation to part of one side. It has to go to the whole side."
     },
     {
       "code": "EQ-OP-CONFUSE",
@@ -1271,7 +1376,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You used the wrong inverse operation to undo a step."
     },
     {
       "code": "EQ-STOP-EARLY",
@@ -1283,7 +1389,8 @@
         "unit": "NCETM KS3 core concept 2.2 'Solving linear equations'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Solving linear equations",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You stopped before x was on its own. Divide by the coefficient as well."
     },
     {
       "code": "SEQ-TERM-TO-NTH",
@@ -1295,7 +1402,8 @@
         "unit": "NCETM KS3 core concept 4.1 'Sequences'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Sequences",
         "keyIdea": "4.1.2.2",
         "quote": "students may see the sequence 4, 7, 10, 13, ... as 'add three' and think that, therefore, the nth term is n + 3 rather than the correct 3n + 1"
-      }
+      },
+      "student": "You gave the term-to-term rule as the nth term. \"Add 3\" is a rule between terms, not a formula for any term."
     },
     {
       "code": "SEQ-OFF-BY-ONE",
@@ -1307,7 +1415,8 @@
         "unit": "NCETM KS3 core concept 4.1 'Sequences'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Sequences",
         "keyIdea": "4.1.2.2",
         "quote": "students may see the sequence 4, 7, 10, 13, ... as 'add three' and think that, therefore, the nth term is n + 3 rather than the correct 3n + 1"
-      }
+      },
+      "student": "Your formula is one step out. Check it by putting n = 1 into it."
     },
     {
       "code": "SEQ-TERM-DOUBLE",
@@ -1319,7 +1428,8 @@
         "unit": "NCETM KS3 core concept 4.1 'Sequences'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Sequences",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; the error the position-to-term rule guards against (4.1.2.2)."
-      }
+      },
+      "student": "You doubled the 5th term to get the 10th. That is only true for some sequences."
     },
     {
       "code": "SEQ-NOT-LINEAR",
@@ -1331,7 +1441,8 @@
         "unit": "NCETM KS3 core concept 4.1 'Sequences'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Sequences",
         "keyIdea": "4.1.3.3",
         "quote": "It is not uncommon for students to notice only additively increasing sequences (i.e. arithmetic sequences where the common difference is positive), so they should experience a varied collection of types of sequence"
-      }
+      },
+      "student": "You assumed the same amount is added each time. Sequences can double, or follow other rules altogether."
     },
     {
       "code": "SEQ-GEOMETRIC",
@@ -1343,7 +1454,8 @@
         "unit": "NCETM KS3 core concept 4.1 'Sequences'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Sequences",
         "keyIdea": "",
         "note": "The guidance asks that students meet a varied collection of sequence types (4.1.3.1); this error is standard."
-      }
+      },
+      "student": "You treated a doubling sequence as linear. The gaps between the terms grow."
     },
     {
       "code": "SEQ-SQUARE",
@@ -1355,7 +1467,8 @@
         "unit": "NCETM KS3 core concept 4.1 'Sequences'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Sequences",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You gave the square numbers a linear rule. The gaps between them grow."
     },
     {
       "code": "SEQ-DECREASING",
@@ -1367,7 +1480,8 @@
         "unit": "NCETM KS3 core concept 4.1 'Sequences'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Sequences",
         "keyIdea": "4.1.2.1",
         "quote": "It is not uncommon for students to notice only additively increasing sequences"
-      }
+      },
+      "student": "Your formula has a positive coefficient of n, so it increases. A decreasing sequence needs a negative one."
     },
     {
       "code": "SEQ-IS-TERM",
@@ -1379,7 +1493,8 @@
         "unit": "NCETM KS3 core concept 4.1 'Sequences'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Sequences",
         "keyIdea": "",
         "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under, marked as such per spec section 4."
-      }
+      },
+      "student": "You tested the value without checking it properly. Solve the nth term formula for n — a whole number means it is a term."
     },
     {
       "code": "GRPH-ADD-NOT-TIMES",
@@ -1391,7 +1506,8 @@
         "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
         "keyIdea": "4.2.2.2",
         "quote": "students may attend to the 'add 3' in the sequence of y-values and conclude that the equation of the line is y = x + 3, rather than the correct y = 3x - 2"
-      }
+      },
+      "student": "You added the step instead of multiplying by it. The y-value is the gradient times x, plus the intercept."
     },
     {
       "code": "GRPH-M-IS-C",
@@ -1403,7 +1519,8 @@
         "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
         "keyIdea": "4.2.2.2",
         "quote": "the gradient is a measure of the rate at which the function is changing ... and that the y-intercept is a fixed point (i.e. the value of y when x is zero)"
-      }
+      },
+      "student": "You swapped the gradient and the intercept. In y = mx + c, m is the gradient and c is where the line crosses the y-axis."
     },
     {
       "code": "GRPH-INTEGER-ONLY",
@@ -1415,7 +1532,8 @@
         "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
         "keyIdea": "4.2.1.4",
         "quote": "it is not uncommon for students to accept that integer coordinates fit the rule given by an equation. What students may not appreciate is that the line is representing an infinity of points, all of which fit the rule"
-      }
+      },
+      "student": "You looked only at whole-number points. The line has points in between them too."
     },
     {
       "code": "GRPH-COORD-ORDER",
@@ -1427,7 +1545,8 @@
         "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for plotting coordinates (4.2.1.1)."
-      }
+      },
+      "student": "You read the coordinates the wrong way round. The x-value comes first."
     },
     {
       "code": "GRPH-GRADIENT",
@@ -1439,7 +1558,8 @@
         "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
         "keyIdea": "",
         "note": "The guidance names rate of change and intercept as the two key elements of a linear relationship (4.2.2.2); this error is standard."
-      }
+      },
+      "student": "You did not divide the rise by the run, or you divided it the wrong way up."
     },
     {
       "code": "GRPH-MIDPOINT",
@@ -1451,7 +1571,8 @@
         "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for problems involving coordinates (4.2.1.2)."
-      }
+      },
+      "student": "You added, subtracted or halved instead of averaging. The midpoint is the mean of the two sets of coordinates."
     },
     {
       "code": "GRPH-HORIZONTAL",
@@ -1463,7 +1584,8 @@
         "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for the features of linear graphs (4.2.2.1)."
-      }
+      },
+      "student": "You confused the two kinds of line. y = a is horizontal; x = a is vertical."
     }
   ]
 }

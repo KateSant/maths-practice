@@ -89,6 +89,54 @@ class QuizApiTest {
         }
     }
 
+    /**
+     * The feedback names the error the student actually made.
+     *
+     * <p>The register code of the wrong option they chose comes back with the result, so the quiz
+     * can tell them what they probably thought rather than list every error the question catches.
+     * It is safe by then: the correct options are revealed in the same payload. Nothing carries a
+     * code beforehand - that guard is
+     * {@link #aTickAllQuestionIsServedWithoutItsAnswerKey()}.
+     */
+    @Test
+    void aWrongAnswerNamesTheErrorItCaught() throws Exception {
+        String admin = adminToken();
+        long questionId = publishedQuestionCatching(admin, "PROP-ONE-IS-PRIME");
+        long[] options = optionIdsOf(admin, questionId);
+
+        String student = studentToken();
+        JsonNode session = startSession(student, 50);
+        // Other tests publish into this topic too, so deal generously and prove the question is in
+        // the round before answering it: the endpoint refuses one that is not.
+        findQuestion(session, questionId);
+        JsonNode wrong = answerOne(student, session.path("sessionId").asLong(), questionId, options[0]);
+
+        assertThat(wrong.path("correct").asBoolean()).isFalse();
+        assertThat(wrong.path("misconceptionCodes").isArray())
+                .as("the result should carry the codes as a list")
+                .isTrue();
+        assertThat(wrong.path("misconceptionCodes")).hasSize(1);
+        assertThat(wrong.path("misconceptionCodes").get(0).asText())
+                .as("the error this option was written to catch")
+                .isEqualTo("PROP-ONE-IS-PRIME");
+    }
+
+    /** A right answer names no error, because there is nothing to explain away. */
+    @Test
+    void aCorrectAnswerNamesNoError() throws Exception {
+        String admin = adminToken();
+        long questionId = publishedQuestionCatching(admin, "PROP-ONE-IS-PRIME");
+        long[] options = optionIdsOf(admin, questionId);
+
+        String student = studentToken();
+        JsonNode session = startSession(student, 50);
+        findQuestion(session, questionId);
+        JsonNode right = answerOne(student, session.path("sessionId").asLong(), questionId, options[1]);
+
+        assertThat(right.path("correct").asBoolean()).isTrue();
+        assertThat(right.path("misconceptionCodes")).isEmpty();
+    }
+
     @Test
     void aTickAllAnswerIsGradedAsASet() throws Exception {
         String admin = adminToken();
@@ -205,6 +253,35 @@ class QuizApiTest {
 
     // ------------------------------------------------------------------ helpers ---
 
+    /**
+     * Creates and publishes a single-choice question whose wrong option names an error, and
+     * returns its id. The code is a real register code, so the whole round trip can be checked:
+     * stored on the option, graded, and handed back to name the mistake.
+     */
+    private long publishedQuestionCatching(String admin, String code) throws Exception {
+        String prompt = "catching " + System.nanoTime() + " what is 2 + 2";
+
+        MvcResult created = mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"topicId":1,"prompt":"%s","explanation":"Because.","difficulty":1,
+                                 "answerType":"SINGLE_CHOICE",
+                                 "options":[
+                                   {"text":"5","correct":false,"misconceptionCode":"%s"},
+                                   {"text":"4","correct":true}]}
+                                """.formatted(prompt, code)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        long id = objectMapper.readTree(created.getResponse().getContentAsString()).path("id").asLong();
+
+        mockMvc.perform(post("/api/admin/questions/" + id + "/publish").header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk());
+
+        return id;
+    }
+
     /** Creates and publishes a tick-all question on the seeded Number topic, and returns its id. */
     private long publishedTickAllQuestion(String admin) throws Exception {
         String prompt = "tickall " + System.nanoTime() + " tick every prime";
@@ -253,6 +330,20 @@ class QuizApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"topicSlug\":\"number\",\"count\":%d}".formatted(count)))
                 .andExpect(status().isCreated())
+                .andReturn());
+    }
+
+    /**
+     * Commits a single-choice answer. A separate call from {@link #answer} because the two types
+     * read different fields - {@code optionId} here, {@code optionIds} there - and the service
+     * picks the field from the question, not the request, so sending the wrong one is a 400.
+     */
+    private JsonNode answerOne(String token, long sessionId, long questionId, long optionId) throws Exception {
+        return body(mockMvc.perform(post("/api/quiz/sessions/" + sessionId + "/answers")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"questionId\":%d,\"optionId\":%d,\"timeMs\":900}".formatted(questionId, optionId)))
+                .andExpect(status().isOk())
                 .andReturn());
     }
 

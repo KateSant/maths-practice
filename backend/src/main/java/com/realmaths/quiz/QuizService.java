@@ -266,12 +266,22 @@ public class QuizService {
         User user = session.getUser();
         Question question = answer.getQuestion();
 
+        // The errors the student actually made, for feedback that names them. Read from the saved
+        // answer rather than the request, so a replayed result says the same as the first one did.
+        List<String> caught = answer.getSelectedOptions().stream()
+                .filter(option -> !option.isCorrect())
+                .map(AnswerOption::getMisconceptionCode)
+                .filter(code -> code != null && !code.isBlank())
+                .distinct()
+                .toList();
+
         return new AnswerResult(
                 question.getId(),
                 question.getAnswerType(),
                 answer.isCorrect(),
                 question.correctOptions().stream().map(AnswerOption::getId).toList(),
                 question.getExplanation(),
+                caught,
                 answer.isCorrect() ? properties.quiz().pointsPerCorrectAnswer() : 0,
                 user.getPoints(),
                 user.getCurrentStreak(),

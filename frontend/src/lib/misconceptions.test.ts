@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { MISCONCEPTIONS, describeMisconception, misconception, misconceptionsByTopic } from './misconceptions'
+import { MISCONCEPTIONS, describeMisconception, misconception, misconceptionsByTopic, studentFeedback } from './misconceptions'
 
 /**
  * The register is imported content, so these tests deliberately do not name codes: the seeder is
@@ -20,6 +20,38 @@ describe('the misconception register', () => {
   it('has no duplicate codes', () => {
     const codes = MISCONCEPTIONS.map((entry) => entry.code)
     expect(new Set(codes).size).toBe(codes.length)
+  })
+})
+
+describe('the line a student reads when they get it wrong', () => {
+  it('is on every row, and is not just the teacher’s sentence again', () => {
+    for (const entry of MISCONCEPTIONS) {
+      expect(entry.student?.trim(), `${entry.code} has no student line`).toBeTruthy()
+      // If the two ever matched there would be no point having the second one: the teacher's
+      // wording ('is not recognised as the same value') is exactly what a student cannot use.
+      expect(entry.student, `${entry.code} just repeats the teacher's sentence`).not.toBe(entry.misconception)
+    }
+  })
+
+  it('speaks to the student rather than about them', () => {
+    for (const entry of MISCONCEPTIONS) {
+      expect(entry.student, `${entry.code} does not address the student`).toMatch(/\b(you|your)\b/i)
+    }
+  })
+
+  it('is short enough to read in the moment', () => {
+    for (const entry of MISCONCEPTIONS) {
+      expect(entry.student!.length, `${entry.code} is a paragraph, not a line`).toBeLessThan(200)
+    }
+  })
+
+  it('round-trips every code and says nothing for an unknown one', () => {
+    for (const entry of MISCONCEPTIONS) {
+      expect(studentFeedback(entry.code)).toBe(entry.student)
+    }
+    expect(studentFeedback('NOT-A-REAL-CODE')).toBeUndefined()
+    expect(studentFeedback(null)).toBeUndefined()
+    expect(studentFeedback(undefined)).toBeUndefined()
   })
 })
 
