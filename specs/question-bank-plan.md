@@ -3,7 +3,8 @@
 **Goal:** 200 questions for Year 7/8 (ages ~11–13) across Number and Algebra, where the wrong options
 are diagnostic — a wrong answer points at *which* misconception a student holds.
 **Later:** geometry, measures, statistics and probability once image support exists; then Year 9, then GCSE.
-*(How items are seeded and loaded is being decided separately; this document is about the content.)*
+*(How items are seeded and loaded is decided in [`seeding.md`](seeding.md); this document is about
+the content. `content/README.md` describes the written bank.)*
 
 ---
 
@@ -13,7 +14,7 @@ are diagnostic — a wrong answer points at *which* misconception a student hold
 |---|---|
 | **Audience** | Year 7 and Year 8, UK Key Stage 3. Age ~11–13. |
 | **Size** | 200 questions across 12 Number and Algebra topics (12–20 each). |
-| **Spine** | DfE *Mathematics guidance: Key Stage 3* (2021), the published non-statutory guidance (Crown copyright, Open Government Licence v3.0). Its Year 7/8 units define the topics; its "common difficulties and misconceptions" passages are the primary source for distractors, with standard subject knowledge where the guidance is silent. |
+| **Spine** | DfE *[Mathematics guidance: Key Stage 3](https://assets.publishing.service.gov.uk/media/621629ac8fa8f5490d52ee78/KS3_NonStatutory_Guidance_Sept_2021_FINAL_NCETM.pdf)* (2021). Its Year 7/8 units define the topics; its "common difficulties and misconceptions" passages are the primary source for distractors, with standard subject knowledge where the guidance is silent. |
 | **Held** | Geometry, measures, statistics and probability. They need pictures. They return as a later set (≈ +100 questions, for ~300 total). |
 
 Two constraints on the writing: **text only** (no diagrams; describe values in words or coordinate
@@ -24,6 +25,34 @@ partial credit.
 says so. Each register row is either a misconception the DfE guidance names or standard, widely
 published subject knowledge; none is taken from a third-party question bank, scheme of work or
 proprietary resource.
+
+### 1.1 The guidance, and where to read it
+
+Crown copyright, Open Government Licence v3.0.
+
+| | |
+|---|---|
+| Publication page | <https://www.gov.uk/government/publications/teaching-mathematics-at-key-stage-3> |
+| The guidance | [Mathematics guidance: Key Stage 3](https://assets.publishing.service.gov.uk/media/621629ac8fa8f5490d52ee78/KS3_NonStatutory_Guidance_Sept_2021_FINAL_NCETM.pdf) — PDF, 295 pages, published 28 September 2021 by the DfE with NCETM |
+| The framework | [Sample Key Stage 3 Mathematics Curriculum Framework](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1020889/Sample_Key_Stage_3_Mathematics_Curriculum_Framework.pdf) — the year-by-year framework §2's units come from |
+| NCETM's summary | <https://www.ncetm.org.uk/features/the-dfe-ks3-maths-guidance-what-you-need-to-know/> |
+
+The misconception material is **not** collected in an appendix. It sits inside each *Exemplified
+significant key idea*, as a passage headed **Common difficulties and misconceptions:**, so it is
+distributed by key idea — and §2's topics map onto those key ideas directly. The document contains
+87 uses of "misconception" and 53 passages headed "common difficulties and misconceptions".
+
+When writing or reviewing a distractor, find the unit in the guidance and read that passage first.
+That is where the register's rows come from, and it is what makes a wrong option diagnostic rather
+than merely wrong. For example, `PROP-MULTIPLE-LIMIT` paraphrases the guidance on multiples:
+
+> "…can lead to misconceptions, such as **thinking that numbers have only 12 multiples** or that
+> numbers outside of the times tables do not have multiples."
+
+The framework's own unit names and terms are the check on §2's table: *Year 7 autumn — Place value,
+Properties of number: factors, multiples, squares and cubes, Arithmetic procedures with integers and
+decimals, Expressions and equations*; *Year 8 autumn — Estimation and rounding, Sequences, Graphical
+representations of linear relationships, Solving linear equations*.
 
 ---
 
@@ -90,8 +119,15 @@ student error, it is decoration and is rewritten.
 
 ## 4. Misconception register
 
-The errors items are written against. The shorthand is for us while writing; it is not stored
-anywhere. It grows to ~70–90 entries as the 12 topics are broken down.
+The errors items are written against. The register is now **112 codes**, one per distinct error,
+and it is machine-readable at `content/misconceptions.json`: every wrong option in the bank carries
+a `catches` code from it, and `content/render.py` fails if any other code appears. The table below
+is the register as it stood when this spec was written — it is the seed of that file, not a second
+copy of it.
+
+The codes are not stored on database rows. They are a writing tool and a record of why each
+distractor exists; a code may be used by more than one topic where the same error reappears
+(`FRAC-OF-AMOUNT` in ratio, `INT-SUB-ORDER` in algebra).
 
 | Shorthand | Misconception | Example the item should expose | Topic |
 |---|---|---|---|
@@ -256,9 +292,11 @@ y-axis at `(0, −2)`, not the origin. At `x = 4`, `y = 3 × 4 − 2 = 10`.
 - **One bridge item** per topic: a short word problem in context.
 - **One retention item** per topic: revisits a prerequisite (e.g. equations includes a substitution
   check; fractions includes an equivalence check).
-- **Existing 33 seed questions** stay as band-1/2 fluency and fold into the new topics. Three are out
-  of Y7/8 scope and are retired or held: Q21 factorising a quadratic, Q31 combined-events probability,
-  Q14 reverse percentage.
+- **The prototype's seed questions are not kept.** When this bank lands they are retired rather than
+  folded into these topics — one statement, `update questions set status = 'RETIRED' where origin
+  = 'SEED'` (see `specs/seeding.md`). There are 32 live ones, not 33: the duplicate primes question
+  was already retired. Nothing here may rely on them, so each topic's allocation has to cover its own
+  band-1/2 fluency.
 
 **Content QA for every item**
 
@@ -271,12 +309,21 @@ y-axis at `(0, −2)`, not the origin. At `x = 4`, `y = 3 × 4 − 2 = 10`.
 7. Tick-all: true claims unambiguously true for all stated values; false claims unambiguously false.
 8. Second read for subject accuracy and for the misconception claim itself.
 
+**Status.** Phases 1 and 2 are written. The bank lives in `content/bank/*.json`, one file per
+topic; `content/README.md` describes the item shape and `content/render.py` validates and renders
+it. `python3 content/render.py --check` reports **200 questions across 12 topics**, bands
+38/67/59/36, and 90 tick-all items. Each topic carries one bridge item and one retention item, and
+each misconception family is met two or three times in different forms. What remains is the second
+read (subject accuracy and whether each distractor really is the most likely reason a student picks
+it), not more writing.
+
 | Phase | Work | Output |
 |---|---|---|
 | **0. Agree** | This spec: 12 topics, register, held set. | Sign-off. |
-| **1. Template** | `properties-of-number` end-to-end (18 items). | The reviewed pattern. |
-| **2. Roll out** | Remaining 11 topics, Number then Algebra. | 200 questions. |
-| **3. Next set** | Geometry/stats/probability, then Year 9, then GCSE. | Later. |
+| **1. Template** | `properties-of-number` end-to-end (18 items). | Written. |
+| **2. Roll out** | Remaining 11 topics, Number then Algebra. | Written; 200 questions. |
+| **3. Second read** | Subject accuracy and distractor plausibility, item by item. | Reviewed bank. |
+| **4. Next set** | Geometry/stats/probability, then Year 9, then GCSE. | Later. |
 
 ---
 
@@ -284,5 +331,15 @@ y-axis at `(0, −2)`, not the origin. At `x = 4`, `y = 3 × 4 − 2 = 10`.
 
 1. Accept the 12 topics and their allocations?
 2. Confirm geometry, measures, statistics and probability wait for image support?
-3. Confirm tick-all stays all-or-nothing, with diagnosis carried by the content?
+3. Tick-all stays all-or-nothing, with diagnosis carried by the content — confirmed and now in
+the bank.
 4. Who does the second read?
+5. **Do the band-4 quadratic items stay?** `expanding-and-factorising` keeps three items on
+expanding double brackets and factorising monic quadratics (band 4), because §4 names
+`FAC-SUM-PRODUCT` as a misconception. The prototype bank's quadratics question is no longer a
+factor: §6 discards that whole bank rather than retiring one question from it. So the question is
+now only whether monic quadratics belong in Year 7/8 — either keep them as top-band Y8 stretch, or
+drop the register code and the items with it. Decide before the second read.
+6. **Which of the 8 archetypes are required?** The bank uses A–G; H (always / sometimes / never) is
+not represented, and D, E, F and G are light. Fine if the mix is judged on diagnostic value rather
+than coverage of the list.
