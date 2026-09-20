@@ -5,25 +5,30 @@ and per-topic progress. There is also a teacher-facing question bank, so the con
 without a deploy. Finishing a set also pays out **play time**, which is spent in a small mining
 game at the top of the results page.
 
-**The product has no name yet**, so the interface deliberately shows none. That is why the
-repository is `real-maths`, the Java package is `com.realmaths`, the database is
-`realmaths.db` and the environment variables are `REALMATHS_*` — those are working names from
-before the naming question was parked. See `docs/deferred.md`.
-
-Prototype stage. The question bank ships with 33 starter questions across 5 topics, intended to be
-replaced by a real teacher's content through the admin screens. One of them is a **tick-all**
-question, so both answer types are reachable on first run, and all 33 are filed under **Year 7**.
-
 ---
 
-## Read these first
+## What it does for the student
 
-| | |
-|---|---|
-| `docs/deferred.md` | What was deliberately not done, and why. |
-| `docs/google-signin.md` | The whole sign-in design, what to configure in Google Cloud, and the two bugs that only showed up in production. |
-| `docs/content-admin-architecture.md` | The question bank's design: lifecycle, publish gate, and the decisions behind them. |
-| `content/misconceptions.json` | The misconception register: the error vocabulary every wrong option is written against, and the source of what a student is told. |
+The loop is: pick a topic, answer a short set, get marked, read why. The marking is diagnostic
+rather than just right or wrong.
+
+- **Pick a year group and a topic.** Year groups run 7–13 and are the student's choice, remembered
+  in `localStorage`; a topic, or mixed practice, picks the set.
+- **The set is pitched at their level.** Before dealing, the server picks a difficulty band from
+  the student's last ten answers, so the questions move with them. The bands are labelled in school
+  words — *Emerging, Developing, Secure, Mastery* — and the results say whether the next set moves
+  up, eases off or stays.
+- **Two ways to answer.** Single choice, or tick-all where every option has to be judged. Both are
+  marked on the server, so the answer key is never in the page.
+- **A wrong answer says what the student probably thought.** Each wrong option carries a sentence
+  written for that option, not a generic "incorrect", drawn from the misconception register
+  ([`content/misconceptions.json`](content/misconceptions.json)). Every distractor exists to catch a
+  documented error, so getting it wrong is the teaching moment — the point of the bank.
+- **Finishing pays out.** A score, points, and the streak of correct answers in a row (current
+  and best), plus **play time** spent in the mining game on the results page.
+- **The review.** Every question with the answer chosen, the correct answer, and the explanation.
+- **Progress over time.** Each topic card shows accuracy and the level reached; the profile page
+  gathers the statistics.
 
 ---
 
@@ -41,133 +46,47 @@ question, so both answer types are reachable on first run, and all 33 are filed 
 
 ## Running it locally
 
-Two processes, no Docker needed.
-
 ```bash
-# 1. API on http://localhost:8081
-cd backend
-REALMATHS_GOOGLE_CLIENT_ID=<client-id> mvn spring-boot:run
-
-# 2. Web app on http://localhost:5174
-cd frontend
-npm install
-VITE_GOOGLE_CLIENT_ID=<client-id> npm run dev
+cd backend  && REALMATHS_GOOGLE_CLIENT_ID=<client-id> mvn spring-boot:run   # API on :8081
+cd frontend && npm install && VITE_GOOGLE_CLIENT_ID=<client-id> npm run dev # web on :5174
 ```
 
-Open <http://localhost:5174>. **Both** environment variables are needed and they are the same
-value — the frontend for Google's button, the API to check the token's `aud` claim. Omitting the
-frontend one shows a "not configured for this build" message instead of the button; omitting the
-API's makes every sign-in fail with 503 *after* Google has already issued a token, which is a
-confusing place to discover it. The client ID is public, not a secret.
+Or in Docker: `docker compose up --build` (API + SQLite volume, port 8081).
 
-**Stay on 5174. Do not change the port.** Changing it has broken sign-in more than once, and it
-keeps happening, so treat this as a rule rather than a preference.
+Open <http://localhost:5174>. **Both** variables are needed and hold the same value: the frontend
+one renders Google's button, the API one checks the token's `aud`. Missing frontend → "not
+configured for this build"; missing API → sign-in fails with 503 *after* Google has already issued
+a token. The client ID is public, not a secret.
 
-`http://localhost:5174` is the only origin registered as an authorised JavaScript origin on the
-Google OAuth client, so Google refuses sign-in from any other port. The button still renders and
-the only symptom is a console error after the click — which reads as a broken app rather than as a
-wrong port, and is why this is worth repeating. `frontend/vite.config.ts` sets `5174` with
-`strictPort`, and it should stay that way.
+**Stay on 5174** — it is the only origin registered on the OAuth client, and `vite.config.ts` pins
+it with `strictPort`. A second worktree can pass `--port` and register that origin; do not edit the
+file (`docs/google-signin.md`). The API is proxied through Vite, so there is no CORS;
+`VITE_API_URL` overrides the target.
 
-If you genuinely need a second port — a second worktree running at the same time, say — pass
-`--port` on the command line rather than editing the file, and register that origin on the OAuth
-client as well (`docs/google-signin.md`). Without that registration Google sign-in cannot work on
-that port, and guest sign-in is the only way in. Nothing else depends on the port: the `/api`
-proxy, the tests and the build all work on any of them.
+The database is created at `backend/data/realmaths.db` on first run. To reset, delete it and its
+`-wal`/`-shm` siblings — **this drops every account and role**. Sign in again (you come back as
+`STUDENT`), then `./scripts/make-admin.sh <your email>`; `scripts/dev-reset.sh` does both.
 
-The API proxies `/api` through Vite, so the browser sees one origin in development exactly as it
-does behind Caddy in production, and there is no CORS in either. `VITE_API_URL` overrides the proxy
-target if you need to point at a different API.
-
-The database is created at `backend/data/realmaths.db` on first run, with the schema and starter
-questions applied by Flyway. To reset it, delete that file and any `-wal`/`-shm` siblings.
-
-**A reset drops every account, and with it any role.** Flyway carries schema and seed content, not
-users: your row is created by signing in, so after a reset you sign in again and come back as
-`STUDENT`. Promote yourself again with `./scripts/make-admin.sh <your email>` (see *Roles, and how to
-grant ADMIN* below). `scripts/dev-reset.sh` does the wipe and the promotion together.
-
-**If you rename or delete a migration, run `mvn clean`.** Maven copies resources into
-`backend/target/classes` but never removes what is no longer in `src`, so a deleted migration keeps
-running from its stale copy - and Flyway reports versions that no longer exist, or fails with "Found
-more than one migration with version N". A deleted migration that is still on the classpath once
-cost a session an afternoon. `mvn clean test` is the reliable check; `mvn -o spring-boot:run` alone
-will happily use the stale copy.
-
-### Docker
-
-```bash
-docker compose up --build     # API + SQLite volume, on port 8081
-```
+**Renaming or deleting a migration needs `mvn clean`** — Maven never removes stale copies from
+`target/classes`, so a deleted migration keeps running. `mvn clean test` is the reliable check.
 
 ---
 
 ## Tests
 
 ```bash
-cd backend  && mvn test       # 148 tests
-cd frontend && npm test       # 93 tests
+cd backend  && mvn test       # 155 tests
+cd frontend && npm test       # 104 tests
 cd frontend && npm run build  # runs tsc --noEmit as well, so type errors fail the build
 ```
 
-Two tests are worth knowing about because they cover things nothing else can:
-
-- `db/SchemaMigrationTest` applies the real migrations to a temporary SQLite file and asserts the
-  schema guarantees directly. Hibernate's community SQLite dialect cannot reliably do
-  `ddl-auto=validate`, so this is where "the schema is what we think it is" is checked.
-- `auth/AuthWiringTest` boots the whole application context and asserts there is **exactly one**
-  `JwtDecoder` bean. See the note on Google's decoder below.
+Two tests cover things nothing else can. `db/SchemaMigrationTest` applies the real migrations to a
+temporary SQLite file and asserts the schema guarantees directly — Hibernate's community SQLite
+dialect cannot reliably do `ddl-auto=validate`. `auth/AuthWiringTest` boots the whole application
+context and asserts there is **exactly one** `JwtDecoder` bean.
 
 There are no component tests: the frontend suite has no DOM environment. Logic worth asserting
-lives in plain functions (`auth/roles.ts`, `lib/format.ts`, `lib/playtime.ts`, `lib/platformer.ts`)
-so it can be tested there.
-
----
-
-## Layout
-
-```
-backend/src/main/java/com/realmaths/
-  admin/      question bank authoring: controllers, services, the publish validator
-  auth/       Google sign-in and guest accounts, JWT issuing, principal resolution
-  common/     error shape, exception handling, score maths
-  config/     security, JWT, properties
-  game/       play-time ledger: what a set pays, what a heartbeat costs
-  profile/    profile and per-topic statistics
-  question/   topics, questions, options, catalog queries
-  quiz/       sessions, answers, grading, points and streaks
-  ratelimit/  token bucket limiting, aimed at unauthenticated account creation
-  user/       User and UserIdentity entities
-
-backend/src/main/resources/db/migration/
-  V1__init.sql              schema
-  V2__seed_questions.sql    starter question bank
-  V3__google_sign_in.sql    drops passwords, adds user_identities
-  V4__question_lifecycle.sql  status replaces active, adds origin
-  V5__play_time.sql         earned play time and its heartbeat
-  V6__multi_select_questions.sql  tick-all questions; answer selections move to their own table
-  V7__retire_duplicate_primes_question.sql  retires the first primes question, now duplicated by V6
-  V8__year_group.sql        questions filed by school year 7-13, and the year a session was dealt
-  V9__answer_option_misconception_code.sql  each wrong option names the error it catches
-  V10__retire_prototype_question_bank.sql   retires round one's bank before the rebuild loads
-  V11__load_question_bank.sql               the rebuilt bank: 180 questions across 12 topics
-  V12__correct_the_questions_with_two_right_answers.sql  three items with a second defensible answer
-  V13__answer_option_feedback.sql           the sentence a student reads, per wrong option
-  V14__retag_mislabelled_options.sql        codes that did not name their error, corrected
-
-content/
-  bank/                 the written bank, one file per topic: prompts, options, codes, messages
-  misconceptions.json   the register: every error a wrong option may name, with its source
-  render.py             validates the bank, and prints it as markdown for reading
-
-frontend/src/
-  api/         typed client; admin.ts holds the admin endpoints and their types
-  auth/        auth context, token storage, route guards, sign-in roles
-  components/  shared primitives and layout, and the mining reward
-  pages/       the student pages, plus pages/admin/ for the question bank
-  lib/         formatting, the product-name constant, the platformer world and its physics,
-               the play-time clock, and the option-state rule the question card draws from
-```
+lives in plain functions (`auth/roles.ts`, `lib/format.ts`, `lib/playtime.ts`, `lib/platformer.ts`).
 
 ---
 
@@ -204,113 +123,22 @@ prefix rather than per controller, so a new endpoint is protected by where it li
 
 ---
 
-## How it works
+## The misconception register
 
-### The answer key never leaves the server
+This is the heart of the business logic. Topics hold questions; questions offer answer options; a
+wrong option carries two things. A `misconception_code` names the error it was written to catch,
+and `feedback` is the sentence the student reads when they pick it. What the student is told hangs
+on the **option**, not on the code, because the option is what knows which misreading was actually
+made: on "what is the value of the 2 in 5.320?", 0.2 and 0.002 are different errors that catch the
+same code. Across the bank that is 508 wrong options and 508 messages, each written to that option.
 
-No JPA entity is serialised to a client. Students receive `QuestionView` / `AnswerOptionView`,
-which have no correctness field at all, and grading happens in `QuizService`. The correct option is
-revealed only in the response to a submitted answer.
-
-The admin DTOs *do* carry it — that is their job — which is why they live in `admin/dto` and the
-frontend mirrors that split in `api/admin.ts`. Keeping them apart makes it obvious which side of
-the line a type belongs on.
-
-### Question sets are organised by year group
-
-`questions.year_group` is 7 to 13, and a quiz is dealt only from the year group the student asks
-for. The 32 starter questions are all Year 7: the migration's column default assigned them, so
-nothing was hand-filed.
-
-**The year group is the student's choice, not a fact about them.** Nothing is asked at sign-up,
-there is no year group on a user, and a Year 7 who wants to work at Year 10 level picks Year 10 and
-is dealt Year 10 questions. The choice is remembered in `localStorage`, and it also travels in the
-quiz link, so the topic list and the quiz cannot disagree about which year is being dealt.
-Omitting `yearGroup` from `POST /api/quiz/sessions` still means "every year", which keeps the
-endpoint usable without one.
-
-The admin list shows each question's year group, filters by it, and the editor can move a question
-between years. The migration is numbered `V8` rather than `V7` because the multi-select work landed
-first and took both `V6` and `V7`; Flyway applies in version order, so the retirements and the new
-answer type land before the year group does.
-
-### Identity is keyed on the provider's subject, never on email
-
-`user_identities` is unique on `(provider, subject)`, where `subject` is Google's immutable account
-identifier. Email is mutable and can be reassigned, so matching on it is how accounts get taken
-over. It is used to find an existing account only when Google is authoritative for the address —
-`@gmail.com`, or a Workspace domain — and a pre-registered account on any other address is refused
-rather than linked.
-
-### There are no passwords
-
-No hashes, no reset flow, no breach surface. Sign-in is Google, or a guest account with no email
-at all. Guests therefore can never be made teachers: there is no identity to attach one to.
-
-### Roles, and how to grant ADMIN
-
-`users.role` is one of `STUDENT`, `TEACHER`, `ADMIN`, constrained by the schema. Nothing in the app
-sets it, and no request body can — there is no registration payload at all any more.
-
-```bash
-./scripts/make-admin.sh someone@example.com                  # promote an existing account
-./scripts/make-admin.sh --pre-register someone@gmail.com "Their Name"  # create it first
-```
-
-There is no allowlist in configuration and no admin UI for it. Because
-`JwtToUserPrincipalConverter` re-reads the user row on **every request**, the change takes effect
-on that person's next request: no re-login, no reissued token, no cache to clear.
-
-`--pre-register` exists so an account can be ready before someone first signs in. Google then
-adopts the row rather than creating a second one. It only works for an address Google is
-authoritative for, and the script warns when it is not.
-
-**A row in `users` is not evidence that anyone has signed in.** A pre-registered account sits there
-from the moment the script runs, with its role already set, and nothing in `users` distinguishes it
-from an account that has been used. Sign-in is evidenced by a row in `user_identities`, created at
-the first successful Google login, which carries `last_login_at`; a pre-registered account has none
-until then. Joining the two tables is the only way to answer "has this person signed in yet", and
-answering it from `users` alone is how a pre-registered colleague reads as a returning user.
-
-### The student and teacher halves are kept apart
-
-The sign-in flow asks Student or Teacher first, then signs in as that. The choice is a statement of
-intent, not a permission — it decides the landing page and nothing else — and a student who picks
-Teacher gets a plain "you're not a teacher on this account" page rather than a silent redirect.
-
-Inside the question bank the header shows authoring navigation; on the practice side there is no
-mention of teaching at all. Both are cosmetic: the API decides what anyone may actually do, and an
-administrator can call `/api/admin/**` whatever the navigation shows.
-
-### A question has a lifecycle, and a draft may be invalid
-
-`status` is `DRAFT`, `PUBLISHED` or `RETIRED`. A teacher has to be able to save something
-half-written, so structural limits are checked on save (lengths, difficulty 1–4, at most six
-options) while "is this answerable" — a prompt, at least two options, and an answer key its type
-allows — is checked only on the `DRAFT`→`PUBLISHED` transition, in `QuestionValidator`. The editor,
-a bulk publish and any future importer all pass through that one gate.
-
-**Nothing is ever hard-deleted.** `quiz_answers` cascades on delete, so deleting a question would
-take students' answer history with it. Retiring is the only removal on offer.
-
-`origin` records where a question came from: `SEED` for the bank loaded from `content/bank`, or
-`AUTHORED` for one a teacher wrote.
-
-### A wrong answer names an error, and says what the student thought
-
-Topics hold questions; questions offer answer options; a wrong option carries two things. A
-`misconception_code` names the error it was written to catch, and `feedback` is the sentence the
-student reads when they pick it. What the student is told hangs on the **option**, not on the code,
-because the option is what knows which misreading was actually made: on "what is the value of the 2
-in 5.320?", 0.2 and 0.002 are different errors that catch the same code. Across the bank that is 508
-wrong options and 508 messages, each written to that option.
-
-The vocabulary is `content/misconceptions.json`, the register: 131 rows, each with the code, its
-topic, the sentence a **teacher** reads, an example, and a source — quoted from the DfE/NCETM
-guidance, or recorded as standard subject knowledge where the guidance is silent. It is a content
-file rather than a table: only the code is stored against an option, and `render.py --check` refuses
-a bank whose option names a code the register does not have. Nothing in the register reaches a
-student; the register is how a teacher and the bank agree on what an error is called.
+The vocabulary is [`content/misconceptions.json`](content/misconceptions.json), the register: 131
+rows, each with the code, its topic, the sentence a **teacher** reads, an example, and a source —
+quoted from the DfE/NCETM guidance, or recorded as standard subject knowledge where the guidance is
+silent. It is a content file rather than a table: only the code is stored against an option, and
+`render.py --check` refuses a bank whose option names a code the register does not have. Nothing in
+the register reaches a student; the register is how a teacher and the bank agree on what an error is
+called.
 
 ```mermaid
 erDiagram
@@ -332,84 +160,22 @@ erDiagram
 ```
 
 Saving is still loose — a draft may be half-written — but publishing an option that names an error
-without saying what the student thought is refused in `QuestionValidator`, so a distractor cannot go
-live naming a problem and explaining nothing.
+without saying what the student thought is refused in `QuestionValidator`, so a distractor cannot
+go live naming a problem and explaining nothing.
 
-### A question is answered one of two ways
+The rest, briefly:
 
-`questions.answer_type` is `SINGLE_CHOICE` or `MULTI_SELECT`, and it decides both how the question
-is shown and how it is graded. It is sent to the student — the screen cannot render a tick-all
-question without it — and it says how to answer, never what the answer is.
-
-The two types share one grading rule: **the chosen set must equal the correct set**. A single choice
-is simply the case where the correct set has one member, so there is no per-type branch in the
-grader that could drift from the answer type. For a tick-all question that means a missing tick is
-wrong and an extra tick is wrong; there is deliberately **no partial credit**, because the score and
-the streak are counts of questions answered correctly and a half-marked question would make both
-mean less.
-
-`QuizAnswer.selectedOptions` holds a set, so an answer is a set for both types, and one row per
-selection in `quiz_answer_options`. A **single-choice** question is refused two correct options by a
-`BEFORE INSERT` trigger, which is where the unconditional `answer_options_one_correct_idx` used to
-enforce it; the guarantee became conditional because a tick-all question needs several. A tick-all
-question is held to "at least one correct" by the validator.
-
-### Grading is idempotent, and sessions are private
-
-`quiz_answers` is unique on `(session_id, question_id)`, so a retried submission returns the
-original grade instead of awarding points twice. Every session lookup filters on the authenticated
-user id, so guessing another student's session id returns 404.
-
-### Play time is metered by the server, not the client
-
-Finishing a set awards seconds of play time to the account: a flat rate per correct answer, plus a
-bonus for a clean sweep. The mining game spends them. The client never says how long it has been
-playing — it sends `POST /api/game/heartbeat` meaning "still here", and the server bills the
-wall-clock gap since the previous call against the stored balance. Time can therefore only be spent
-if it was actually earned, and editing the bundle cannot mint more of it.
-
-Two rules keep that from being punishing. The gap is capped by
-`realmaths.game.max-heartbeat-gap-seconds`, so closing the tab and returning an hour later costs at
-most the cap rather than the whole balance. And the clock stops at zero, so the break before the
-next set is not charged against the time that set is about to earn. `GameServiceTest` covers the
-rules; on the client, `lib/playtime.ts` does the ticking between heartbeats, and every response
-overwrites its guess, so the countdown on screen is never the authority.
-
-### The database enforces the invariants
-
-- A single-choice question cannot hold two correct options: the `answer_options_single_choice_insert`
-  trigger refuses it, and so does the matching `UPDATE` trigger. This replaced a partial unique
-  index, which could not be made conditional on the question's answer type.
-- Foreign keys and cascades are declared in the schema.
-- `users.email` is unique, and `user_identities` is unique on `(provider, subject)`.
-- `questions.status`, `answer_type` and `origin` have `check` constraints.
-
-### SQLite specifics
-
-Four things are easy to get wrong, and each is handled deliberately:
-
-- **`foreign_keys=on` is required.** SQLite ignores foreign keys unless the pragma is set per
-  connection, which is why it is in the JDBC URL in `application.yml`. Without it the `REFERENCES`
-  clauses are inert. `journal_mode=WAL` and `busy_timeout` are there for the same reason: readers
-  while a writer works, and waiting rather than failing on a locked database.
-- **Timestamps are declared `timestamp` but store epoch milliseconds**, because that is how
-  `sqlite-jdbc` encodes an `Instant`. Column defaults therefore use `unixepoch() * 1000` rather than
-  `current_timestamp`, which would write TEXT where JPA writes INTEGER. `SchemaMigrationTest`
-  guards this.
-- **`AUTOINCREMENT` columns must be declared exactly `INTEGER`** to be an alias for the 64-bit
-  rowid, but the entities use `Long`. `@JdbcTypeCode(SqlTypes.INTEGER)` on each `@Id` bridges it.
-- **`DROP COLUMN` fails while an index names the column**, so the index must be dropped first.
-  `V4` does exactly that, in that order, and it is commented there.
-
-### Google's decoder is not a bean
-
-`GoogleIdTokenVerifier` builds its own `JwtDecoder` internally and never publishes one. The
-application's own `JwtDecoder` bean authenticates API calls, and a second one in the context could
-wire the resource server to Google's keys — at which point any Google ID token would be a valid API
-credential. `AuthWiringTest` asserts there is exactly one.
-
-The verifier reads the `iss` claim as a raw string rather than through `jwt.getIssuer()`, because
-Spring models that as a URI and Google also issues the scheme-less `accounts.google.com` form.
+- **The answer key never leaves the server.** Students get DTOs with no correctness field; grading
+  happens in `QuizService`. Only the admin DTOs carry the key. A `DRAFT`→`PUBLISHED` gate means a
+  draft may be invalid, and nothing is hard-deleted — retiring is the only removal, because
+  `quiz_answers` would cascade away with it.
+- **One grading rule for both answer types.** The chosen set must equal the correct set, so a
+  single-choice question is just the one-member case; there is no partial credit.
+- **The year group is the student's choice, not a fact about them.** Nothing about it is stored on
+  the account, and a Year 7 can pick Year 10.
+- **Play time is metered server-side** by heartbeats, so editing the bundle cannot mint it.
+- **Sign-in is Google or a guest account** — there are no passwords — and identity is keyed on
+  `(provider, subject)`, never on mutable email.
 
 ---
 
@@ -430,8 +196,6 @@ push to main
 Runs are serialised by a `concurrency` group, so two pushes queue rather than racing for the host
 or the Terraform state.
 
-### What is where
-
 | | |
 |---|---|
 | Host | `maths.thinktalkbuild.com` → static IP `16.60.38.27`, Lightsail, `eu-west-2` |
@@ -442,36 +206,24 @@ or the Terraform state.
 | Terraform state | `s3://realmaths-terraform-state-991346485322` |
 | CI role | `realmaths-github-ci`, assumed over GitHub OIDC — no stored AWS keys |
 
-### Configuration
-
 Repository **variables** (not secrets): `SITE_DOMAIN`, `GOOGLE_CLIENT_ID`, `AWS_REGION`,
-`AWS_AVAILABILITY_ZONE`, `SSH_CIDR`, `SSH_PUBLIC_KEY`, `TF_STATE_BUCKET`.
-
-Secrets: `AWS_ROLE_ARN`, `DEPLOY_USER`, `DEPLOY_HOST_KEY`, `DEPLOY_SSH_KEY`. There is one
-environment, `production`.
-
-The container settings live in `docker-compose.prod.yml` and the host's `.env`. **The deploy step
-upserts new keys into that `.env` rather than `sed`-replacing them**, because `sed` does nothing at
-all when a key is absent — which is how `REALMATHS_GOOGLE_CLIENT_ID` first shipped missing while the
-deploy reported success.
+`AWS_AVAILABILITY_ZONE`, `SSH_CIDR`, `SSH_PUBLIC_KEY`, `TF_STATE_BUCKET`. Secrets: `AWS_ROLE_ARN`,
+`DEPLOY_USER`, `DEPLOY_HOST_KEY`, `DEPLOY_SSH_KEY`. There is one environment, `production`.
 
 `VITE_GOOGLE_CLIENT_ID` reaches the web image as a **Docker build arg**, not a runtime variable,
-because Vite inlines it. Setting it on the container does nothing.
+because Vite inlines it. Setting it on the container does nothing. The deploy step upserts new keys
+into the host's `.env` rather than `sed`-replacing them, because `sed` does nothing at all when a
+key is absent — which is how `REALMATHS_GOOGLE_CLIENT_ID` first shipped missing while the deploy
+reported success.
 
-### The smoke test
+After deploying, the smoke test checks `GET /` returns 200 (Caddy and the certificate are up),
+`GET /api/topics` returns 401 (the API is reachable and refusing anonymous callers), and
+`POST /api/auth/google` with a junk token returns **401, not 503** — 503 means the API has no
+client ID, which is otherwise invisible because the button still renders and Google still issues a
+token.
 
-After deploying, the workflow checks:
-
-- `GET /` returns 200 (Caddy is serving, certificate obtained)
-- `GET /api/topics` returns 401 (the API is reachable and refusing anonymous callers)
-- `POST /api/auth/google` with a junk token returns **401, not 503** — 503 means the API has no
-  client ID, which is otherwise invisible because the button still renders and Google still issues
-  a token. This check exists because that shipped once.
-
-### The trust policy names the repository
-
-`realmaths-github-ci` trusts `repo:KateSant@*/real-maths@*:...`, so only this repository's
-workflows can assume the role over OIDC.
+The `realmaths-github-ci` role trusts `repo:KateSant@*/real-maths@*:...`, so only this repository's
+workflows can assume it over OIDC.
 
 ### Operating it
 
@@ -479,19 +231,10 @@ workflows can assume the role over OIDC.
 # logs
 ssh -i ~/.ssh/realmaths-deploy ubuntu@16.60.38.27 \
   'cd /srv/realmaths && docker compose -f docker-compose.prod.yml logs -f api'
-
-# the database: sqlite3 is on neither the host nor the api image, so use a container
-ssh -i ~/.ssh/realmaths-deploy ubuntu@16.60.38.27 \
-  'docker run --rm -v realmaths_realmaths-data:/data alpine:3 sh -c \
-   "apk add --no-cache sqlite >/dev/null && sqlite3 /data/realmaths.db \"select id,email,role from users;\""'
 ```
 
-That recipe mounts the volume read-write and leaves the connection writable, which is fine for a
-`select` and wrong for anything else. When the check has to be read-only, copy the database out and
-query the copy: `docker cp` the `.db` and its `-wal`/`-shm` siblings to a temp directory, then read
-them with the host's `python3`, whose `sqlite3` module needs no client installed. Mounting `:ro` is
-not the read-only version of this — SQLite has to be able to write the `-shm` file to read a WAL
-database at all, so a `:ro` mount fails rather than protecting anything.
+For a database check, query a copy rather than the live volume — SQLite has to write the `-shm`
+file to read a WAL database, so a `:ro` mount fails rather than protecting anything.
 
 ```bash
 # a read-only check: query a copy, so the live volume is never opened for writing
