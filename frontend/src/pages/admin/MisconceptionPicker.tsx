@@ -55,7 +55,7 @@ export function MisconceptionPicker({
   return (
     <div className="mt-2 min-w-0 rounded-lg border border-indigo-100 bg-indigo-50/60 p-3">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-indigo-500">Catches</span>
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-indigo-500">Common error</span>
         {value ? <MisconceptionCodeChip code={value} /> : null}
       </div>
 
@@ -63,7 +63,7 @@ export function MisconceptionPicker({
         <p className="mt-1.5 text-sm font-medium leading-snug text-slate-800">{selected.misconception}</p>
       ) : (
         <p className="mt-1.5 text-sm text-slate-500">
-          Not diagnosed — say what a student who picks this has got wrong.
+          Choose the mistake a student makes if they pick this answer.
         </p>
       )}
 
@@ -77,7 +77,7 @@ export function MisconceptionPicker({
         onChange={(event) => onChange(event.target.value)}
         className="mt-2 w-full min-w-0 rounded-md border border-indigo-100 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
       >
-        <option value="">Not diagnosed</option>
+        <option value="">No mistake chosen</option>
         {groups.map((group) => (
           <optgroup key={group.topic} label={topicName(group.topic)}>
             {group.items.map((item) => (
@@ -93,7 +93,7 @@ export function MisconceptionPicker({
 
       {unknown ? (
         <p className="mt-1.5 text-xs text-amber-700">
-          “{value}” is not in the register. Pick a code from the list, or leave it undiagnosed.
+          “{value}” is not in the list. Choose one, or leave it unset.
         </p>
       ) : null}
     </div>

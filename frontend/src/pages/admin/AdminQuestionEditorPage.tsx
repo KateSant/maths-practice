@@ -13,6 +13,7 @@ import { QuestionCard, type OptionState } from '../../components/QuestionCard'
 import type { AnswerType } from '../../api/types'
 import { AdminHeader, OriginBadge, StatusBadge } from './adminUi'
 import { MisconceptionPicker } from './MisconceptionPicker'
+import { GUIDANCE_URL } from '../../lib/guidance'
 import { DIFFICULTY_BANDS, difficultyLabel } from '../../lib/format'
 import { DEFAULT_YEAR_GROUP, YEAR_GROUPS, yearGroupLabel } from '../../lib/yearGroups'
 import { fieldClass } from './AdminQuestionListPage'
@@ -268,7 +269,6 @@ export function AdminQuestionEditorPage() {
     <div className="space-y-6">
       <AdminHeader
         title={questionId === null ? 'New question' : 'Edit question'}
-        subtitle="Write it, check the preview, then publish when it reads right."
         action={
           <div className="flex items-center gap-2">
             <StatusBadge status={status} />
@@ -279,6 +279,27 @@ export function AdminQuestionEditorPage() {
           </div>
         }
       />
+
+      {/* The two things a teacher needs to know before the options, and neither is obvious from
+          the form: that the green badge is the key, and where the mistakes in the list come from. */}
+      <div className="space-y-1">
+        <p className="text-xs leading-relaxed text-slate-500">
+          Green marks the right answer. Under each wrong answer, set the mistake it catches — that is
+          what lets the app explain what a student got wrong.
+        </p>
+        <p className="text-xs leading-relaxed text-slate-400">
+          Mistakes are sourced from the DfE and NCETM’s{' '}
+          <a
+            href={GUIDANCE_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium text-indigo-600 hover:text-indigo-700"
+          >
+            Key Stage 3 mathematics guidance
+          </a>
+          , or marked as standard subject knowledge where the guidance is silent.
+        </p>
+      </div>
 
       {error ? (
         <p role="alert" className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
