@@ -41,3 +41,21 @@ export function parseRole(value: string | undefined): SignInRole | null {
 export function allowsGuest(role: SignInRole): boolean {
   return role === 'student'
 }
+
+/**
+ * Whether someone already signed in should be sent on from a role's sign-in page.
+ *
+ * True means they are already the person this door is for, so the page has nothing to offer and
+ * redirecting is right. False means showing it.
+ *
+ * The teacher case is not symmetric on purpose. A signed-in student who opens the teacher door is
+ * not there by mistake - they are there to sign in as somebody else - and sending them to the
+ * student home made the teacher door unreachable without signing out first. A signed-in admin, by
+ * contrast, is exactly who that page is for.
+ *
+ * @param role the signed-in user's role, or undefined when nobody is signed in
+ */
+export function alreadySignedInFor(mode: SignInRole, role: string | undefined): boolean {
+  if (role === undefined) return false
+  return mode !== 'teacher' || role === 'ADMIN'
+}

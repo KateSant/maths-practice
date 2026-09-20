@@ -23,10 +23,16 @@ export function QuizPage() {
     Number.isFinite(requestedCount) && requestedCount > 0
       ? Math.min(Math.floor(requestedCount), MAX_QUESTIONS)
       : DEFAULT_QUESTIONS
-  // The year group travels in the link so the choice on the topic list is the one that deals the
-  // set; the remembered preference is the fallback for a link opened directly or a refresh.
-  const requestedYear = Number(searchParams.get('year'))
-  const yearGroup: YearGroup = isYearGroup(requestedYear) ? requestedYear : readYearGroup()
+  // The year group travels in the link, so the choice made on the topic list is the one that deals
+  // the set; the remembered preference is the fallback for a link opened directly or a refresh.
+  //
+  // Snapshotted once, deliberately. The header control can be changed from any screen now, and
+  // re-dealing the questions underneath a student because they changed next week's year group
+  // mid-round would be worse than ignoring the change until they start a new set.
+  const [yearGroup] = useState<YearGroup>(() => {
+    const requestedYear = Number(searchParams.get('year'))
+    return isYearGroup(requestedYear) ? requestedYear : readYearGroup()
+  })
   const startKey = `${topicSlug ?? 'mixed'}:${count}:${yearGroup}`
 
   const [session, setSession] = useState<QuizSession | null>(null)

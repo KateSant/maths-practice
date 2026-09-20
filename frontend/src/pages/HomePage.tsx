@@ -2,28 +2,28 @@ import { useEffect, useState } from 'react'
 import { ApiRequestError, api } from '../api/client'
 import type { Topic } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
+import { useYearGroup } from '../components/YearGroupSelect'
 import { TopicCard } from '../components/TopicCard'
 import { Spinner, StatTile } from '../components/ui'
 import { accuracyTone, encouragement, percent } from '../lib/format'
-import { YEAR_GROUPS, readYearGroup, writeYearGroup, yearGroupLabel, type YearGroup } from '../lib/yearGroups'
+import { yearGroupLabel } from '../lib/yearGroups'
 
 /**
- * The student home page is the topic list and the year group they are working at, and nothing
- * else.
+ * The student home page is the topic list, and nothing else.
  *
  * There is no mixed practice and no question-count picker: those belonged to the idea of a
  * "round", which sat between the student and the topics without adding anything to them. A
- * student picks a year group and a topic and works through it.
+ * student picks a topic and works through it.
  *
- * The year group is a preference, not a fact about the student. Nothing is asked at sign-up and
- * nothing is stored on their account, so a Year 7 who wants Year 10 work simply chooses Year 10;
- * that is also why the choice lives in `localStorage` rather than on the profile.
+ * The year group is chosen in the header rather than here, because it applies to every student
+ * screen rather than to this list. The page reads it from the same shared state the control
+ * writes, so the two cannot disagree.
  */
 export function HomePage() {
   const { profile, refresh } = useAuth()
+  const { yearGroup } = useYearGroup()
 
   const [topics, setTopics] = useState<Topic[] | null>(null)
-  const [yearGroup, setYearGroup] = useState<YearGroup>(() => readYearGroup())
   const [error, setError] = useState('')
 
   // Pull fresh stats too, so points and streaks are right after practising a topic.
@@ -33,6 +33,10 @@ export function HomePage() {
 
   useEffect(() => {
     let cancelled = false
+    // Back to the loading state rather than leaving the previous year's topics under the new
+    // heading for a frame after the header control changes.
+    setTopics(null)
+    setError('')
     void (async () => {
       try {
         // Counted for the chosen year, and topics with nothing there are left out, so every card
@@ -49,14 +53,6 @@ export function HomePage() {
       cancelled = true
     }
   }, [yearGroup])
-
-  const chooseYearGroup = (next: YearGroup) => {
-    setYearGroup(next)
-    writeYearGroup(next)
-    // Back to the loading state rather than leaving last year's topics under the new heading.
-    setTopics(null)
-    setError('')
-  }
 
   const stats = profile?.stats
   const firstName = profile?.user.displayName.split(' ')[0] ?? 'there'
@@ -103,33 +99,11 @@ export function HomePage() {
       ) : null}
 
       <section>
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">Topics</h2>
-            <p className="mt-0.5 text-sm text-slate-500">
-              A short set from the topic, aimed at the level you are working at.
-            </p>
-          </div>
-
-          {/*
-            Always visible, never hidden behind the profile: which year you work at is a choice
-            for this visit, not a setting, and changing it changes the questions immediately.
-          */}
-          <label className="flex shrink-0 items-center gap-2">
-            <span className="text-sm font-medium text-slate-600">Year group</span>
-            <select
-              value={yearGroup}
-              onChange={(event) => chooseYearGroup(Number(event.target.value) as YearGroup)}
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-            >
-              {YEAR_GROUPS.map((year) => (
-                <option key={year} value={year}>
-                  {yearGroupLabel(year)}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+        <h2 className="text-lg font-semibold text-slate-900">Topics</h2>
+        <p className="mt-0.5 text-sm text-slate-500">
+          A short set from the topic, aimed at the level you are working at. Change the year group in
+          the header at any time.
+        </p>
 
         {error ? (
           <p className="mt-4 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p>

@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useAuth } from '../auth/AuthContext'
 import { initials } from '../lib/format'
 import { PrototypeBadge } from './PrototypeBadge'
+import { YearGroupSelect } from './YearGroupSelect'
 import { Button } from './ui'
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
@@ -75,6 +76,15 @@ export function AppLayout() {
               </>
             )}
           </nav>
+
+          {/*
+            Which year's questions to practise, on every student screen rather than only on the
+            topic list: the choice decides what the next set is drawn from, and a student who has
+            just finished a Year 8 round should be able to move to Year 9 without hunting for a
+            control. Deliberately absent from the teacher's side, where the year group is content
+            metadata set per question in the editor.
+          */}
+          {!inAdmin ? <YearGroupSelect className="ml-1" /> : null}
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             {profile ? (

@@ -4,7 +4,7 @@ import { ApiRequestError } from '../api/client'
 import type { Profile } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { isGoogleConfigured, renderGoogleButton } from '../auth/google'
-import { allowsGuest, landingFor, parseRole, SIGN_IN_ROLES, type SignInRole } from '../auth/roles'
+import { alreadySignedInFor, allowsGuest, landingFor, parseRole, SIGN_IN_ROLES, type SignInRole } from '../auth/roles'
 import { AuthShell } from '../components/AuthShell'
 import { Button } from '../components/ui'
 
@@ -64,6 +64,19 @@ export function SignInPage() {
     [navigate],
   )
 
+  /**
+   * Signs out and puts the sign-in form back.
+   *
+   * Clearing `notATeacher` is the load-bearing part. Without it the panel stays on "you're not a
+   * teacher on this account" after signing out, with no Google button on it, so the button read as
+   * having done nothing - which is what "log out isn't clearing" looks like from the outside.
+   */
+  const useDifferentAccount = () => {
+    logout()
+    setNotATeacher(false)
+    setMessage('')
+  }
+
   useEffect(() => {
     const host = buttonHost.current
     if (!isGoogleConfigured || !host || notATeacher) return
@@ -94,8 +107,13 @@ export function SignInPage() {
     return <Navigate to="/login" replace />
   }
 
-  if (!restoring && !busy && profile && !leaving.current && !notATeacher) {
-    return <Navigate to="/" replace />
+  // Someone already signed in as the person this door is for has no business here, so send them
+  // where they were going. A student opening the teacher door is a different case, and the rule
+  // lives in alreadySignedInFor so it can be tested without a browser.
+  const alreadySignedInForThisDoor = alreadySignedInFor(mode, profile?.user.role)
+
+  if (!restoring && !busy && alreadySignedInForThisDoor && !leaving.current && !notATeacher) {
+    return <Navigate to={landingFor(mode)} replace />
   }
 
   const option = SIGN_IN_ROLES.find((candidate) => candidate.value === mode)
@@ -117,7 +135,7 @@ export function SignInPage() {
           <Button size="lg" onClick={() => navigate('/', { replace: true })}>
             Carry on as a student
           </Button>
-          <Button variant="secondary" size="lg" onClick={logout}>
+          <Button variant="secondary" size="lg" onClick={useDifferentAccount}>
             Use a different account
           </Button>
         </div>

@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAuth } from './auth/RequireAuth'
 import { RequireRole } from './auth/RequireRole'
 import { AppLayout } from './components/AppLayout'
+import { YearGroupProvider } from './components/YearGroupSelect'
 import { Spinner } from './components/ui'
 import { DevDigPage } from './pages/DevDigPage'
 import { DevResultsPage } from './pages/DevResultsPage'
@@ -55,11 +56,16 @@ export function App() {
           no session and no sign-in. Dropped entirely from a production build. */}
       {import.meta.env.DEV ? <Route path="/dev/dig" element={<DevDigPage />} /> : null}
 
-      {/* Everything below shares the app chrome and needs a signed-in user. */}
+      {/* Everything below shares the app chrome and needs a signed-in user. The year group
+          provider wraps the whole layout - including the admin pages nested under it - because the
+          header control and the pages it affects are not in the same component. The control itself
+          is only rendered on the student side. */}
       <Route
         element={
           <RequireAuth>
-            <AppLayout />
+            <YearGroupProvider>
+              <AppLayout />
+            </YearGroupProvider>
           </RequireAuth>
         }
       >
