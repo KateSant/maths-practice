@@ -6,6 +6,7 @@ import { AppLayout } from './components/AppLayout'
 import { YearGroupProvider } from './components/YearGroupSelect'
 import { Spinner } from './components/ui'
 import { DevDigPage } from './pages/DevDigPage'
+import { DevPlotPage } from './pages/DevPlotPage'
 import { DevResultsPage } from './pages/DevResultsPage'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
@@ -55,6 +56,11 @@ export function App() {
       {/* Dev-only, and deliberately outside the auth guard: the mining reward on its own,
           no session and no sign-in. Dropped entirely from a production build. */}
       {import.meta.env.DEV ? <Route path="/dev/dig" element={<DevDigPage />} /> : null}
+
+      {/* Dev-only, and outside the auth guard for the same reason: a mockup of a drawn answer —
+          a coordinate grid to plot points on — shown without a session so it can be looked at
+          directly. Nothing here is wired to the API. */}
+      {import.meta.env.DEV ? <Route path="/dev/plot" element={<DevPlotPage />} /> : null}
 
       {/* Everything below shares the app chrome and needs a signed-in user. The year group
           provider wraps the whole layout - including the admin pages nested under it - because the
