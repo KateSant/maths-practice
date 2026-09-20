@@ -219,6 +219,13 @@ on that person's next request: no re-login, no reissued token, no cache to clear
 adopts the row rather than creating a second one. It only works for an address Google is
 authoritative for, and the script warns when it is not.
 
+**A row in `users` is not evidence that anyone has signed in.** A pre-registered account sits there
+from the moment the script runs, with its role already set, and nothing in `users` distinguishes it
+from an account that has been used. Sign-in is evidenced by a row in `user_identities`, created at
+the first successful Google login, which carries `last_login_at`; a pre-registered account has none
+until then. Joining the two tables is the only way to answer "has this person signed in yet", and
+answering it from `users` alone is how a pre-registered colleague reads as a returning user.
+
 ### The student and teacher halves are kept apart
 
 The sign-in flow asks Student or Teacher first, then signs in as that. The choice is a statement of
@@ -370,6 +377,25 @@ ssh -i ~/.ssh/realmaths-deploy ubuntu@16.60.38.27 \
 ssh -i ~/.ssh/realmaths-deploy ubuntu@16.60.38.27 \
   'docker run --rm -v realmaths_realmaths-data:/data alpine:3 sh -c \
    "apk add --no-cache sqlite >/dev/null && sqlite3 /data/realmaths.db \"select id,email,role from users;\""'
+```
+
+That recipe mounts the volume read-write and leaves the connection writable, which is fine for a
+`select` and wrong for anything else. When the check has to be read-only, copy the database out and
+query the copy: `docker cp` the `.db` and its `-wal`/`-shm` siblings to a temp directory, then read
+them with the host's `python3`, whose `sqlite3` module needs no client installed. Mounting `:ro` is
+not the read-only version of this — SQLite has to be able to write the `-shm` file to read a WAL
+database at all, so a `:ro` mount fails rather than protecting anything.
+
+```bash
+# a read-only check: query a copy, so the live volume is never opened for writing
+ssh -i ~/.ssh/realmaths-deploy ubuntu@16.60.38.27 '
+  d=$(mktemp -d)
+  docker cp realmaths-api-1:/data/realmaths.db "$d/" >/dev/null
+  docker cp realmaths-api-1:/data/realmaths.db-wal "$d/" >/dev/null 2>&1
+  python3 -c "import sqlite3,sys; [print(r) for r in sqlite3.connect(sys.argv[1]).execute(sys.argv[2])]" \
+    "$d/realmaths.db" \
+    "select u.email,u.role,i.last_login_at from users u left join user_identities i on i.user_id=u.id"
+  rm -rf "$d"'
 ```
 
 A pre-migration backup of the production database is at `/home/ubuntu/realmaths-before-v4.db` on
