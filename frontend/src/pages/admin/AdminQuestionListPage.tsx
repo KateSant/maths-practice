@@ -8,7 +8,7 @@ import {
   type PageResponse,
   type QuestionStatus,
 } from '../../api/admin'
-import { Button, Card, EmptyState, Spinner, buttonClasses } from '../../components/ui'
+import { Badge, Button, Card, EmptyState, Spinner, buttonClasses } from '../../components/ui'
 import { AdminHeader, DifficultyBadge, OriginBadge, StatusBadge, YearGroupBadge } from './adminUi'
 import { DIFFICULTY_BANDS, difficultyLabel } from '../../lib/format'
 import { YEAR_GROUPS, yearGroupLabel } from '../../lib/yearGroups'
@@ -242,6 +242,7 @@ export function AdminQuestionListPage() {
                     <span className="text-xs text-slate-500">{question.topicName}</span>
                     <YearGroupBadge yearGroup={question.yearGroup} />
                     <DifficultyBadge difficulty={question.difficulty} />
+                    {question.answerType === 'MULTI_SELECT' ? <Badge tone="indigo">Tick all</Badge> : null}
                     <StatusBadge status={question.status} />
                     <OriginBadge origin={question.origin} />
                   </div>

@@ -2,6 +2,7 @@ package com.realmaths.admin;
 
 import com.realmaths.common.ApiValidationException;
 import com.realmaths.question.AnswerOption;
+import com.realmaths.question.AnswerType;
 import com.realmaths.question.Question;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,6 +17,11 @@ import org.springframework.stereotype.Component;
  * checked on the {@code DRAFT} to {@code PUBLISHED} transition, and this is the single place
  * that happens, so the editor, a bulk publish and the CSV importer all pass through the same
  * gate rather than each enforcing their own version of it.
+ *
+ * <p>How many correct options are allowed depends on the question's {@link AnswerType}: exactly
+ * one for a single choice, at least one for a tick-all. The database enforces the single-choice
+ * half as well, conditionally, via a trigger; this repeats it so the teacher gets a sentence
+ * rather than a constraint violation, and covers the multi-select half the database cannot.
  */
 @Component
 public class QuestionValidator {
@@ -58,11 +64,20 @@ public class QuestionValidator {
 
         long correct = options.stream().filter(AnswerOption::isCorrect).count();
         if (correct == 0) {
-            errors.put("options.correct", "Mark one option as the correct answer.");
-        } else if (correct > 1) {
-            // The database refuses this anyway, via answer_options_one_correct_idx, but a
-            // sentence naming the problem beats an opaque 409 from a constraint violation.
-            errors.put("options.correct", "Only one option can be the correct answer.");
+            errors.put(
+                    "options.correct",
+                    question.getAnswerType().isMultiSelect()
+                            ? "Tick at least one option as correct."
+                            : "Mark one option as the correct answer.");
+        } else if (correct > 1 && !question.getAnswerType().isMultiSelect()) {
+            // The database refuses this too, via the answer_options_single_choice_insert trigger,
+            // but a sentence naming the problem beats an opaque 409 from a constraint violation.
+            // The message names the fix, because "too many right answers" is usually a teacher
+            // reaching for the wrong question type rather than a mistake in the options.
+            errors.put(
+                    "options.correct",
+                    "A single-answer question can have only one correct option. "
+                            + "Switch it to 'tick all that apply' to mark more than one.");
         }
 
         if (!errors.isEmpty()) {

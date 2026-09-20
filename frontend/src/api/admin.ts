@@ -1,3 +1,4 @@
+import type { AnswerType } from './types'
 import { apiRequest } from './client'
 
 /**
@@ -29,6 +30,7 @@ export interface AdminQuestionSummary {
   topicName: string
   difficulty: number
   yearGroup: number
+  answerType: AnswerType
   status: QuestionStatus
   origin: QuestionOrigin
   createdAt: string
@@ -42,6 +44,7 @@ export interface AdminQuestionDetail {
   explanation?: string
   difficulty: number
   yearGroup: number
+  answerType: AnswerType
   status: QuestionStatus
   origin: QuestionOrigin
   createdAt: string
@@ -69,6 +72,7 @@ export interface SaveQuestionRequest {
   difficulty: number
   /** The year group this question belongs to, 7 to 13. */
   yearGroup: number
+  answerType: AnswerType
   options: QuestionOptionDraft[]
 }
 

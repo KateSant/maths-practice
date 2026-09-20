@@ -10,8 +10,9 @@ repository is `real-maths`, the Java package is `com.realmaths`, the database is
 `realmaths.db` and the environment variables are `REALMATHS_*` — those are working names from
 before the naming question was parked. See `docs/deferred.md`.
 
-Prototype stage. The question bank ships with 32 starter questions across 5 topics, all filed
-under **Year 7**, intended to be replaced by a real teacher's content through the admin screens.
+Prototype stage. The question bank ships with 33 starter questions across 5 topics, intended to be
+replaced by a real teacher's content through the admin screens. One of them is a **tick-all**
+question, so both answer types are reachable on first run, and all 33 are filed under **Year 7**.
 
 ---
 
@@ -32,7 +33,7 @@ under **Year 7**, intended to be replaced by a real teacher's content through th
 | Backend | Spring Boot 3.5, Java 21, Spring Data JPA, Spring Security, JWT |
 | Database | SQLite, one file, no server. Schema by Flyway |
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, React Router |
-| Tests | JUnit 5 + Mockito (**111**) · Vitest (**83**) |
+| Tests | JUnit 5 + Mockito (**148**) · Vitest (**93**) |
 | Deploy | GitHub Actions → GHCR → one Lightsail instance, Caddy in front |
 
 ---
@@ -91,8 +92,8 @@ docker compose up --build     # API + SQLite volume, on port 8081
 ## Tests
 
 ```bash
-cd backend  && mvn test       # 111 tests
-cd frontend && npm test       # 83 tests
+cd backend  && mvn test       # 148 tests
+cd frontend && npm test       # 93 tests
 cd frontend && npm run build  # runs tsc --noEmit as well, so type errors fail the build
 ```
 
@@ -131,7 +132,9 @@ backend/src/main/resources/db/migration/
   V3__google_sign_in.sql    drops passwords, adds user_identities
   V4__question_lifecycle.sql  status replaces active, adds origin
   V5__play_time.sql         earned play time and its heartbeat
-  V7__year_group.sql        questions filed by school year, V6 belongs to the multi-select work
+  V6__multi_select_questions.sql  tick-all questions; answer selections move to their own table
+  V7__retire_duplicate_primes_question.sql  retires the first primes question, now duplicated by V6
+  V8__year_group.sql        questions filed by school year 7-13, and the year a session was dealt
 
 frontend/src/
   api/         typed client; admin.ts holds the admin endpoints and their types
@@ -139,7 +142,7 @@ frontend/src/
   components/  shared primitives and layout, and the mining reward
   pages/       the student pages, plus pages/admin/ for the question bank
   lib/         formatting, the product-name constant, the platformer world and its physics,
-               and the play-time clock
+               the play-time clock, and the option-state rule the question card draws from
 ```
 
 ---
@@ -203,8 +206,9 @@ Omitting `yearGroup` from `POST /api/quiz/sessions` still means "every year", wh
 endpoint usable without one.
 
 The admin list shows each question's year group, filters by it, and the editor can move a question
-between years. `V7` is numbered past a gap because the multi-select work in flight on `main` has
-claimed `V6`; Flyway applies in version order, so when both land `V6` runs first and `V7` follows.
+between years. The migration is numbered `V8` rather than `V7` because the multi-select work landed
+first and took both `V6` and `V7`; Flyway applies in version order, so the retirements and the new
+answer type land before the year group does.
 
 ### Identity is keyed on the provider's subject, never on email
 
@@ -258,14 +262,33 @@ administrator can call `/api/admin/**` whatever the navigation shows.
 
 `status` is `DRAFT`, `PUBLISHED` or `RETIRED`. A teacher has to be able to save something
 half-written, so structural limits are checked on save (lengths, difficulty 1–5, at most six
-options) while "is this answerable" — a prompt, at least two options, exactly one correct — is
-checked only on the `DRAFT`→`PUBLISHED` transition, in `QuestionValidator`. The editor, a bulk
-publish and any future importer all pass through that one gate.
+options) while "is this answerable" — a prompt, at least two options, and an answer key its type
+allows — is checked only on the `DRAFT`→`PUBLISHED` transition, in `QuestionValidator`. The editor,
+a bulk publish and any future importer all pass through that one gate.
 
 **Nothing is ever hard-deleted.** `quiz_answers` cascades on delete, so deleting a question would
 take students' answer history with it. Retiring is the only removal on offer.
 
-`origin` records where a question came from: `SEED` for the 32 starter questions, or `AUTHORED`.
+`origin` records where a question came from: `SEED` for the 33 starter questions, or `AUTHORED`.
+
+### A question is answered one of two ways
+
+`questions.answer_type` is `SINGLE_CHOICE` or `MULTI_SELECT`, and it decides both how the question
+is shown and how it is graded. It is sent to the student — the screen cannot render a tick-all
+question without it — and it says how to answer, never what the answer is.
+
+The two types share one grading rule: **the chosen set must equal the correct set**. A single choice
+is simply the case where the correct set has one member, so there is no per-type branch in the
+grader that could drift from the answer type. For a tick-all question that means a missing tick is
+wrong and an extra tick is wrong; there is deliberately **no partial credit**, because the score and
+the streak are counts of questions answered correctly and a half-marked question would make both
+mean less.
+
+`QuizAnswer.selectedOptions` holds a set, so an answer is a set for both types, and one row per
+selection in `quiz_answer_options`. A **single-choice** question is refused two correct options by a
+`BEFORE INSERT` trigger, which is where the unconditional `answer_options_one_correct_idx` used to
+enforce it; the guarantee became conditional because a tick-all question needs several. A tick-all
+question is held to "at least one correct" by the validator.
 
 ### Grading is idempotent, and sessions are private
 
@@ -290,10 +313,12 @@ overwrites its guess, so the countdown on screen is never the authority.
 
 ### The database enforces the invariants
 
-- `answer_options_one_correct_idx`, a partial unique index, makes two correct options impossible.
+- A single-choice question cannot hold two correct options: the `answer_options_single_choice_insert`
+  trigger refuses it, and so does the matching `UPDATE` trigger. This replaced a partial unique
+  index, which could not be made conditional on the question's answer type.
 - Foreign keys and cascades are declared in the schema.
 - `users.email` is unique, and `user_identities` is unique on `(provider, subject)`.
-- `questions.status` and `origin` have `check` constraints.
+- `questions.status`, `answer_type` and `origin` have `check` constraints.
 
 ### SQLite specifics
 

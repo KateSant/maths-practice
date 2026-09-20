@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ApiRequestError, api } from '../api/client'
+import { ApiRequestError, api, type AnswerSelection } from '../api/client'
 import type { AnswerResult, QuizSession } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { Badge, Button, Card, ProgressBar, Spinner, buttonClasses } from '../components/ui'
-import { QuestionCard, type OptionState } from '../components/QuestionCard'
+import { QuestionCard, type OptionState, type QuestionVariant } from '../components/QuestionCard'
 import { difficultyLabel } from '../lib/format'
 import { isYearGroup, readYearGroup, yearGroupLabel, type YearGroup } from '../lib/yearGroups'
+import { optionState, toggleSelection } from '../lib/answerState'
 
 const DEFAULT_QUESTIONS = 5
 const MAX_QUESTIONS = 20
@@ -30,8 +31,14 @@ export function QuizPage() {
 
   const [session, setSession] = useState<QuizSession | null>(null)
   const [error, setError] = useState('')
+  const [submitError, setSubmitError] = useState('')
   const [index, setIndex] = useState(0)
-  const [selectedId, setSelectedId] = useState<number | null>(null)
+  /**
+   * What the student has ticked. One entry for a single choice, several for a tick-all, and it is
+   * the same state either way because the only difference is how many entries are ever allowed in
+   * it - which is decided by the question, not by a second piece of state here.
+   */
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [result, setResult] = useState<AnswerResult | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [finishing, setFinishing] = useState(false)
@@ -68,31 +75,53 @@ export function QuizPage() {
   const question = session?.questions[index]
   const total = session?.questions.length ?? 0
   const isLast = index + 1 >= total
+  const multi = question?.answerType === 'MULTI_SELECT'
+  const variant: QuestionVariant = multi ? 'multi' : 'single'
 
-  const choose = useCallback(
-    async (optionId: number) => {
+  /**
+   * Marks one answer. Used for both types: a single choice calls it on the click, a tick-all calls
+   * it when the student presses Check.
+   */
+  const submit = useCallback(
+    async (optionIds: number[]) => {
       if (!session || !question || result || submitting) return
       setSubmitting(true)
-      setSelectedId(optionId)
+      setSubmitError('')
+      setSelectedIds(optionIds)
       try {
-        const answered = await api.submitAnswer(session.sessionId, question.id, optionId, Date.now() - askedAt)
+        const selection: AnswerSelection = multi ? { optionIds } : { optionId: optionIds[0]! }
+        const answered = await api.submitAnswer(session.sessionId, question.id, selection, Date.now() - askedAt)
         setResult(answered)
       } catch (caught) {
-        setSelectedId(null)
-        setError(caught instanceof ApiRequestError ? caught.message : 'Could not submit that answer.')
+        // A single choice clears, because the student is choosing again. A tick-all keeps its
+        // ticks, because losing them to a flaky connection would mean re-doing the whole question.
+        if (!multi) setSelectedIds([])
+        setSubmitError(caught instanceof ApiRequestError ? caught.message : 'Could not submit that answer.')
       } finally {
         setSubmitting(false)
       }
     },
-    [session, question, result, submitting, askedAt],
+    [session, question, result, submitting, multi, askedAt],
+  )
+
+  const choose = useCallback(
+    (optionId: number) => {
+      if (multi) {
+        setSelectedIds((current) => toggleSelection(current, optionId))
+        return
+      }
+      void submit([optionId])
+    },
+    [multi, submit],
   )
 
   const next = useCallback(async () => {
     if (!session) return
     if (!isLast) {
       setIndex((current) => current + 1)
-      setSelectedId(null)
+      setSelectedIds([])
       setResult(null)
+      setSubmitError('')
       setAskedAt(Date.now())
       return
     }
@@ -124,20 +153,25 @@ export function QuizPage() {
         }
         return
       }
-      const byNumber = '1234'.indexOf(event.key)
-      const byLetter = 'abcd'.indexOf(event.key.toLowerCase())
-      const optionIndex = byNumber >= 0 ? byNumber : byLetter
-      if (optionIndex >= 0) {
-        const option = question.options[optionIndex]
-        if (option) {
-          event.preventDefault()
-          void choose(option.id)
-        }
+      // A tick-all answer is committed with Enter, which has to come before the per-option keys
+      // so it is not swallowed as "no option matched".
+      if (multi && event.key === 'Enter') {
+        event.preventDefault()
+        if (selectedIds.length > 0) void submit(selectedIds)
+        return
       }
+      const byNumber = '123456'.indexOf(event.key)
+      const byLetter = 'abcdef'.indexOf(event.key.toLowerCase())
+      const optionIndex = byNumber >= 0 ? byNumber : byLetter
+      if (optionIndex < 0) return
+      const option = question.options[optionIndex]
+      if (!option) return
+      event.preventDefault()
+      choose(option.id)
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [question, result, next, choose])
+  }, [question, result, multi, selectedIds, next, submit, choose])
 
   if (error) {
     return (
@@ -175,12 +209,19 @@ export function QuizPage() {
     )
   }
 
-  const stateFor = (optionId: number): OptionState => {
-    if (!result) return optionId === selectedId ? 'selected' : 'idle'
-    if (optionId === result.correctOptionId) return 'correct'
-    if (optionId === selectedId) return 'wrong'
-    return 'muted'
-  }
+  const stateFor = (optionId: number): OptionState =>
+    optionState({
+      optionId,
+      selectedIds,
+      correctOptionIds: result?.correctOptionIds ?? [],
+      graded: Boolean(result),
+    })
+
+  const hint = result
+    ? 'Press Enter to continue'
+    : multi
+      ? 'Press 1–6 or A–F to tick, then Enter to check'
+      : 'Press 1–6 or A–F to answer'
 
   return (
     <div className="mx-auto max-w-3xl animate-rise">
@@ -196,6 +237,7 @@ export function QuizPage() {
               Year 10 and not a silently different set. */}
           <Badge tone="slate">{yearGroupLabel(session.yearGroup ?? yearGroup)}</Badge>
           <Badge tone="indigo">{difficultyLabel(question.difficulty)}</Badge>
+          {multi ? <Badge tone="slate">Tick all that apply</Badge> : null}
           {result ? <Badge tone="emerald">{result.correctSoFar}/{result.answeredSoFar} correct</Badge> : null}
         </div>
       </div>
@@ -212,8 +254,9 @@ export function QuizPage() {
         className="mt-6"
         prompt={question.prompt}
         options={question.options}
+        variant={variant}
         stateFor={stateFor}
-        onChoose={(optionId) => void choose(optionId)}
+        onChoose={choose}
         disabled={Boolean(result) || submitting}
       >
         {result ? (
@@ -237,19 +280,34 @@ export function QuizPage() {
           </div>
         ) : null}
 
-        <div className="mt-6 flex items-center justify-between gap-4">
-          <p className="hidden text-xs text-slate-400 sm:block">
-            {result ? 'Press Enter to continue' : 'Press 1–4 or A–D to answer'}
+        {submitError ? (
+          <p role="alert" className="mt-6 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            {submitError}
           </p>
-          <Button
-            ref={nextButtonRef}
-            onClick={() => void next()}
-            disabled={!result}
-            size="lg"
-            className={result ? '' : 'invisible'}
-          >
-            {isLast ? 'See my results' : 'Next question'}
-          </Button>
+        ) : null}
+
+        <div className="mt-6 flex items-center justify-between gap-4">
+          <p className="hidden text-xs text-slate-400 sm:block">{hint}</p>
+          <div className="flex items-center gap-3">
+            {multi && !result ? (
+              <Button
+                onClick={() => void submit(selectedIds)}
+                disabled={selectedIds.length === 0 || submitting}
+                size="lg"
+              >
+                {submitting ? 'Checking…' : 'Check answer'}
+              </Button>
+            ) : null}
+            <Button
+              ref={nextButtonRef}
+              onClick={() => void next()}
+              disabled={!result}
+              size="lg"
+              className={result ? '' : 'invisible'}
+            >
+              {isLast ? 'See my results' : 'Next question'}
+            </Button>
+          </div>
         </div>
       </QuestionCard>
 

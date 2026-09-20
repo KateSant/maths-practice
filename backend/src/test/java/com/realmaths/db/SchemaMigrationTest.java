@@ -45,36 +45,154 @@ class SchemaMigrationTest {
     void seedsTheWholeStarterQuestionBank() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
             assertThat(scalar(statement, "select count(*) from topics")).isEqualTo(5);
-            assertThat(scalar(statement, "select count(*) from questions")).isEqualTo(32);
-            assertThat(scalar(statement, "select count(*) from answer_options")).isEqualTo(128);
+            assertThat(scalar(statement, "select count(*) from questions")).isEqualTo(33);
+            assertThat(scalar(statement, "select count(*) from answer_options")).isEqualTo(133);
         }
     }
 
     /**
      * The SQLite replacement for the PL/pgSQL assertion that lived in the seed
-     * migration: no question may be unanswerable or have two right answers.
+     * migration: no question may be unanswerable or have a contradictory answer key.
+     *
+     * <p>Type-aware, because "exactly one correct" was only ever a rule for single-choice
+     * questions. Every question still needs at least two options and at least one right answer;
+     * the single-choice ceiling of one is what the trigger below enforces.
      */
     @Test
-    void everyQuestionHasFourOptionsAndExactlyOneCorrectAnswer() throws Exception {
+    void everySeededQuestionHasAnAnswerKeyItsTypeAllows() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
             long broken = scalar(statement, """
                     select count(*) from questions q
-                    where (select count(*) from answer_options o where o.question_id = q.id) <> 4
+                    where (select count(*) from answer_options o where o.question_id = q.id) < 2
                        or (select count(*) from answer_options o
-                           where o.question_id = q.id and o.is_correct) <> 1
+                           where o.question_id = q.id and o.is_correct) = 0
+                       or (q.answer_type = 'SINGLE_CHOICE'
+                           and (select count(*) from answer_options o
+                                where o.question_id = q.id and o.is_correct) <> 1)
                     """);
             assertThat(broken).as("questions with a malformed option set").isZero();
         }
     }
 
+    /**
+     * The 32 original questions are all single choices and were all written with four options.
+     * Worth pinning separately, because the general check above is now loose enough to permit a
+     * seed question that quietly lost an option.
+     */
     @Test
-    void sqliteRefusesASecondCorrectOptionForTheSameQuestion() throws Exception {
+    void theOriginalSeededQuestionsEachStillHaveFourOptions() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThat(scalar(statement, """
+                    select count(*) from questions q
+                    where q.answer_type = 'SINGLE_CHOICE'
+                      and (select count(*) from answer_options o where o.question_id = q.id) <> 4
+                    """))
+                    .as("single-choice seed questions without exactly four options")
+                    .isZero();
+        }
+    }
+
+    /**
+     * The at-most-one-correct guarantee, which used to be the unconditional partial unique index
+     * answer_options_one_correct_idx and is now the answer_options_single_choice_insert trigger.
+     */
+    @Test
+    void sqliteRefusesASecondCorrectOptionOnASingleChoiceQuestion() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
             assertThatThrownBy(() -> statement.executeUpdate("""
                     insert into answer_options (question_id, position, label, text, is_correct)
                     values (1, 5, 'E', 'a second right answer', 1)
                     """))
-                    .as("the partial unique index should reject this")
+                    .as("question 1 is a single choice, so the trigger should reject this")
+                    .isInstanceOf(SQLException.class);
+        }
+    }
+
+    /**
+     * The same guarantee, reached by flipping a flag rather than inserting a row. No application
+     * code does this - create and update rebuild the option set - so the trigger exists for a
+     * direct SQL edit and for a future importer.
+     */
+    @Test
+    void sqliteRefusesFlippingASecondOptionCorrectOnASingleChoiceQuestion() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            // Question 1's correct option is position 3, so position 2 is a second one.
+            assertThatThrownBy(() -> statement.executeUpdate(
+                            "update answer_options set is_correct = 1 where question_id = 1 and position = 2"))
+                    .as("the trigger should reject this")
+                    .isInstanceOf(SQLException.class);
+        }
+    }
+
+    /** The other half: a tick-all question is allowed as many right answers as it likes. */
+    @Test
+    void sqliteAllowsSeveralCorrectOptionsOnATickAllQuestion() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            // Question 33 is the seeded tick-all example and already has three correct options.
+            statement.executeUpdate("""
+                    insert into answer_options (question_id, position, label, text, is_correct)
+                    values (33, 6, 'F', '53', 1)
+                    """);
+
+            assertThat(scalar(statement, """
+                    select count(*) from answer_options where question_id = 33 and is_correct
+                    """))
+                    .as("correct options on the tick-all question")
+                    .isEqualTo(4);
+        }
+    }
+
+    /**
+     * The answer type is a new column defaulting to SINGLE_CHOICE, so the 32 questions written
+     * before tick-all existed keep their meaning without a backfill.
+     */
+    @Test
+    void everyOriginalSeededQuestionIsASingleChoice() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThat(scalar(statement, """
+                    select count(*) from questions
+                    where id <> 33 and answer_type = 'SINGLE_CHOICE'
+                    """))
+                    .as("questions from before tick-all existed")
+                    .isEqualTo(32);
+            assertThat(text(statement, "select answer_type from questions where id = 33"))
+                    .isEqualTo("MULTI_SELECT");
+        }
+    }
+
+    /**
+     * The one tick-all question in the prototype bank, which is how the new type is reachable
+     * without authoring anything first.
+     */
+    @Test
+    void theStarterBankIncludesATickAllExample() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThat(scalar(statement, """
+                    select count(*) from answer_options where question_id = 33 and is_correct
+                    """))
+                    .as("correct options on the tick-all example")
+                    .isEqualTo(3);
+            assertThat(text(statement, "select status from questions where id = 33")).isEqualTo("PUBLISHED");
+            assertThat(text(statement, "select origin from questions where id = 33")).isEqualTo("SEED");
+        }
+    }
+
+    /**
+     * The selected answers moved out of quiz_answers.selected_option_id and into their own table,
+     * because an answer is a set now. The column is dropped rather than left beside the table.
+     */
+    @Test
+    void theSingleSelectedOptionColumnIsReplacedByASelectionTable() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThatThrownBy(() -> statement.executeQuery("select selected_option_id from quiz_answers limit 1"))
+                    .as("quiz_answers.selected_option_id should have been dropped")
+                    .isInstanceOf(SQLException.class);
+
+            // Still there and still enforced, so an answer cannot select an option that is not.
+            assertThatThrownBy(() -> statement.executeUpdate("""
+                    insert into quiz_answer_options (answer_id, option_id) values (999999, 1)
+                    """))
+                    .as("a selection pointing at a missing answer should be rejected")
                     .isInstanceOf(SQLException.class);
         }
     }
@@ -105,7 +223,7 @@ class SchemaMigrationTest {
                     """);
             assertThat(scalar(statement, "select max(id) from questions"))
                     .as("new question id")
-                    .isGreaterThan(32);
+                    .isGreaterThan(33);
 
             statement.executeUpdate("""
                     insert into topics (slug, name, description, sort_order)
@@ -199,7 +317,11 @@ class SchemaMigrationTest {
                     .as("questions.active should have been dropped")
                     .isInstanceOf(SQLException.class);
 
-            // The 32 seeded questions were all published before the change, and must still be.
+            // The 32 seeded questions were all published before the change. V6 then added a
+            // tick-all example and V7 retired one of the originals, so the published total is back
+            // to 32: 31 of the originals plus the V6 example. What this test really guards is that
+            // nothing is left unpublished by accident, so the number is asserted rather than
+            // derived - a silent extra RETIRED row would show up here.
             assertThat(scalar(statement, "select count(*) from questions where status = 'PUBLISHED'"))
                     .isEqualTo(32);
         }
@@ -210,13 +332,14 @@ class SchemaMigrationTest {
     void theStarterQuestionsAreMarkedAsSeedContent() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
             assertThat(scalar(statement, "select count(*) from questions where origin = 'SEED'"))
-                    .isEqualTo(32);
+                    .isEqualTo(33);
         }
     }
 
     /**
      * A new row defaults to DRAFT, so a forgotten INSERT leaves an unpublished question rather
-     * than putting half-written content in front of a student.
+     * than putting half-written content in front of a student. It also defaults to
+     * SINGLE_CHOICE, so a forgotten INSERT cannot invent a tick-all question by accident.
      */
     @Test
     void aNewQuestionDefaultsToDraftAndAuthored() throws Exception {
@@ -228,6 +351,18 @@ class SchemaMigrationTest {
                     .isEqualTo("DRAFT");
             assertThat(text(statement, "select origin from questions where prompt = 'brand new'"))
                     .isEqualTo("AUTHORED");
+            assertThat(text(statement, "select answer_type from questions where prompt = 'brand new'"))
+                    .isEqualTo("SINGLE_CHOICE");
+        }
+    }
+
+    @Test
+    void sqliteRefusesAnUnknownAnswerType() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThatThrownBy(() -> statement.executeUpdate(
+                            "update questions set answer_type = 'GUESS_ONE' where id = 1"))
+                    .as("the check constraint should reject this")
+                    .isInstanceOf(SQLException.class);
         }
     }
 
@@ -241,18 +376,19 @@ class SchemaMigrationTest {
         }
     }
 
-    // ---------------------------------------------------------- year groups (V7) ---
+    // ---------------------------------------------------------- year groups (V8) ---
 
     /**
      * The starter bank was written for the first year of secondary school, so it is Year 7
-     * content. This is what makes "all the questions we already have are in Year 7" true rather
-     * than an assumption: the migration's default assigned them, and nothing has moved one since.
+     * content - including the tick-all example V6 added. This is what makes "all the questions we
+     * already have are in Year 7" true rather than an assumption: the migration's default assigned
+     * them, and nothing has moved one since.
      */
     @Test
     void theStarterQuestionsAreYearSevenContent() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
             assertThat(scalar(statement, "select count(*) from questions where year_group = 7"))
-                    .isEqualTo(32);
+                    .isEqualTo(33);
         }
     }
 
@@ -303,6 +439,45 @@ class SchemaMigrationTest {
 
             assertThat(scalar(statement, "select count(*) from user_identities"))
                     .as("identities of the deleted user")
+                    .isZero();
+        }
+    }
+
+    // ------------------------------------------- retiring the duplicate (V7) ---
+
+    /**
+     * The old single-choice primes question is retired, not deleted. It carries recorded answers,
+     * and {@code quiz_answers.question_id} is {@code on delete cascade}, so a DELETE would have
+     * taken them with it.
+     */
+    @Test
+    void theDuplicatePrimesQuestionIsRetiredRatherThanDeleted() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThat(text(statement, "select status from questions where id = 3")).isEqualTo("RETIRED");
+
+            // Still there with its options, so the answers already recorded against it and any
+            // completed review that shows it still resolve rather than 404ing.
+            assertThat(scalar(statement, "select count(*) from answer_options where question_id = 3"))
+                    .as("options of the retired question")
+                    .isEqualTo(4);
+        }
+    }
+
+    /**
+     * And it is out of the dealt set, which is what "gone" means here: both catalog queries filter
+     * on PUBLISHED, so retiring is sufficient and no delete is needed.
+     */
+    @Test
+    void aRetiredQuestionIsNoLongerPublishedForDealing() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThat(scalar(statement, """
+                    select count(*) from questions where topic_id = 1 and status = 'PUBLISHED'
+                    """))
+                    .as("published questions left in the Number topic")
+                    .isEqualTo(7);
+            assertThat(scalar(statement, """
+                    select count(*) from questions where topic_id = 1 and status = 'PUBLISHED' and id = 3
+                    """))
                     .isZero();
         }
     }

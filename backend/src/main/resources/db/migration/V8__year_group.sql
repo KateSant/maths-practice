@@ -6,17 +6,19 @@
 -- Year 10 questions, and there is no age to give at sign-up and no profile field to correct later.
 --
 -- Every question that exists today is Year 7 content: the starter bank was written for the first
--- year of secondary school. The column default says so, so the existing 32 rows are assigned
--- without being touched, and a future INSERT that forgets the column lands in Year 7 rather than
--- becoming invisible to every dropdown.
+-- year of secondary school, and that includes the tick-all example V6 added. The column default
+-- says so, so every existing row - 33 of them - is assigned without being touched, and a future
+-- INSERT that forgets the column lands in Year 7 rather than becoming invisible to every dropdown.
 --
 -- The CHECK mirrors the ones on difficulty, status and origin. The API validates as well, so a
 -- bad year group reads as a message rather than a constraint violation, but the database is where
 -- a value outside 7..13 becomes impossible instead of merely unlikely.
 --
--- Numbered V7 rather than V6 because the multi-select question work in flight on main has claimed
--- V6. Flyway applies migrations in version order and a gap is harmless, so this branch runs on its
--- own; when both land, V6 runs first and this follows it.
+-- The history of this number, since it is not obvious from the file: it was written as V7 on a
+-- branch while the multi-select work was still uncommitted, on the bet that that work would take
+-- V6. It did - and then took V7 as well, for retiring the duplicate primes question - so this was
+-- renumbered to V8 when the two were merged. Flyway applies in version order, so the retirements
+-- and the new answer type land first and the year group follows.
 
 alter table questions add column year_group integer not null default 7
     check (year_group between 7 and 13);

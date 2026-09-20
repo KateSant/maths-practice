@@ -1,5 +1,6 @@
 package com.realmaths.admin.dto;
 
+import com.realmaths.question.AnswerType;
 import com.realmaths.question.YearGroups;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,6 +26,10 @@ import java.util.List;
  * absent value means Year 7, matching the column default. A caller that has not been taught about
  * year groups — an older client, or a future CSV importer — therefore puts content in the first
  * year of secondary school rather than failing or filing it somewhere invisible.
+ *
+ * <p>{@code answerType} is likewise nullable and defaults to {@code SINGLE_CHOICE}, so a client
+ * written before tick-all questions existed keeps producing the questions it meant to. An omitted
+ * answer type is a client that only knows about one type, not an ambiguous question.
  */
 public record SaveQuestionRequest(
         @NotNull(message = "Choose a topic.") Long topicId,
@@ -36,6 +41,7 @@ public record SaveQuestionRequest(
         @Min(value = YearGroups.MIN, message = "Year group must be between 7 and 13.")
                 @Max(value = YearGroups.MAX, message = "Year group must be between 7 and 13.")
                 Integer yearGroup,
+        AnswerType answerType,
         @Size(max = 6, message = "A question can have at most six options.")
                 List<OptionDraft> options) {
 

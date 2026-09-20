@@ -1,0 +1,25 @@
+-- Retire the original "Which of these numbers is prime?" question.
+--
+-- V6 added a tick-all example built on the same idea ("Tick every number below that is prime."),
+-- which left the Number topic holding two primes questions side by side - one single choice, one
+-- tick-all, with near-identical wording and overlapping distractors. That is a poor prototype bank:
+-- the purpose of the tick-all example is to be visibly a different kind of question, and parked
+-- next to a lookalike it is invisible, because the natural reading is that the second one is the
+-- one you have already answered. The duplicate is the older one, so the older one goes.
+--
+-- Retired rather than deleted. Question 3 already carries recorded answers, and
+-- quiz_answers.question_id is `on delete cascade`, so a DELETE would take those answers with it and
+-- rewrite history that has already been shown to a student - the same reasoning that makes Retire
+-- the only removal on offer in the admin screens. `status = 'RETIRED'` is enough to take it out of
+-- circulation: both catalog queries that deal a set filter on `status = 'PUBLISHED'`, so it stops
+-- being served, while every answer and every completed review still resolves.
+--
+-- A migration rather than a call to `POST /api/admin/questions/3/retire`, because this row is SEED
+-- content and the starter bank is defined by migrations. Retiring it through the API would leave
+-- the bank's definition split between V2/V6 and one manual call: a fresh database would still get
+-- the old question while an existing one would not. This is the same deliberate exception to the
+-- schema-only rule in docs/content-admin-architecture.md §2.1 that V6's header sets out.
+--
+-- Note that V2 is left alone even though it seeds this question, because it has already been
+-- applied and editing it would fail the checksum on every existing database.
+update questions set status = 'RETIRED' where id = 3;

@@ -6,6 +6,7 @@ import com.realmaths.admin.dto.PageResponse;
 import com.realmaths.admin.dto.SaveQuestionRequest;
 import com.realmaths.common.ApiException;
 import com.realmaths.common.ApiValidationException;
+import com.realmaths.question.AnswerType;
 import com.realmaths.question.Question;
 import com.realmaths.question.QuestionOrigin;
 import com.realmaths.question.QuestionRepository;
@@ -62,7 +63,8 @@ public class AdminQuestionService {
                 promptOrEmpty(request.prompt()),
                 request.explanation(),
                 request.difficulty(),
-                yearGroupOrFirst(request.yearGroup()));
+                yearGroupOrFirst(request.yearGroup()),
+                answerTypeOrSingleChoice(request.answerType()));
 
         applyOptions(question, request.options());
         return AdminQuestionDetail.from(questions.saveAndFlush(question));
@@ -77,7 +79,8 @@ public class AdminQuestionService {
                 promptOrEmpty(request.prompt()),
                 request.explanation(),
                 request.difficulty(),
-                yearGroupOrFirst(request.yearGroup()));
+                yearGroupOrFirst(request.yearGroup()),
+                answerTypeOrSingleChoice(request.answerType()));
 
         // The replacement options occupy the same (question_id, position) pairs as the rows being
         // removed, and the partial unique index is checked per statement. Without this flush the
@@ -126,6 +129,22 @@ public class AdminQuestionService {
                     Map.of("options", "A question can have at most " + QuestionValidator.MAX_OPTIONS + " options."));
         }
 
+        // Also defence in depth, and it matters more than the ceiling above because the database
+        // enforces this one: saving a single-choice question with two right answers is refused by
+        // the answer_options_single_choice_insert trigger, so without this check the teacher would
+        // get an opaque 409 from a constraint violation instead of a message on the offending
+        // input. Harmless for a draft that really is half-written, because a draft with no correct
+        // option at all is still allowed to be saved.
+        long correct = submitted.stream().filter(SaveQuestionRequest.OptionDraft::correct).count();
+        if (correct > 1 && !question.getAnswerType().isMultiSelect()) {
+            throw new ApiValidationException(
+                    "This question has more than one correct answer.",
+                    Map.of(
+                            "options.correct",
+                            "A single-answer question can have only one correct option. "
+                                    + "Switch it to 'tick all that apply' to mark more than one."));
+        }
+
         for (int index = 0; index < submitted.size(); index++) {
             // Labels are derived from position, never accepted from the client, so the two
             // cannot end up disagreeing.
@@ -170,5 +189,14 @@ public class AdminQuestionService {
      */
     private static int yearGroupOrFirst(Integer yearGroup) {
         return yearGroup == null ? YearGroups.MIN : yearGroup;
+    }
+
+    /**
+     * A request that names no answer type is one written before tick-all questions existed, and
+     * what it means is a single choice. Defaulting keeps such a client correct rather than
+     * producing a question whose type is a coin flip.
+     */
+    private static AnswerType answerTypeOrSingleChoice(AnswerType answerType) {
+        return answerType == null ? AnswerType.SINGLE_CHOICE : answerType;
     }
 }
