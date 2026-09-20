@@ -1,0 +1,183 @@
+{
+  "slug": "coordinates-and-linear-graphs",
+  "name": "Coordinates & linear graphs",
+  "strand": "Algebra",
+  "dfeUnit": "Plotting coordinates (Y7); graphical representations (Y8)",
+  "yearGroup": 8,
+  "planned": 12,
+  "questions": [
+    {
+      "key": "grph-tick-line-from-points",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "A straight line passes through (0, −2), (1, 1) and (2, 4). Tick every statement that is true.",
+      "options": [
+        {"text": "The equation of the line is y = 3x − 2", "correct": true},
+        {"text": "The equation of the line is y = x + 3", "correct": false, "catches": "GRPH-ADD-NOT-TIMES"},
+        {"text": "When x = 4, y = 10", "correct": true},
+        {"text": "The line passes through the origin", "correct": false, "catches": "GRPH-M-IS-C"},
+        {"text": "The line crosses the y-axis at −2", "correct": true}
+      ],
+      "explanation": "y rises by 3 each time x rises by 1, so the equation is y = 3x + c; at x = 0 the value is −2, so y = 3x − 2. Adding the y-step to x instead of multiplying gives y = x + 3. Substituting x = 4 gives y = 3 × 4 − 2 = 10. The line crosses the y-axis at (0, −2), not at the origin."
+    },
+    {
+      "key": "grph-table-to-equation",
+      "band": 3,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "A straight line gives y = 1 when x = 0, y = 4 when x = 1, and y = 7 when x = 2. Which is its equation?",
+      "options": [
+        {"text": "y = 3x + 1", "correct": true},
+        {"text": "y = x + 3", "correct": false, "catches": "GRPH-ADD-NOT-TIMES"},
+        {"text": "y = 3x", "correct": false, "catches": "GRPH-M-IS-C"},
+        {"text": "y = 3x − 1", "correct": false, "catches": "GRPH-M-IS-C"}
+      ],
+      "explanation": "y increases by 3 whenever x increases by 1, so the coefficient of x is 3. At x = 0, y = 1, so the constant is +1 and the equation is y = 3x + 1. y = x + 3 adds 3 to x rather than multiplying. y = 3x would cross at the origin, and y = 3x − 1 would give y = −1 at x = 0."
+    },
+    {
+      "key": "grph-gradient-and-intercept",
+      "band": 3,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "For the line y = 5x − 3, what is the gradient and where does it cross the y-axis?",
+      "options": [
+        {"text": "Gradient 5, crosses at (0, −3)", "correct": true},
+        {"text": "Gradient −3, crosses at (0, 5)", "correct": false, "catches": "GRPH-M-IS-C"},
+        {"text": "Gradient 5, crosses at (0, 3)", "correct": false, "catches": "GRPH-M-IS-C"},
+        {"text": "Gradient 1/5, crosses at (0, −3)", "correct": false, "catches": "GRPH-GRADIENT"}
+      ],
+      "explanation": "In y = mx + c the number multiplying x is the gradient and the constant is the y-intercept, so the gradient is 5 and the line crosses the y-axis at −3. Swapping the two, or taking the gradient as −3, confuses the gradient with the intercept. Changing the sign of the intercept puts the crossing on the wrong side of the origin. 1/5 is the reciprocal of the gradient."
+    },
+    {
+      "key": "grph-crossing-at-4",
+      "band": 1,
+      "archetype": "E",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Which line crosses the y-axis at (0, 4)?",
+      "options": [
+        {"text": "y = 2x + 4", "correct": true},
+        {"text": "y = 4x + 2", "correct": false, "catches": "GRPH-M-IS-C"},
+        {"text": "y = 4x", "correct": false, "catches": "GRPH-M-IS-C"},
+        {"text": "y = x + 2", "correct": false, "catches": "GRPH-M-IS-C"}
+      ],
+      "explanation": "A line crosses the y-axis where x = 0, so the crossing point is the constant term. y = 2x + 4 gives y = 4 at x = 0. y = 4x + 2 crosses at 2, and the 4 is the gradient. y = 4x crosses at the origin, and y = x + 2 crosses at 2 as well."
+    },
+    {
+      "key": "grph-coordinates-direction",
+      "band": 1,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "What are the coordinates of the point 3 to the right and 2 down from the origin?",
+      "options": [
+        {"text": "(3, −2)", "correct": true},
+        {"text": "(−2, 3)", "correct": false, "catches": "GRPH-COORD-ORDER"},
+        {"text": "(2, −3)", "correct": false, "catches": "GRPH-COORD-ORDER"},
+        {"text": "(−3, 2)", "correct": false, "catches": "GRPH-COORD-ORDER"}
+      ],
+      "explanation": "Coordinates are written (x, y): the x value comes first and tells you how far right, and the y value second and tells you how far up. So 3 right and 2 down is (3, −2). The other options put the numbers the wrong way round or use the wrong signs."
+    },
+    {
+      "key": "grph-tick-coordinates",
+      "band": 1,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "The point (4, −1) is 4 right and 1 down from the origin", "correct": true},
+        {"text": "The point (−1, 4) is 4 right and 1 down from the origin", "correct": false, "catches": "GRPH-COORD-ORDER"},
+        {"text": "The point (0, 3) lies on the y-axis", "correct": true},
+        {"text": "The point (3, 0) lies on the y-axis", "correct": false, "catches": "GRPH-COORD-ORDER"},
+        {"text": "The points (−2, −5) and (−1, −3) lie in the same region of the grid", "correct": true}
+      ],
+      "explanation": "The first coordinate is x and the second is y, so (4, −1) is 4 right and 1 down, while (−1, 4) is 1 left and 4 up. A point lies on the y-axis when x = 0, so (0, 3) does and (3, 0) lies on the x-axis. Both (−2, −5) and (−1, −3) have two negative coordinates, so they are in the same region, the bottom-left."
+    },
+    {
+      "key": "grph-gradient-from-two-points",
+      "band": 2,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "A line passes through (1, 2) and (4, 11). What is its gradient?",
+      "options": [
+        {"text": "3", "correct": true},
+        {"text": "1/3", "correct": false, "catches": "GRPH-GRADIENT"},
+        {"text": "9", "correct": false, "catches": "GRPH-GRADIENT"},
+        {"text": "6", "correct": false, "catches": "GRPH-GRADIENT"}
+      ],
+      "explanation": "Gradient is the rise divided by the run: y goes up by 11 − 2 = 9 and x goes up by 4 − 1 = 3, so the gradient is 9 ÷ 3 = 3. Writing 1/3 turns the fraction the wrong way up. 9 is the rise on its own, without dividing by the run, and 6 comes from adding the changes instead of dividing."
+    },
+    {
+      "key": "grph-negative-gradient",
+      "band": 4,
+      "archetype": "C",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "A line passes through (0, 5) and (2, 1). What is its gradient?",
+      "options": [
+        {"text": "−2", "correct": true},
+        {"text": "2", "correct": false, "catches": "GRPH-GRADIENT"},
+        {"text": "−1/2", "correct": false, "catches": "GRPH-GRADIENT"},
+        {"text": "4", "correct": false, "catches": "GRPH-GRADIENT"}
+      ],
+      "explanation": "y changes by 1 − 5 = −4 and x changes by 2 − 0 = 2, so the gradient is −4 ÷ 2 = −2. The line goes downhill, so the gradient must be negative; 2 drops the sign. −1/2 turns the division the wrong way up, and 4 is the change in y on its own."
+    },
+    {
+      "key": "grph-midpoint",
+      "band": 2,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "bridge": true,
+      "prompt": "On a map, a straight path runs from the point (2, 3) to the point (8, 11). A bench sits exactly half way along the path. What are the coordinates of the bench?",
+      "options": [
+        {"text": "(5, 7)", "correct": true},
+        {"text": "(6, 8)", "correct": false, "catches": "GRPH-MIDPOINT"},
+        {"text": "(10, 14)", "correct": false, "catches": "GRPH-MIDPOINT"},
+        {"text": "(3, 4)", "correct": false, "catches": "GRPH-MIDPOINT"}
+      ],
+      "explanation": "The midpoint is the average of the coordinates: ((2 + 8) ÷ 2, (3 + 11) ÷ 2) = (5, 7). (6, 8) is the difference between the points, halved. (10, 14) adds the coordinates without dividing, and (3, 4) halves each coordinate of the second point."
+    },
+    {
+      "key": "grph-tick-midpoint",
+      "band": 3,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "The midpoint of (0, 0) and (4, 6) is (2, 3)", "correct": true},
+        {"text": "The midpoint of (0, 0) and (4, 6) is (4, 6)", "correct": false, "catches": "GRPH-MIDPOINT"},
+        {"text": "The midpoint of (−2, 1) and (4, 5) is (1, 3)", "correct": true},
+        {"text": "The midpoint of (−2, 1) and (4, 5) is (3, 2)", "correct": false, "catches": "GRPH-MIDPOINT"},
+        {"text": "The midpoint of (2, 3) and (2, 7) is (2, 5)", "correct": true}
+      ],
+      "explanation": "Average the coordinates: (0 + 4) ÷ 2 = 2 and (0 + 6) ÷ 2 = 3; (−2 + 4) ÷ 2 = 1 and (1 + 5) ÷ 2 = 3; (2 + 2) ÷ 2 = 2 and (3 + 7) ÷ 2 = 5. Leaving the coordinates unchanged, or using the differences (3, 2), does not give the half-way point."
+    },
+    {
+      "key": "grph-point-on-line",
+      "band": 4,
+      "archetype": "C",
+      "answerType": "SINGLE_CHOICE",
+      "retention": true,
+      "prompt": "Which of these points lies on the line y = 2x + 1?",
+      "options": [
+        {"text": "(1.5, 4)", "correct": true},
+        {"text": "(2, 4)", "correct": false, "catches": "GRPH-INTEGER-ONLY"},
+        {"text": "(1, 4)", "correct": false, "catches": "GRPH-GRADIENT"},
+        {"text": "(3, 4)", "correct": false, "catches": "GRPH-INTEGER-ONLY"}
+      ],
+      "explanation": "Substitute the x value and check the y value: 2 × 1.5 + 1 = 4, so (1.5, 4) is on the line. A line passes through points with any coordinates, not only whole numbers, so rejecting (1.5, 4) is a mistake. (2, 4) would need y = 5, (1, 4) would need y = 3, and (3, 4) would need y = 7."
+    },
+    {
+      "key": "grph-horizontal-line",
+      "band": 1,
+      "archetype": "E",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Which of these lines is horizontal?",
+      "options": [
+        {"text": "y = 4", "correct": true},
+        {"text": "x = 4", "correct": false, "catches": "GRPH-HORIZONTAL"},
+        {"text": "y = 4x", "correct": false, "catches": "GRPH-HORIZONTAL"},
+        {"text": "x = 0", "correct": false, "catches": "GRPH-HORIZONTAL"}
+      ],
+      "explanation": "y = 4 means every point on the line has y-value 4, whatever x is, so it runs left to right and is horizontal. x = 4 means every point has x-value 4, which runs up and down and is vertical; x = 0 is the y-axis, also vertical. y = 4x is a sloping line through the origin with gradient 4."
+    }
+  ]
+}

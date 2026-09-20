@@ -1,0 +1,277 @@
+{
+  "slug": "expressions-and-simplifying",
+  "name": "Expressions & simplifying",
+  "strand": "Algebra",
+  "dfeUnit": "Expressions and equations: notation & simplifying (Y7)",
+  "yearGroup": 7,
+  "planned": 18,
+  "questions": [
+    {
+      "key": "alg-tick-equal-5a",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every expression that is equal to 5a.",
+      "options": [
+        {"text": "3a + 2a", "correct": true},
+        {"text": "5 + a", "correct": false, "catches": "ALG-LETTER-OBJECT"},
+        {"text": "a × 5", "correct": true},
+        {"text": "5a²", "correct": false, "catches": "ALG-A-SQUARED-2A"},
+        {"text": "10a ÷ 2", "correct": true},
+        {"text": "a + a + a + a", "correct": false, "catches": "ALG-TERM-COUNT"}
+      ],
+      "explanation": "a is a number, so 3a + 2a is five of them, a × 5 is five of them, and 10a ÷ 2 is five of them. 5 + a cannot be collected because 5 and a are not like terms. 5a² is five lots of a², which is a different size. a + a + a + a is only 4a."
+    },
+    {
+      "key": "alg-tick-unlike-terms",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "2a + 3b cannot be simplified", "correct": true},
+        {"text": "2a + 3b = 5ab", "correct": false, "catches": "ALG-UNLIKE-TERMS"},
+        {"text": "3x + 2x = 5x", "correct": true},
+        {"text": "3x + 2x = 5x²", "correct": false, "catches": "ALG-MULT-NOT-ADD"},
+        {"text": "4a + 3 = 7a", "correct": false, "catches": "ALG-ADD-COEFFICIENT"},
+        {"text": "4a − a = 3a", "correct": true}
+      ],
+      "explanation": "Only like terms can be collected. 3x and 2x are both x terms, so they add to 5x, and 4a − a = 3a. But 2a and 3b are different letters, so they stay separate; writing 5ab multiplies the letters together instead of adding them. 4a + 3 has a number term and an a term, and they cannot be combined into 7a."
+    },
+    {
+      "key": "alg-multiply-2a-3a",
+      "band": 4,
+      "archetype": "C",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Simplify 2a × 3a.",
+      "options": [
+        {"text": "6a²", "correct": true},
+        {"text": "6a", "correct": false, "catches": "ALG-MULT-NOT-ADD"},
+        {"text": "5a²", "correct": false, "catches": "ALG-UNLIKE-TERMS"},
+        {"text": "5a", "correct": false, "catches": "ALG-ADD-COEFFICIENT"}
+      ],
+      "explanation": "2a × 3a is 2 × 3 × a × a, so multiply the numbers to get 6 and the letters to get a²: 6a². Writing 6a keeps only one a. 5a² and 5a add the coefficients instead of multiplying them."
+    },
+    {
+      "key": "alg-tick-squares",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "a + a = 2a", "correct": true},
+        {"text": "a + a = a²", "correct": false, "catches": "ALG-A-SQUARED-2A"},
+        {"text": "a² means a × a", "correct": true},
+        {"text": "2a means a + a", "correct": true},
+        {"text": "a² = 2a", "correct": false, "catches": "ALG-A-SQUARED-2A"},
+        {"text": "a × a × a = 3a", "correct": false, "catches": "ALG-MULT-NOT-ADD"}
+      ],
+      "explanation": "Adding two a's gives 2a; multiplying a by a gives a². They are the same only when a happens to be 2, so a² = 2a is not true in general. a × a × a is a³, not 3a."
+    },
+    {
+      "key": "alg-substitute-3a",
+      "band": 3,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Work out the value of 3a when a = −2.",
+      "options": [
+        {"text": "−6", "correct": true},
+        {"text": "6", "correct": false, "catches": "ALG-SUBSTITUTE-NEG"},
+        {"text": "−1", "correct": false, "catches": "ALG-MULT-NOT-ADD"}
+      ],
+      "explanation": "3a means 3 × a, so 3 × (−2) = −6. Dropping the minus sign gives 6. Adding instead of multiplying gives 3 + (−2) = 1, and writing −1 takes the wrong sign from that addition."
+    },
+    {
+      "key": "alg-substitute-square",
+      "band": 3,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Work out the value of a² when a = −3.",
+      "options": [
+        {"text": "9", "correct": true},
+        {"text": "−9", "correct": false, "catches": "ALG-SUBSTITUTE-NEG"},
+        {"text": "−6", "correct": false, "catches": "ALG-A-SQUARED-2A"},
+        {"text": "6", "correct": false, "catches": "ALG-SUBSTITUTE-NEG"}
+      ],
+      "explanation": "a² means a × a, so (−3) × (−3) = 9. A negative multiplied by a negative is positive, so −9 is wrong. −6 comes from treating a² as 2a, which gives 2 × (−3) = −6. 6 keeps the size but loses the minus sign from the multiplication."
+    },
+    {
+      "key": "alg-tick-substitution",
+      "band": 3,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "When x = 4, tick every statement that is true.",
+      "options": [
+        {"text": "2x = 8", "correct": true},
+        {"text": "x² = 16", "correct": true},
+        {"text": "x + 3 = 7", "correct": true},
+        {"text": "x² = 8", "correct": false, "catches": "ALG-A-SQUARED-2A"},
+        {"text": "x − 6 = −2", "correct": true},
+        {"text": "5 − x = 9", "correct": false, "catches": "INT-SUB-ORDER"}
+      ],
+      "explanation": "Substituting x = 4: 2x is 2 × 4 = 8; x² is 4 × 4 = 16; x + 3 = 7; and 4 − 6 = −2. x² = 8 would be doubling rather than squaring. 5 − x is 5 − 4 = 1, not 9: 9 comes from adding 5 and 4, or from working out 4 − 5 with the sign forgotten."
+    },
+    {
+      "key": "alg-five-more-than-n",
+      "band": 1,
+      "archetype": "G",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Which expression means \"5 more than n\"?",
+      "options": [
+        {"text": "n + 5", "correct": true},
+        {"text": "5n", "correct": false, "catches": "ALG-WRITE-EXPRESSION"},
+        {"text": "n − 5", "correct": false, "catches": "ALG-WRITE-EXPRESSION"},
+        {"text": "5 − n", "correct": false, "catches": "ALG-WRITE-EXPRESSION"}
+      ],
+      "explanation": "Five more than n means add 5 to n, which is n + 5. 5n means 5 times n. n − 5 and 5 − n subtract instead of adding, and both depend on which way round the subtraction is written."
+    },
+    {
+      "key": "alg-divided-by-2",
+      "band": 2,
+      "archetype": "G",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Which expression means \"a divided by 2\"?",
+      "options": [
+        {"text": "a/2", "correct": true},
+        {"text": "2/a", "correct": false, "catches": "ALG-NOTATION-DIV"},
+        {"text": "2a", "correct": false, "catches": "ALG-MULT-NOT-ADD"},
+        {"text": "a − 2", "correct": false, "catches": "ALG-NOTATION-DIV"}
+      ],
+      "explanation": "\"a divided by 2\" puts the a on top: a/2. Writing 2/a divides 2 by a, which is a different expression and is not even defined when a = 0. 2a means 2 times a, and a − 2 subtracts rather than divides."
+    },
+    {
+      "key": "alg-3a-as-sum",
+      "band": 2,
+      "archetype": "C",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Which of these is equal to 3a?",
+      "options": [
+        {"text": "a + a + a", "correct": true},
+        {"text": "a × a × a", "correct": false, "catches": "ALG-TERM-COUNT"},
+        {"text": "3 + a", "correct": false, "catches": "ALG-LETTER-OBJECT"},
+        {"text": "a + 3", "correct": false, "catches": "ALG-LETTER-OBJECT"}
+      ],
+      "explanation": "3a means 3 lots of a, so it is a + a + a. a × a × a is a³, which is a different expression. 3 + a and a + 3 both add the number 3 to a single a instead of repeating the a three times."
+    },
+    {
+      "key": "alg-error-collecting",
+      "band": 3,
+      "archetype": "D",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Jaz writes 2a + 3b = 5ab. What has she done?",
+      "options": [
+        {"text": "Collected terms that are not like terms", "correct": true},
+        {"text": "Multiplied the two terms instead of adding them", "correct": false, "catches": "ALG-MULT-NOT-ADD"},
+        {"text": "Added the numbers but kept the letters separate", "correct": false, "catches": "ALG-UNLIKE-TERMS"},
+        {"text": "Treated a and b as if they were both equal to 1", "correct": false, "catches": "ALG-LETTER-OBJECT"}
+      ],
+      "explanation": "2a and 3b are not like terms, so they cannot be collected: the expression is already simplified as 2a + 3b. Adding the numbers but also multiplying the letters gives 5ab. Keeping the letters separate would give 5a + 5b, which is also wrong. Making both letters 1 would give 2 + 3 = 5, with no letters at all."
+    },
+    {
+      "key": "alg-tick-mult-not-add",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "3a + 2a = 5a", "correct": true},
+        {"text": "3a + 2a = 6a²", "correct": false, "catches": "ALG-MULT-NOT-ADD"},
+        {"text": "2a + 2a = 4a", "correct": true},
+        {"text": "2a × 2a = 4a²", "correct": true},
+        {"text": "2a × 2a = 4a", "correct": false, "catches": "ALG-MULT-NOT-ADD"},
+        {"text": "a × a = a²", "correct": true}
+      ],
+      "explanation": "Adding like terms adds the coefficients: 3a + 2a = 5a and 2a + 2a = 4a. Multiplying multiplies both the numbers and the letters: 2a × 2a = 4a², and a × a = a². Treating an addition as a multiplication gives 6a²; treating a multiplication as an addition gives 4a."
+    },
+    {
+      "key": "alg-simplify-5x-3y",
+      "band": 1,
+      "archetype": "E",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Simplify 5x + 3y.",
+      "options": [
+        {"text": "5x + 3y", "correct": true},
+        {"text": "8xy", "correct": false, "catches": "ALG-UNLIKE-TERMS"},
+        {"text": "8x + y", "correct": false, "catches": "ALG-UNLIKE-TERMS"},
+        {"text": "15xy", "correct": false, "catches": "ALG-MULT-NOT-ADD"}
+      ],
+      "explanation": "x and y are different letters, so 5x and 3y are not like terms and cannot be combined; the expression is already as simple as it gets. 8xy adds the coefficients but also multiplies the letters. 8x + y adds only one of the coefficients to the wrong term. 15xy multiplies the terms instead of adding them."
+    },
+    {
+      "key": "alg-simplify-a-plus-a-squared",
+      "band": 4,
+      "archetype": "C",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Simplify a + a².",
+      "options": [
+        {"text": "a + a²", "correct": true},
+        {"text": "2a²", "correct": false, "catches": "ALG-LIKE-TERMS-POWER"},
+        {"text": "a³", "correct": false, "catches": "ALG-LIKE-TERMS-POWER"},
+        {"text": "2a", "correct": false, "catches": "ALG-LIKE-TERMS-POWER"}
+      ],
+      "explanation": "a and a² are not like terms: one is a single a and the other is a multiplied by itself, so the expression cannot be simplified. Adding to get 2a² treats them as the same. a³ would come from multiplying a by a². 2a treats a² as another a."
+    },
+    {
+      "key": "alg-bridge-perimeter",
+      "band": 3,
+      "archetype": "G",
+      "answerType": "SINGLE_CHOICE",
+      "bridge": true,
+      "prompt": "A rectangle is a cm long and 3 cm wide. Which expression gives its perimeter?",
+      "options": [
+        {"text": "2a + 6", "correct": true},
+        {"text": "a + 3", "correct": false, "catches": "ALG-WRITE-EXPRESSION"},
+        {"text": "2a + 3", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"},
+        {"text": "3a", "correct": false, "catches": "ALG-MULT-NOT-ADD"}
+      ],
+      "explanation": "The perimeter is 2(a + 3), which expands to 2a + 6. a + 3 is the length plus the width, which is only half the perimeter. 2a + 3 doubles the length but not the width. 3a multiplies the two side lengths, which gives the area, not the perimeter."
+    },
+    {
+      "key": "alg-retention-substitution",
+      "band": 1,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "retention": true,
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "If a = 7, then a + 2 = 9", "correct": true},
+        {"text": "If b = 5, then 3b = 15", "correct": true},
+        {"text": "If c = 10, then c ÷ 2 = 5", "correct": true},
+        {"text": "If d = 4, then d² = 8", "correct": false, "catches": "ALG-A-SQUARED-2A"},
+        {"text": "If e = 6, then e − 2 = 4", "correct": true},
+        {"text": "If f = 3, then 2f = 5", "correct": false, "catches": "ALG-MULT-NOT-ADD"}
+      ],
+      "explanation": "A letter stands for a number, so replace it and work out the arithmetic: a + 2 = 9, 3b = 15, c ÷ 2 = 5 and e − 2 = 4. d² is d × d = 16, not 2 × d = 8. 2f is 2 × 3 = 6, not 2 + 3 = 5."
+    },
+    {
+      "key": "alg-tick-letter-as-object",
+      "band": 1,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "4 + a cannot be simplified to 4a", "correct": true},
+        {"text": "4 + a = 4a", "correct": false, "catches": "ALG-LETTER-OBJECT"},
+        {"text": "5 + a = 5a", "correct": false, "catches": "ALG-LETTER-OBJECT"},
+        {"text": "x + x + x = 3x", "correct": true},
+        {"text": "3 + x = 3x", "correct": false, "catches": "ALG-LETTER-OBJECT"},
+        {"text": "2 + 2 = 4", "correct": true}
+      ],
+      "explanation": "A letter is a number, not an object, so it can only be collected with like terms. 4 + a is a number plus an unknown and stays as it is; it does not become 4a. The same goes for 5 + a and 3 + x. x + x + x is three lots of the same term, so it is 3x. Plain arithmetic like 2 + 2 = 4 is unchanged."
+    },
+    {
+      "key": "alg-substitute-two-terms",
+      "band": 4,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Work out the value of 2a + 3b when a = 5 and b = −2.",
+      "options": [
+        {"text": "4", "correct": true},
+        {"text": "16", "correct": false, "catches": "ALG-SUBSTITUTE-NEG"},
+        {"text": "−4", "correct": false, "catches": "ALG-SUBSTITUTE-NEG"},
+        {"text": "10", "correct": false, "catches": "ALG-LETTER-OBJECT"}
+      ],
+      "explanation": "Substitute both values: 2 × 5 + 3 × (−2) = 10 + (−6) = 4. Treating 3 × (−2) as +6 gives 16. Getting the sign the wrong way round entirely gives −4. 10 ignores the b term and works out only 2a."
+    }
+  ]
+}

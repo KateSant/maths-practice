@@ -1,0 +1,223 @@
+{
+  "slug": "place-value",
+  "name": "Place value & ordering",
+  "strand": "Number",
+  "dfeUnit": "Place value (Y7)",
+  "yearGroup": 7,
+  "planned": 14,
+  "questions": [
+    {
+      "key": "pv-tick-compare-1",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "0.45 > 0.5", "correct": false, "catches": "PV-MORE-DIGITS"},
+        {"text": "−7 < −3", "correct": true},
+        {"text": "0.405 = 0.45", "correct": false, "catches": "PV-ZERO-PLACE"},
+        {"text": "0.7 > 0.65", "correct": true},
+        {"text": "−2.5 > −2.05", "correct": false, "catches": "PV-NEG-ORDER"},
+        {"text": "0.09 > 0.1", "correct": false, "catches": "PV-MORE-DIGITS"}
+      ],
+      "explanation": "0.5 is five tenths and 0.45 is only four tenths, so 0.5 is larger however many digits follow. The zero in 0.405 is a placeholder in the hundredths column, so 0.405 is smaller than 0.45. On a number line −7 is to the left of −3, and −2.5 is to the left of −2.05, so both 'greater than' claims are the wrong way round. 0.09 is nine hundredths and 0.1 is ten hundredths, so 0.1 is larger."
+    },
+    {
+      "key": "pv-largest-decimal",
+      "band": 1,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Which of these numbers is the largest?",
+      "options": [
+        {"text": "0.5", "correct": true},
+        {"text": "0.45", "correct": false, "catches": "PV-MORE-DIGITS"},
+        {"text": "0.405", "correct": false, "catches": "PV-MORE-DIGITS"},
+        {"text": "0.049", "correct": false, "catches": "PV-COLUMN-NAME"}
+      ],
+      "explanation": "Compare the tenths first: 0.5 has five tenths and the others have four, four and zero, so 0.5 is largest. Counting digits instead of comparing place value makes 0.405 look biggest because it is longest. Reading 0.049 as 'forty-nine' makes it look big, but the 4 is in the hundredths column and there are no tenths at all."
+    },
+    {
+      "key": "pv-tick-zero-placeholder",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "0.405 = 0.45", "correct": false, "catches": "PV-ZERO-PLACE"},
+        {"text": "3.05 = 3.5", "correct": false, "catches": "PV-ZERO-PLACE"},
+        {"text": "0.30 = 0.3", "correct": true},
+        {"text": "0.07 is 7 tenths", "correct": false, "catches": "PV-COLUMN-NAME"},
+        {"text": "0.405 < 0.45", "correct": true},
+        {"text": "3.5 = 3.50", "correct": true}
+      ],
+      "explanation": "A zero in a decimal holds a column open. In 0.405 the zero is in the hundredths column, so the number is four tenths and five thousandths — smaller than 0.45. In 3.05 the zero is in the tenths column, so there are no tenths, which is not the same as 3.5. A zero after the last digit, as in 0.30 or 3.50, changes nothing. In 0.07 the 7 is in the hundredths column, so it is 7 hundredths, not 7 tenths."
+    },
+    {
+      "key": "pv-tick-negative-order",
+      "band": 1,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "−7 < −3", "correct": true},
+        {"text": "−2 > −5", "correct": true},
+        {"text": "−1 > −0.5", "correct": false, "catches": "PV-NEG-ORDER"},
+        {"text": "−2.5 > −2.05", "correct": false, "catches": "PV-NEG-ORDER"},
+        {"text": "0 > −6", "correct": true},
+        {"text": "−10 > −4", "correct": false, "catches": "PV-NEG-ORDER"}
+      ],
+      "explanation": "On a number line, further left is smaller. −7 is left of −3 and −10 is left of −4, so '−10 > −4' is backwards. The larger the digit after the minus sign, the smaller the number: −2 is greater than −5, and −0.5 is greater than −1. −2.5 is left of −2.05, so −2.5 is the smaller number, not the greater. Zero sits to the right of every negative number."
+    },
+    {
+      "key": "pv-tick-column-names",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "In 3.7 the 7 is worth 7 tenths", "correct": true},
+        {"text": "In 4.782 the 7 is worth 7 hundredths", "correct": false, "catches": "PV-COLUMN-NAME"},
+        {"text": "In 0.07 the 7 is worth 7 hundredths", "correct": true},
+        {"text": "In 4.782 the 8 is worth 8 tenths", "correct": false, "catches": "PV-COLUMN-NAME"},
+        {"text": "In 0.7 the 7 is worth 70 hundredths", "correct": true},
+        {"text": "In 5.06 the 6 is worth 6 tenths", "correct": false, "catches": "PV-COLUMN-NAME"}
+      ],
+      "explanation": "The columns after the decimal point are tenths, then hundredths, then thousandths. In 4.782 the 7 is in the tenths column, the 8 is in the hundredths column and the 2 is in the thousandths column, so the second and fourth claims have the columns wrong. In 5.06 the 6 is in the hundredths column. 0.7 is seven tenths, and seven tenths is the same as seventy hundredths."
+    },
+    {
+      "key": "pv-tick-power-of-ten",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "0.4 × 100 = 40", "correct": true},
+        {"text": "0.4 × 100 = 0.400", "correct": false, "catches": "PV-POWER-TEN"},
+        {"text": "5.2 ÷ 10 = 0.52", "correct": true},
+        {"text": "5.2 ÷ 10 = 5.20", "correct": false, "catches": "PV-POWER-TEN"},
+        {"text": "3.7 × 10 = 37", "correct": true},
+        {"text": "6 × 1000 = 600", "correct": false, "catches": "PV-POWER-TEN"}
+      ],
+      "explanation": "Multiplying by 10, 100 or 1000 moves every digit that many columns to the left; dividing moves them right. So 0.4 × 100 = 40 and 5.2 ÷ 10 = 0.52. Writing 0.400 for 0.4 × 100 just adds zeros and leaves the value unchanged. 5.2 ÷ 10 is not 5.20. Multiplying by 1000 moves the digits three columns, so 6 × 1000 is 6000, not 600."
+    },
+    {
+      "key": "pv-numbers-between",
+      "band": 3,
+      "archetype": "C",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "How many numbers are there strictly between 0.4 and 0.5?",
+      "options": [
+        {"text": "None", "correct": false, "catches": "PV-BETWEEN"},
+        {"text": "Exactly one, 0.45", "correct": false, "catches": "PV-BETWEEN"},
+        {"text": "Exactly nine", "correct": false, "catches": "PV-BETWEEN"},
+        {"text": "Infinitely many", "correct": true}
+      ],
+      "explanation": "Between any two different decimals there is always another one: 0.45 sits between them, but so do 0.41, 0.401 and 0.4001, and you can keep going for ever. Counting only the tenths or only the hundredths makes it look as though there is nothing or only one."
+    },
+    {
+      "key": "pv-order-decimals",
+      "band": 3,
+      "archetype": "E",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Write 0.6, 0.06, 0.66 and 0.606 in order, smallest first. Which order is correct?",
+      "options": [
+        {"text": "0.06, 0.6, 0.606, 0.66", "correct": true},
+        {"text": "0.6, 0.06, 0.606, 0.66", "correct": false, "catches": "PV-MORE-DIGITS"},
+        {"text": "0.06, 0.6, 0.66, 0.606", "correct": false, "catches": "PV-COLUMN-NAME"},
+        {"text": "0.06, 0.606, 0.6, 0.66", "correct": false, "catches": "PV-ZERO-PLACE"}
+      ],
+      "explanation": "Line the numbers up by place value: 0.060, 0.600, 0.606, 0.660. Comparing tenths first gives 0.06 smallest and both 0.6 and 0.606 with six tenths; 0.606 has the extra six thousandths, so 0.66 (six tenths and six hundredths) is largest. Putting 0.6 first compares length of digits rather than place value. Putting 0.606 last reads it as 606 against 66. Treating the zero in 0.606 as nothing makes it look like 0.66."
+    },
+    {
+      "key": "pv-tick-negative-decimals",
+      "band": 4,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "−3.5 < −3.05", "correct": true},
+        {"text": "−0.5 > −0.45", "correct": false, "catches": "PV-NEG-ORDER"},
+        {"text": "−8 > −12", "correct": true},
+        {"text": "−4.2 > −4.02", "correct": false, "catches": "PV-NEG-ORDER"},
+        {"text": "−6°C is colder than −4°C", "correct": true},
+        {"text": "−1 > 0", "correct": false, "catches": "PV-NEG-ORDER"}
+      ],
+      "explanation": "More negative means smaller, so −3.5 is left of −3.05 and −4.2 is left of −4.02; both claims that they are greater are backwards. −0.5 is left of −0.45, so it is smaller. −8 is greater than −12 because it is less negative. Every negative temperature is colder than every positive one, and −6 is colder than −4. No negative number is greater than zero."
+    },
+    {
+      "key": "pv-digit-value-074",
+      "band": 3,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "In the number 12.074, what is the value of the digit 7?",
+      "options": [
+        {"text": "7 tenths", "correct": false, "catches": "PV-COLUMN-NAME"},
+        {"text": "7 hundredths", "correct": true},
+        {"text": "7 thousandths", "correct": false, "catches": "PV-COLUMN-NAME"},
+        {"text": "70 hundredths", "correct": false, "catches": "PV-COLUMN-NAME"}
+      ],
+      "explanation": "After the decimal point the columns are tenths, hundredths, thousandths. There is a 0 in the tenths column, so the 7 occupies the hundredths column and is worth 7 hundredths. Calling it 7 tenths skips the zero; calling it 7 thousandths moves it one column too far right; 70 hundredths would be seven tenths."
+    },
+    {
+      "key": "pv-error-power-ten",
+      "band": 3,
+      "archetype": "D",
+      "answerType": "SINGLE_CHOICE",
+      "prompt": "Ben works out 0.4 × 100 and writes the answer 0.400. What has he done?",
+      "options": [
+        {"text": "Added two zeros to the number instead of moving the digits", "correct": true},
+        {"text": "Multiplied by 10 instead of 100", "correct": false, "catches": "PV-POWER-TEN"},
+        {"text": "Divided by 100 instead of multiplying", "correct": false, "catches": "PV-POWER-TEN"},
+        {"text": "Rounded the answer to three decimal places", "correct": false, "catches": "PV-POWER-TEN"}
+      ],
+      "explanation": "Multiplying by 100 moves each digit two columns to the left, so 0.4 × 100 = 40. Ben has kept the digits where they are and written extra zeros, which leaves the value unchanged. Multiplying by 10 would give 4, not 0.400, and dividing by 100 would give 0.004. The answer has not been rounded, it has been left alone."
+    },
+    {
+      "key": "pv-bridge-run-distance",
+      "band": 2,
+      "archetype": "A",
+      "answerType": "SINGLE_CHOICE",
+      "bridge": true,
+      "prompt": "Dan runs 0.5 km on Monday and 0.45 km on Tuesday. On which day did he run further?",
+      "options": [
+        {"text": "Monday", "correct": true},
+        {"text": "Tuesday, because 45 is bigger than 5", "correct": false, "catches": "PV-COLUMN-NAME"},
+        {"text": "Tuesday, because 0.45 has more digits", "correct": false, "catches": "PV-MORE-DIGITS"},
+        {"text": "Both days were the same distance", "correct": false, "catches": "PV-ZERO-PLACE"}
+      ],
+      "explanation": "0.5 is 0.50, which is five tenths; 0.45 is four tenths and five hundredths. Comparing the tenths first, Monday is further. Comparing the digits 45 and 5 treats a hundredths count against a tenths count. Having more digits does not make a decimal larger — 0.45 is 0.450, still less than 0.5. The two distances are not the same."
+    },
+    {
+      "key": "pv-retention-integer-columns",
+      "band": 1,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "retention": true,
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "In 4,782 the digit 7 is worth 700", "correct": true},
+        {"text": "In 4,782 the digit 4 is worth 4,000", "correct": true},
+        {"text": "In 4,782 the digit 8 is worth 8", "correct": false, "catches": "PV-COLUMN-NAME"},
+        {"text": "In 40,782 the digit 7 is worth 700", "correct": true},
+        {"text": "In 4,782 the digit 2 is worth 20", "correct": false, "catches": "PV-COLUMN-NAME"}
+      ],
+      "explanation": "Read the columns from the right: ones, tens, hundreds, thousands. In 4,782 the 8 is in the tens column, so it is worth 80, not 8, and the 2 is in the ones column, so it is worth 2, not 20. The 7 is in the hundreds column in both 4,782 and 40,782, so it is worth 700 in each. The 4 in 4,782 is in the thousands column, so it is worth 4,000."
+    },
+    {
+      "key": "pv-tick-sign-compare",
+      "band": 2,
+      "archetype": "B",
+      "answerType": "MULTI_SELECT",
+      "prompt": "Tick every statement that is true.",
+      "options": [
+        {"text": "0.5 > 0.45", "correct": true},
+        {"text": "0.45 > 0.5", "correct": false, "catches": "PV-MORE-DIGITS"},
+        {"text": "−0.5 < 0.05", "correct": true},
+        {"text": "−0.5 > 0.05", "correct": false, "catches": "PV-NEG-ORDER"},
+        {"text": "0 > −0.05", "correct": true},
+        {"text": "−0.05 > 0", "correct": false, "catches": "PV-NEG-ORDER"}
+      ],
+      "explanation": "−0.5 is negative, so it is less than every positive number, including 0.05. No negative number is greater than zero, so the last two 'greater than' claims are backwards. For the positives, 0.5 is five tenths and 0.45 is four and a half tenths, so 0.5 is larger regardless of digit count."
+    }
+  ]
+}
