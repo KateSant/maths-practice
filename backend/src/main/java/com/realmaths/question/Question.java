@@ -44,6 +44,17 @@ public class Question {
     @Column(nullable = false)
     private int difficulty;
 
+    /**
+     * The school year this question belongs to, 7 to 13. See {@link YearGroups}.
+     *
+     * <p>This decides which sets a student may be dealt: a quiz started at Year 8 draws only
+     * Year 8 questions. It is a property of the content rather than of the student, so nothing
+     * about a student's account records a year group and changing the dropdown changes the
+     * questions rather than the person.
+     */
+    @Column(name = "year_group", nullable = false)
+    private int yearGroup;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private QuestionStatus status = QuestionStatus.DRAFT;
@@ -63,11 +74,12 @@ public class Question {
         // for JPA
     }
 
-    public Question(Topic topic, String prompt, String explanation, int difficulty) {
+    public Question(Topic topic, String prompt, String explanation, int difficulty, int yearGroup) {
         this.topic = topic;
         this.prompt = prompt;
         this.explanation = explanation;
         this.difficulty = difficulty;
+        this.yearGroup = yearGroup;
     }
 
     public void addOption(String label, String text, boolean correct) {
@@ -86,11 +98,12 @@ public class Question {
     }
 
     /** Applies an edit to the parts a teacher can change. Options are handled separately. */
-    public void revise(Topic topic, String prompt, String explanation, int difficulty) {
+    public void revise(Topic topic, String prompt, String explanation, int difficulty, int yearGroup) {
         this.topic = topic;
         this.prompt = prompt;
         this.explanation = explanation;
         this.difficulty = difficulty;
+        this.yearGroup = yearGroup;
     }
 
     public void setStatus(QuestionStatus status) {
@@ -119,6 +132,11 @@ public class Question {
 
     public int getDifficulty() {
         return difficulty;
+    }
+
+    /** The school year this question is written for, 7 to 13. */
+    public int getYearGroup() {
+        return yearGroup;
     }
 
     /** True when this question may be served to students. */

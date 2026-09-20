@@ -40,6 +40,18 @@ public class QuizSession {
     @JoinColumn(name = "topic_id")
     private Topic topic;
 
+    /**
+     * The year group the set was dealt from, or null for a mixed set or one dealt before year
+     * groups existed.
+     *
+     * <p>Recorded rather than re-derived, so the results page can offer "try again" at the year
+     * the student actually worked at instead of at whatever the dropdown is set to by then. The
+     * questions in the session could not answer it: a mixed set spans years, and a thin bank is
+     * topped up from the neighbouring band rather than a single one.
+     */
+    @Column(name = "year_group")
+    private Integer yearGroup;
+
     @Column(name = "question_count", nullable = false)
     private int questionCount;
 
@@ -72,9 +84,10 @@ public class QuizSession {
         // for JPA
     }
 
-    public QuizSession(User user, Topic topic, Instant startedAt) {
+    public QuizSession(User user, Topic topic, Integer yearGroup, Instant startedAt) {
         this.user = user;
         this.topic = topic;
+        this.yearGroup = yearGroup;
         this.startedAt = startedAt;
     }
 
@@ -110,6 +123,11 @@ public class QuizSession {
 
     public Topic getTopic() {
         return topic;
+    }
+
+    /** The year group this set was dealt from, or null if it was mixed or unrecorded. */
+    public Integer getYearGroup() {
+        return yearGroup;
     }
 
     public int getQuestionCount() {

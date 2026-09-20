@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import type { QuestionOrigin, QuestionStatus } from '../../api/admin'
 import { Badge } from '../../components/ui'
 import { difficultyLabel } from '../../lib/format'
+import { yearGroupLabel } from '../../lib/yearGroups'
 
 /**
  * Shared status and origin display for the admin screens.
@@ -13,6 +14,17 @@ export function StatusBadge({ status }: { status: QuestionStatus }) {
   const tone = status === 'PUBLISHED' ? 'emerald' : status === 'DRAFT' ? 'amber' : 'slate'
   const label = status === 'PUBLISHED' ? 'Published' : status === 'DRAFT' ? 'Draft' : 'Retired'
   return <Badge tone={tone}>{label}</Badge>
+}
+
+/**
+ * Which year group's set a question belongs to.
+ *
+ * Always shown, unlike the origin badge: with seven year groups in play it is the row's most
+ * useful piece of metadata after the prompt itself, and the one a teacher scanning the list is
+ * most likely to be looking for.
+ */
+export function YearGroupBadge({ yearGroup }: { yearGroup: number }) {
+  return <Badge tone="slate">{yearGroupLabel(yearGroup)}</Badge>
 }
 
 /**

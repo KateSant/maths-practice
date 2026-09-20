@@ -5,6 +5,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import com.realmaths.question.AnswerOption;
 import com.realmaths.question.Question;
 import com.realmaths.question.Topic;
+import com.realmaths.question.YearGroups;
 import com.realmaths.quiz.QuizAnswer;
 import com.realmaths.quiz.QuizSession;
 import com.realmaths.user.User;
@@ -28,7 +29,19 @@ public final class Fixtures {
     /** @param correctIndex zero-based index into {@code optionTexts} */
     public static Question question(long id, Topic topic, String prompt, String explanation, int correctIndex,
             String... optionTexts) {
-        Question question = new Question(topic, prompt, explanation, 1);
+        return question(id, topic, YearGroups.MIN, prompt, explanation, correctIndex, optionTexts);
+    }
+
+    /**
+     * The same, filed in a chosen year group.
+     *
+     * <p>{@code YearGroups.MIN} is Year 7, which is also the column default: tests that do not
+     * care about year groups get the starter bank's year and cannot accidentally depend on a
+     * different one.
+     */
+    public static Question question(long id, Topic topic, int yearGroup, String prompt, String explanation,
+            int correctIndex, String... optionTexts) {
+        Question question = new Question(topic, prompt, explanation, 1, yearGroup);
         setField(question, "id", id);
         for (int i = 0; i < optionTexts.length; i++) {
             question.addOption(String.valueOf((char) ('A' + i)), optionTexts[i], i == correctIndex);
@@ -56,7 +69,9 @@ public final class Fixtures {
     }
 
     public static QuizSession session(long id, User user, Topic topic, List<Question> questions) {
-        QuizSession session = new QuizSession(user, topic, Instant.parse("2026-01-01T09:00:00Z"));
+        // Mixed, with no year group: tests that care about one pass it through a session they
+        // build themselves rather than through this convenience.
+        QuizSession session = new QuizSession(user, topic, null, Instant.parse("2026-01-01T09:00:00Z"));
         setField(session, "id", id);
         session.addQuestions(questions);
         return session;

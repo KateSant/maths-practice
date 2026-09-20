@@ -6,6 +6,7 @@ import { useAuth } from '../auth/AuthContext'
 import { Badge, Button, Card, ProgressBar, Spinner, buttonClasses } from '../components/ui'
 import { QuestionCard, type OptionState } from '../components/QuestionCard'
 import { difficultyLabel } from '../lib/format'
+import { isYearGroup, readYearGroup, yearGroupLabel, type YearGroup } from '../lib/yearGroups'
 
 const DEFAULT_QUESTIONS = 5
 const MAX_QUESTIONS = 20
@@ -21,7 +22,11 @@ export function QuizPage() {
     Number.isFinite(requestedCount) && requestedCount > 0
       ? Math.min(Math.floor(requestedCount), MAX_QUESTIONS)
       : DEFAULT_QUESTIONS
-  const startKey = `${topicSlug ?? 'mixed'}:${count}`
+  // The year group travels in the link so the choice on the topic list is the one that deals the
+  // set; the remembered preference is the fallback for a link opened directly or a refresh.
+  const requestedYear = Number(searchParams.get('year'))
+  const yearGroup: YearGroup = isYearGroup(requestedYear) ? requestedYear : readYearGroup()
+  const startKey = `${topicSlug ?? 'mixed'}:${count}:${yearGroup}`
 
   const [session, setSession] = useState<QuizSession | null>(null)
   const [error, setError] = useState('')
@@ -43,7 +48,7 @@ export function QuizPage() {
   useEffect(() => {
     let cancelled = false
     if (startedRef.current?.key !== startKey) {
-      startedRef.current = { key: startKey, promise: api.startQuiz(topicSlug, count) }
+      startedRef.current = { key: startKey, promise: api.startQuiz(topicSlug, count, yearGroup) }
     }
     startedRef.current.promise
       .then((loaded) => {
@@ -58,7 +63,7 @@ export function QuizPage() {
     return () => {
       cancelled = true
     }
-  }, [startKey, topicSlug, count])
+  }, [startKey, topicSlug, count, yearGroup])
 
   const question = session?.questions[index]
   const total = session?.questions.length ?? 0
@@ -187,6 +192,9 @@ export function QuizPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          {/* Which year's questions these are, so a student who picked Year 10 can see they got
+              Year 10 and not a silently different set. */}
+          <Badge tone="slate">{yearGroupLabel(session.yearGroup ?? yearGroup)}</Badge>
           <Badge tone="indigo">{difficultyLabel(question.difficulty)}</Badge>
           {result ? <Badge tone="emerald">{result.correctSoFar}/{result.answeredSoFar} correct</Badge> : null}
         </div>

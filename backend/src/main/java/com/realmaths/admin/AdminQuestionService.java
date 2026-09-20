@@ -12,6 +12,7 @@ import com.realmaths.question.QuestionRepository;
 import com.realmaths.question.QuestionStatus;
 import com.realmaths.question.Topic;
 import com.realmaths.question.TopicRepository;
+import com.realmaths.question.YearGroups;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
@@ -39,9 +40,12 @@ public class AdminQuestionService {
             QuestionStatus status,
             Integer difficulty,
             QuestionOrigin origin,
+            Integer yearGroup,
             String search,
             Pageable pageable) {
-        Page<Question> page = questions.search(topicId, status, difficulty, origin, blankToNull(search), pageable);
+        YearGroups.requireValid(yearGroup);
+        Page<Question> page =
+                questions.search(topicId, status, difficulty, origin, yearGroup, blankToNull(search), pageable);
         return PageResponse.of(page.map(AdminQuestionSummary::from));
     }
 
@@ -57,7 +61,8 @@ public class AdminQuestionService {
                 requireTopic(request.topicId()),
                 promptOrEmpty(request.prompt()),
                 request.explanation(),
-                request.difficulty());
+                request.difficulty(),
+                yearGroupOrFirst(request.yearGroup()));
 
         applyOptions(question, request.options());
         return AdminQuestionDetail.from(questions.saveAndFlush(question));
@@ -71,7 +76,8 @@ public class AdminQuestionService {
                 requireTopic(request.topicId()),
                 promptOrEmpty(request.prompt()),
                 request.explanation(),
-                request.difficulty());
+                request.difficulty(),
+                yearGroupOrFirst(request.yearGroup()));
 
         // The replacement options occupy the same (question_id, position) pairs as the rows being
         // removed, and the partial unique index is checked per statement. Without this flush the
@@ -156,5 +162,13 @@ public class AdminQuestionService {
      */
     private static String promptOrEmpty(String prompt) {
         return prompt == null ? "" : prompt;
+    }
+
+    /**
+     * An absent year group means the first year of secondary school, matching the column default.
+     * Bean validation has already rejected anything outside 7..13 by the time this runs.
+     */
+    private static int yearGroupOrFirst(Integer yearGroup) {
+        return yearGroup == null ? YearGroups.MIN : yearGroup;
     }
 }

@@ -20,6 +20,7 @@ public record AdminQuestionSummary(
         Long topicId,
         String topicName,
         int difficulty,
+        int yearGroup,
         QuestionStatus status,
         QuestionOrigin origin,
         Instant createdAt) {
@@ -31,6 +32,7 @@ public record AdminQuestionSummary(
                 question.getTopic().getId(),
                 question.getTopic().getName(),
                 question.getDifficulty(),
+                question.getYearGroup(),
                 question.getStatus(),
                 question.getOrigin(),
                 question.getCreatedAt());

@@ -28,6 +28,7 @@ export interface AdminQuestionSummary {
   topicId: number
   topicName: string
   difficulty: number
+  yearGroup: number
   status: QuestionStatus
   origin: QuestionOrigin
   createdAt: string
@@ -40,6 +41,7 @@ export interface AdminQuestionDetail {
   prompt: string
   explanation?: string
   difficulty: number
+  yearGroup: number
   status: QuestionStatus
   origin: QuestionOrigin
   createdAt: string
@@ -65,6 +67,8 @@ export interface SaveQuestionRequest {
   prompt: string
   explanation?: string | null
   difficulty: number
+  /** The year group this question belongs to, 7 to 13. */
+  yearGroup: number
   options: QuestionOptionDraft[]
 }
 
@@ -102,6 +106,7 @@ export interface QuestionFilters {
   status?: QuestionStatus
   difficulty?: number
   origin?: QuestionOrigin
+  yearGroup?: number
   q?: string
   page?: number
   size?: number
@@ -127,6 +132,7 @@ export const adminApi = {
         status: filters.status,
         difficulty: filters.difficulty,
         origin: filters.origin,
+        yearGroup: filters.yearGroup,
         q: filters.q,
         page: filters.page,
         size: filters.size,

@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.realmaths.common.ApiValidationException;
 import com.realmaths.question.Question;
 import com.realmaths.question.Topic;
+import com.realmaths.question.YearGroups;
 import com.realmaths.support.Fixtures;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ class QuestionValidatorTest {
     private final Topic topic = Fixtures.topic(1L, "number", "Number");
 
     private Question question(String prompt, String... options) {
-        Question question = new Question(topic, prompt, "Because.", 1);
+        Question question = new Question(topic, prompt, "Because.", 1, YearGroups.MIN);
         for (int index = 0; index < options.length; index++) {
             // First option correct unless a test says otherwise.
             question.addOption(String.valueOf((char) ('A' + index)), options[index], index == 0);
@@ -69,7 +70,7 @@ class QuestionValidatorTest {
 
     @Test
     void refusesAQuestionWithNoCorrectOption() {
-        Question unmarked = new Question(topic, "What is 2 + 2?", "Because.", 1);
+        Question unmarked = new Question(topic, "What is 2 + 2?", "Because.", 1, YearGroups.MIN);
         unmarked.addOption("A", "4", false);
         unmarked.addOption("B", "5", false);
 
@@ -85,7 +86,7 @@ class QuestionValidatorTest {
      */
     @Test
     void refusesAQuestionWithTwoCorrectOptions() {
-        Question question = new Question(topic, "What is 2 + 2?", "Because.", 1);
+        Question question = new Question(topic, "What is 2 + 2?", "Because.", 1, YearGroups.MIN);
         question.addOption("A", "4", true);
         question.addOption("B", "5", true);
 
@@ -97,7 +98,7 @@ class QuestionValidatorTest {
 
     @Test
     void reportsEveryProblemAtOnceRatherThanOneAtATime() {
-        Question question = new Question(topic, " ", "Because.", 1);
+        Question question = new Question(topic, " ", "Because.", 1, YearGroups.MIN);
         question.addOption("A", "", false);
 
         assertThatThrownBy(() -> validator.requirePublishable(question))

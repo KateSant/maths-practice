@@ -1,5 +1,6 @@
 package com.realmaths.admin.dto;
 
+import com.realmaths.question.YearGroups;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,11 @@ import java.util.List;
  * server, so a client cannot desync the two. There is no {@code status} or {@code origin}
  * either — status changes through publish and retire, and origin is not the client's to
  * claim.
+ *
+ * <p>{@code yearGroup} is the exception to "the client sends everything": it is nullable, and an
+ * absent value means Year 7, matching the column default. A caller that has not been taught about
+ * year groups — an older client, or a future CSV importer — therefore puts content in the first
+ * year of secondary school rather than failing or filing it somewhere invisible.
  */
 public record SaveQuestionRequest(
         @NotNull(message = "Choose a topic.") Long topicId,
@@ -27,6 +33,9 @@ public record SaveQuestionRequest(
         @Min(value = 1, message = "Difficulty runs from 1 to 4.")
                 @Max(value = 4, message = "Difficulty runs from 1 to 4.")
                 int difficulty,
+        @Min(value = YearGroups.MIN, message = "Year group must be between 7 and 13.")
+                @Max(value = YearGroups.MAX, message = "Year group must be between 7 and 13.")
+                Integer yearGroup,
         @Size(max = 6, message = "A question can have at most six options.")
                 List<OptionDraft> options) {
 

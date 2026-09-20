@@ -38,6 +38,8 @@ export interface Question {
   id: number
   prompt: string
   difficulty: number
+  /** The school year this question is filed in, 7 to 13. */
+  yearGroup: number
   options: AnswerOption[]
 }
 
@@ -46,6 +48,8 @@ export interface QuizSession {
   topicSlug?: string
   topicName: string
   questionCount: number
+  /** The year group this set was drawn from, or undefined when it was mixed across years. */
+  yearGroup?: number
   startedAt: string
   questions: Question[]
 }
@@ -78,6 +82,8 @@ export interface SessionSummary {
   sessionId: number
   topicSlug?: string
   topicName: string
+  /** The year group this set was dealt from, or undefined when mixed or unrecorded. */
+  yearGroup?: number
   questionCount: number
   answeredCount: number
   correctCount: number

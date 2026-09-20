@@ -241,6 +241,54 @@ class SchemaMigrationTest {
         }
     }
 
+    // ---------------------------------------------------------- year groups (V7) ---
+
+    /**
+     * The starter bank was written for the first year of secondary school, so it is Year 7
+     * content. This is what makes "all the questions we already have are in Year 7" true rather
+     * than an assumption: the migration's default assigned them, and nothing has moved one since.
+     */
+    @Test
+    void theStarterQuestionsAreYearSevenContent() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThat(scalar(statement, "select count(*) from questions where year_group = 7"))
+                    .isEqualTo(32);
+        }
+    }
+
+    /** An INSERT that predates year groups still lands in Year 7 rather than nowhere. */
+    @Test
+    void aNewQuestionDefaultsToYearSeven() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            statement.executeUpdate(
+                    "insert into questions (topic_id, prompt, explanation, difficulty) values (1, 'no year given', 'x', 1)");
+
+            assertThat(scalar(statement, "select year_group from questions where prompt = 'no year given'"))
+                    .isEqualTo(7);
+        }
+    }
+
+    @Test
+    void sqliteRefusesAYearGroupOutsideSevenToThirteen() throws Exception {
+        try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThatThrownBy(() -> statement.executeUpdate("update questions set year_group = 14 where id = 1"))
+                    .as("the check constraint should reject a year above 13")
+                    .isInstanceOf(SQLException.class);
+            assertThatThrownBy(() -> statement.executeUpdate("update questions set year_group = 6 where id = 1"))
+                    .as("the check constraint should reject a year below 7")
+                    .isInstanceOf(SQLException.class);
+
+            // The session's copy of the year group is held to the same range.
+            statement.executeUpdate("insert into users (email, display_name) values ('y@example.com', 'Y')");
+            assertThatThrownBy(() -> statement.executeUpdate("""
+                    insert into quiz_sessions (user_id, topic_id, question_count, year_group)
+                    values ((select id from users where email = 'y@example.com'), 1, 5, 14)
+                    """))
+                    .as("a session cannot have been dealt from an invented year")
+                    .isInstanceOf(SQLException.class);
+        }
+    }
+
     @Test
     void deletingAUserCascadesToTheirIdentities() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {

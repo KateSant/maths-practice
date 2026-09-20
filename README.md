@@ -10,8 +10,8 @@ repository is `real-maths`, the Java package is `com.realmaths`, the database is
 `realmaths.db` and the environment variables are `REALMATHS_*` — those are working names from
 before the naming question was parked. See `docs/deferred.md`.
 
-Prototype stage. The question bank ships with 32 starter questions across 5 topics, intended to be
-replaced by a real teacher's content through the admin screens.
+Prototype stage. The question bank ships with 32 starter questions across 5 topics, all filed
+under **Year 7**, intended to be replaced by a real teacher's content through the admin screens.
 
 ---
 
@@ -32,7 +32,7 @@ replaced by a real teacher's content through the admin screens.
 | Backend | Spring Boot 3.5, Java 21, Spring Data JPA, Spring Security, JWT |
 | Database | SQLite, one file, no server. Schema by Flyway |
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, React Router |
-| Tests | JUnit 5 + Mockito (**103**) · Vitest (**75**) |
+| Tests | JUnit 5 + Mockito (**111**) · Vitest (**83**) |
 | Deploy | GitHub Actions → GHCR → one Lightsail instance, Caddy in front |
 
 ---
@@ -91,8 +91,8 @@ docker compose up --build     # API + SQLite volume, on port 8081
 ## Tests
 
 ```bash
-cd backend  && mvn test       # 103 tests
-cd frontend && npm test       # 75 tests
+cd backend  && mvn test       # 111 tests
+cd frontend && npm test       # 83 tests
 cd frontend && npm run build  # runs tsc --noEmit as well, so type errors fail the build
 ```
 
@@ -131,6 +131,7 @@ backend/src/main/resources/db/migration/
   V3__google_sign_in.sql    drops passwords, adds user_identities
   V4__question_lifecycle.sql  status replaces active, adds origin
   V5__play_time.sql         earned play time and its heartbeat
+  V7__year_group.sql        questions filed by school year, V6 belongs to the multi-select work
 
 frontend/src/
   api/         typed client; admin.ts holds the admin endpoints and their types
@@ -152,8 +153,8 @@ Authenticated requests use `Authorization: Bearer <token>`. The token is ours, i
 |---|---|---|
 | POST | `/api/auth/google` | Exchange a Google ID token for ours |
 | POST | `/api/auth/guest` | Create a throwaway student account |
-| GET | `/api/topics` | Topics with published question counts |
-| POST | `/api/quiz/sessions` | Deal a quiz (`topicSlug` optional, `count`) |
+| GET | `/api/topics` | Topics with published question counts. Optional `yearGroup` counts one year and drops empty topics |
+| POST | `/api/quiz/sessions` | Deal a quiz (`topicSlug` optional, `count`, `yearGroup` optional) |
 | GET | `/api/quiz/sessions/{id}` | A session with its answers so far |
 | POST | `/api/quiz/sessions/{id}/answers` | Submit one answer, returns the grade |
 | POST | `/api/quiz/sessions/{id}/complete` | Finish, returns the full review |
@@ -162,7 +163,7 @@ Authenticated requests use `Authorization: Bearer <token>`. The token is ours, i
 | GET | `/api/me/history` | Completed quizzes |
 | GET | `/api/game` | Play-time balance, without spending it |
 | POST | `/api/game/heartbeat` | "Still playing": bills the time since the last call |
-| GET | `/api/admin/questions` | Paged question list. Filters: `topicId`, `status`, `difficulty`, `origin`, `q` |
+| GET | `/api/admin/questions` | Paged question list. Filters: `topicId`, `status`, `difficulty`, `origin`, `yearGroup`, `q` |
 | POST | `/api/admin/questions` | Create a draft |
 | GET | `/api/admin/questions/{id}` | One question, **with the answer key** |
 | PUT | `/api/admin/questions/{id}` | Replace a question and its options |
@@ -187,6 +188,23 @@ revealed only in the response to a submitted answer.
 The admin DTOs *do* carry it — that is their job — which is why they live in `admin/dto` and the
 frontend mirrors that split in `api/admin.ts`. Keeping them apart makes it obvious which side of
 the line a type belongs on.
+
+### Question sets are organised by year group
+
+`questions.year_group` is 7 to 13, and a quiz is dealt only from the year group the student asks
+for. The 32 starter questions are all Year 7: the migration's column default assigned them, so
+nothing was hand-filed.
+
+**The year group is the student's choice, not a fact about them.** Nothing is asked at sign-up,
+there is no year group on a user, and a Year 7 who wants to work at Year 10 level picks Year 10 and
+is dealt Year 10 questions. The choice is remembered in `localStorage`, and it also travels in the
+quiz link, so the topic list and the quiz cannot disagree about which year is being dealt.
+Omitting `yearGroup` from `POST /api/quiz/sessions` still means "every year", which keeps the
+endpoint usable without one.
+
+The admin list shows each question's year group, filters by it, and the editor can move a question
+between years. `V7` is numbered past a gap because the multi-select work in flight on `main` has
+claimed `V6`; Flyway applies in version order, so when both land `V6` runs first and `V7` follows.
 
 ### Identity is keyed on the provider's subject, never on email
 

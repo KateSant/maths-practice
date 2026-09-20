@@ -9,8 +9,9 @@ import {
   type QuestionStatus,
 } from '../../api/admin'
 import { Button, Card, EmptyState, Spinner, buttonClasses } from '../../components/ui'
-import { AdminHeader, DifficultyBadge, OriginBadge, StatusBadge } from './adminUi'
+import { AdminHeader, DifficultyBadge, OriginBadge, StatusBadge, YearGroupBadge } from './adminUi'
 import { DIFFICULTY_BANDS, difficultyLabel } from '../../lib/format'
+import { YEAR_GROUPS, yearGroupLabel } from '../../lib/yearGroups'
 
 const PAGE_SIZE = 20
 
@@ -29,6 +30,7 @@ export function AdminQuestionListPage() {
   const [topicId, setTopicId] = useState('')
   const [status, setStatus] = useState('')
   const [difficulty, setDifficulty] = useState('')
+  const [yearGroup, setYearGroup] = useState('')
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [page, setPage] = useState(0)
@@ -65,6 +67,7 @@ export function AdminQuestionListPage() {
           topicId: topicId ? Number(topicId) : undefined,
           status: (status || undefined) as QuestionStatus | undefined,
           difficulty: difficulty ? Number(difficulty) : undefined,
+          yearGroup: yearGroup ? Number(yearGroup) : undefined,
           q: debouncedSearch || undefined,
           page,
           size: PAGE_SIZE,
@@ -77,7 +80,7 @@ export function AdminQuestionListPage() {
       setLoading(false)
     }
     // reloadKey is a manual trigger rather than data, which is why it is only in the deps.
-  }, [topicId, status, difficulty, debouncedSearch, page, reloadKey])
+  }, [topicId, status, difficulty, yearGroup, debouncedSearch, page, reloadKey])
 
   useEffect(() => {
     void load()
@@ -121,7 +124,7 @@ export function AdminQuestionListPage() {
       />
 
       <Card className="p-4">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <label className="block">
             <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Search</span>
             <input
@@ -160,6 +163,22 @@ export function AdminQuestionListPage() {
               {STATUSES.map((value) => (
                 <option key={value} value={value}>
                   {value.charAt(0) + value.slice(1).toLowerCase()}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Year group</span>
+            <select
+              value={yearGroup}
+              onChange={(event) => resetTo(() => setYearGroup(event.target.value))}
+              className={fieldClass()}
+            >
+              <option value="">All year groups</option>
+              {YEAR_GROUPS.map((value) => (
+                <option key={value} value={value}>
+                  {yearGroupLabel(value)}
                 </option>
               ))}
             </select>
@@ -221,6 +240,7 @@ export function AdminQuestionListPage() {
                   </Link>
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     <span className="text-xs text-slate-500">{question.topicName}</span>
+                    <YearGroupBadge yearGroup={question.yearGroup} />
                     <DifficultyBadge difficulty={question.difficulty} />
                     <StatusBadge status={question.status} />
                     <OriginBadge origin={question.origin} />

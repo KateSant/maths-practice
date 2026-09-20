@@ -10,6 +10,8 @@ public record SessionSummary(
         Long sessionId,
         String topicSlug,
         String topicName,
+        /** The year group the set was dealt from, or null when it was mixed or not recorded. */
+        Integer yearGroup,
         int questionCount,
         int answeredCount,
         int correctCount,
@@ -31,6 +33,7 @@ public record SessionSummary(
                 session.getId(),
                 session.getTopic() == null ? null : session.getTopic().getSlug(),
                 session.getTopic() == null ? "Mixed practice" : session.getTopic().getName(),
+                session.getYearGroup(),
                 session.getQuestionCount(),
                 answers.size(),
                 session.getCorrectCount(),

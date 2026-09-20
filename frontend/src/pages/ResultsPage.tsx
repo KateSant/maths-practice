@@ -7,6 +7,7 @@ import { LevelMeter } from '../components/LevelMeter'
 import { MiningReward } from '../components/MiningReward'
 import { Card, Spinner, StatTile, buttonClasses } from '../components/ui'
 import { difficultyLabel, formatDuration, percent, pluralise } from '../lib/format'
+import { yearGroupLabel } from '../lib/yearGroups'
 
 interface ResultsLocationState {
   summary?: SessionSummary
@@ -59,9 +60,13 @@ export function ResultsPage({ previewSummary }: { previewSummary?: SessionSummar
     return <Spinner label="Loading your results…" />
   }
 
+  // Carry the year group through so "try again" repeats the set the student just worked at,
+  // rather than whatever the dropdown has been changed to since. A mixed or unrecorded set has
+  // none, which leaves it to the remembered preference.
+  const yearQuery = summary.yearGroup === undefined ? '' : `&year=${summary.yearGroup}`
   const retryHref = summary.topicSlug
-    ? `/quiz?topic=${encodeURIComponent(summary.topicSlug)}&count=${summary.questionCount}`
-    : `/quiz?count=${summary.questionCount}`
+    ? `/quiz?topic=${encodeURIComponent(summary.topicSlug)}&count=${summary.questionCount}${yearQuery}`
+    : `/quiz?count=${summary.questionCount}${yearQuery}`
 
   return (
     <div className="mx-auto max-w-3xl animate-rise space-y-6">
@@ -70,6 +75,9 @@ export function ResultsPage({ previewSummary }: { previewSummary?: SessionSummar
           {/* The topic is the heading. There used to be an encouraging line under it, but a
               sentence about a low score is worse than saying nothing. */}
           <h1 className="text-2xl font-bold">{summary.topicName}</h1>
+          {summary.yearGroup !== undefined ? (
+            <p className="mt-1 text-sm font-medium text-indigo-100">{yearGroupLabel(summary.yearGroup)}</p>
+          ) : null}
         </div>
 
         <div className="flex flex-col items-center gap-6 px-6 py-8 sm:flex-row sm:justify-center sm:gap-12">

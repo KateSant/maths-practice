@@ -5,18 +5,25 @@ import { useAuth } from '../auth/AuthContext'
 import { TopicCard } from '../components/TopicCard'
 import { Spinner, StatTile } from '../components/ui'
 import { accuracyTone, encouragement, percent } from '../lib/format'
+import { YEAR_GROUPS, readYearGroup, writeYearGroup, yearGroupLabel, type YearGroup } from '../lib/yearGroups'
 
 /**
- * The student home page is the topic list, and nothing else.
+ * The student home page is the topic list and the year group they are working at, and nothing
+ * else.
  *
- * There is no mixed practice, no question-count picker and no list of finished sittings: those
- * belonged to the idea of a "round", which sat between the student and the topics without adding
- * anything to them. A student picks a topic and works through it.
+ * There is no mixed practice and no question-count picker: those belonged to the idea of a
+ * "round", which sat between the student and the topics without adding anything to them. A
+ * student picks a year group and a topic and works through it.
+ *
+ * The year group is a preference, not a fact about the student. Nothing is asked at sign-up and
+ * nothing is stored on their account, so a Year 7 who wants Year 10 work simply chooses Year 10;
+ * that is also why the choice lives in `localStorage` rather than on the profile.
  */
 export function HomePage() {
   const { profile, refresh } = useAuth()
 
   const [topics, setTopics] = useState<Topic[] | null>(null)
+  const [yearGroup, setYearGroup] = useState<YearGroup>(() => readYearGroup())
   const [error, setError] = useState('')
 
   // Pull fresh stats too, so points and streaks are right after practising a topic.
@@ -28,7 +35,9 @@ export function HomePage() {
     let cancelled = false
     void (async () => {
       try {
-        const loaded = await api.topics()
+        // Counted for the chosen year, and topics with nothing there are left out, so every card
+        // on screen can actually deal a set.
+        const loaded = await api.topics(yearGroup)
         if (!cancelled) setTopics(loaded)
       } catch (caught) {
         if (!cancelled) {
@@ -39,7 +48,15 @@ export function HomePage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [yearGroup])
+
+  const chooseYearGroup = (next: YearGroup) => {
+    setYearGroup(next)
+    writeYearGroup(next)
+    // Back to the loading state rather than leaving last year's topics under the new heading.
+    setTopics(null)
+    setError('')
+  }
 
   const stats = profile?.stats
   const firstName = profile?.user.displayName.split(' ')[0] ?? 'there'
@@ -86,23 +103,54 @@ export function HomePage() {
       ) : null}
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-900">Topics</h2>
-        <p className="mt-0.5 text-sm text-slate-500">
-          A short set from the topic, aimed at the level you are working at.
-        </p>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">Topics</h2>
+            <p className="mt-0.5 text-sm text-slate-500">
+              A short set from the topic, aimed at the level you are working at.
+            </p>
+          </div>
+
+          {/*
+            Always visible, never hidden behind the profile: which year you work at is a choice
+            for this visit, not a setting, and changing it changes the questions immediately.
+          */}
+          <label className="flex shrink-0 items-center gap-2">
+            <span className="text-sm font-medium text-slate-600">Year group</span>
+            <select
+              value={yearGroup}
+              onChange={(event) => chooseYearGroup(Number(event.target.value) as YearGroup)}
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+            >
+              {YEAR_GROUPS.map((year) => (
+                <option key={year} value={year}>
+                  {yearGroupLabel(year)}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
 
         {error ? (
           <p className="mt-4 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p>
         ) : null}
 
-        {!topics && !error ? <Spinner label="Loading topics…" /> : null}
+        {!topics && !error ? <Spinner label={`Loading ${yearGroupLabel(yearGroup)} topics…`} /> : null}
 
-        {topics ? (
+        {topics && topics.length === 0 ? (
+          <p className="mt-4 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            Nothing is published for {yearGroupLabel(yearGroup)} yet. Try another year group — you can
+            change it at any time.
+          </p>
+        ) : null}
+
+        {topics && topics.length > 0 ? (
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {topics.map((topic) => (
               <TopicCard
                 key={topic.id}
                 topic={topic}
+                yearGroup={yearGroup}
                 accuracy={accuracyById.get(topic.id)}
                 level={levelById.get(topic.id)}
               />

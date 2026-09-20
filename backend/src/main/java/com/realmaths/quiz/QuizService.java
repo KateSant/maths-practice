@@ -8,6 +8,7 @@ import com.realmaths.question.DifficultyBand;
 import com.realmaths.question.Question;
 import com.realmaths.question.QuestionCatalogService;
 import com.realmaths.question.Topic;
+import com.realmaths.question.YearGroups;
 import com.realmaths.quiz.dto.AnswerResult;
 import com.realmaths.quiz.dto.QuizHistoryItem;
 import com.realmaths.quiz.dto.QuizSessionView;
@@ -58,11 +59,16 @@ public class QuizService {
             topic = catalogService.requireTopicBySlug(request.topicSlug());
         }
 
+        // The student's choice of year group, not a fact about them: it selects which questions
+        // come back, and asking for a year above their own is allowed on purpose.
+        Integer yearGroup = YearGroups.requireValid(request.yearGroup());
+
         Long topicId = topic == null ? null : topic.getId();
         List<Question> picked = catalogService.pickForSession(
-                topicId, resolveQuestionCount(request.count()), targetLevelFor(userId, topicId, null));
+                topicId, yearGroup, resolveQuestionCount(request.count()), targetLevelFor(userId, topicId, null));
 
-        QuizSession session = new QuizSession(userRepository.getReferenceById(userId), topic, clock.instant());
+        QuizSession session = new QuizSession(
+                userRepository.getReferenceById(userId), topic, yearGroup, clock.instant());
         session.addQuestions(picked);
 
         return QuizSessionView.from(sessionRepository.save(session));

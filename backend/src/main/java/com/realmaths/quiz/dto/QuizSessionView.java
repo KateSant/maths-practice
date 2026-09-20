@@ -10,6 +10,8 @@ public record QuizSessionView(
         String topicSlug,
         String topicName,
         int questionCount,
+        // The year group this set was dealt from, or null when it was mixed across years.
+        Integer yearGroup,
         Instant startedAt,
         List<QuestionView> questions) {
 
@@ -22,6 +24,7 @@ public record QuizSessionView(
                 slug,
                 name,
                 session.getQuestionCount(),
+                session.getYearGroup(),
                 session.getStartedAt(),
                 session.getQuestions().stream().map(QuestionView::from).toList());
     }

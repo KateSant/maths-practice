@@ -12,6 +12,7 @@ import { Button, Card, Spinner, buttonClasses } from '../../components/ui'
 import { QuestionCard, type OptionState } from '../../components/QuestionCard'
 import { AdminHeader, OriginBadge, StatusBadge } from './adminUi'
 import { DIFFICULTY_BANDS, difficultyLabel } from '../../lib/format'
+import { DEFAULT_YEAR_GROUP, YEAR_GROUPS, yearGroupLabel } from '../../lib/yearGroups'
 import { fieldClass } from './AdminQuestionListPage'
 
 const MAX_OPTIONS = 6
@@ -47,6 +48,9 @@ export function AdminQuestionEditorPage() {
   const [prompt, setPrompt] = useState('')
   const [explanation, setExplanation] = useState('')
   const [difficulty, setDifficulty] = useState(2)
+  // New questions start in Year 7, which is where the starter bank lives. The teacher moves them
+  // with the dropdown; nothing infers a year group from the topic or the difficulty.
+  const [yearGroup, setYearGroup] = useState<number>(DEFAULT_YEAR_GROUP)
   const [options, setOptions] = useState<DraftOption[]>(() => [newOption(), newOption()])
   const [status, setStatus] = useState<QuestionStatus>('DRAFT')
   const [origin, setOrigin] = useState<AdminQuestionDetail['origin']>('AUTHORED')
@@ -77,6 +81,7 @@ export function AdminQuestionEditorPage() {
         setPrompt(question.prompt)
         setExplanation(question.explanation ?? '')
         setDifficulty(question.difficulty)
+        setYearGroup(question.yearGroup)
         setStatus(question.status)
         setOrigin(question.origin)
         setOptions(
@@ -120,6 +125,7 @@ export function AdminQuestionEditorPage() {
         prompt,
         explanation: explanation.trim() === '' ? null : explanation,
         difficulty,
+        yearGroup,
         options: options.map((option) => ({ text: option.text, correct: option.correct })),
       }
 
@@ -232,7 +238,7 @@ export function AdminQuestionEditorPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-5">
           <Card className="p-5">
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-3">
               <label className="block">
                 <span className="mb-1.5 block text-sm font-medium text-slate-700">Topic</span>
                 <select
@@ -248,6 +254,22 @@ export function AdminQuestionEditorPage() {
                   ))}
                 </select>
                 <FieldError message={fieldErrors['topicId']} />
+              </label>
+
+              <label className="block">
+                <span className="mb-1.5 block text-sm font-medium text-slate-700">Year group</span>
+                <select
+                  value={yearGroup}
+                  onChange={(event) => setYearGroup(Number(event.target.value))}
+                  className={fieldClass(fieldErrors['yearGroup'])}
+                >
+                  {YEAR_GROUPS.map((value) => (
+                    <option key={value} value={value}>
+                      {yearGroupLabel(value)}
+                    </option>
+                  ))}
+                </select>
+                <FieldError message={fieldErrors['yearGroup']} />
               </label>
 
               <label className="block">

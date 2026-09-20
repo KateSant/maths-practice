@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.realmaths.auth.JwtService;
+import com.realmaths.question.YearGroups;
 import com.realmaths.user.Role;
 import com.realmaths.user.User;
 import com.realmaths.user.UserRepository;
@@ -146,6 +147,70 @@ class AdminApiTest {
         mockMvc.perform(get("/api/admin/questions/" + id).header("Authorization", "Bearer " + admin))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("RETIRED"));
+    }
+
+    /**
+     * The question bank shows which year group each question belongs to, and can be narrowed to
+     * one. This is the admin half of the feature: without it, a teacher cannot see or change the
+     * sets the dropdown deals from.
+     */
+    @Test
+    void questionsAreFiledAndFilteredByYearGroup() throws Exception {
+        String admin = adminToken();
+        String marker = "yeargroup" + System.nanoTime();
+
+        // No year group sent: filed in Year 7, matching the column default. That is what every
+        // question written before this feature existed now is.
+        long legacy = idOf(mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(question(marker + " no year sent", "4", "5")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.yearGroup").value(7))
+                .andReturn());
+
+        long higher = idOf(mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(questionInYear(9, marker + " year nine", "4", "5")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.yearGroup").value(9))
+                .andReturn());
+
+        mockMvc.perform(get("/api/admin/questions?yearGroup=9&q=" + marker)
+                        .header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalItems").value(1))
+                .andExpect(jsonPath("$.items[0].id").value(higher));
+
+        mockMvc.perform(get("/api/admin/questions?yearGroup=7&q=" + marker)
+                        .header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalItems").value(1))
+                .andExpect(jsonPath("$.items[0].id").value(legacy));
+
+        // An edit can move a question to another year group.
+        mockMvc.perform(put("/api/admin/questions/" + legacy)
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(questionInYear(11, marker + " moved", "4", "5")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.yearGroup").value(11));
+    }
+
+    @Test
+    void aYearGroupOutsideSevenToThirteenIsRejected() throws Exception {
+        String admin = adminToken();
+
+        mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(questionInYear(14, "too far")))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors.yearGroup").exists());
+
+        mockMvc.perform(get("/api/admin/questions?yearGroup=99").header("Authorization", "Bearer " + admin))
+                .andExpect(status().isBadRequest());
     }
 
     /** The design point: a draft may be half-written, and simply cannot be published. */
@@ -298,11 +363,20 @@ class AdminApiTest {
         return question(prompt, 0, options);
     }
 
+    /** A question filed in a chosen year group, rather than defaulting to Year 7. */
+    private static String questionInYear(int yearGroup, String prompt, String... options) {
+        return question(yearGroup, prompt, 0, options);
+    }
+
     /** @param correctIndex which option is the right answer, zero-based */
     private static String question(String prompt, int correctIndex, String... options) {
+        return question(YearGroups.MIN, prompt, correctIndex, options);
+    }
+
+    private static String question(int yearGroup, String prompt, int correctIndex, String... options) {
         StringBuilder json = new StringBuilder("""
-                {"topicId":1,"prompt":"%s","explanation":"Because.","difficulty":2,"options":[
-                """.formatted(prompt));
+                {"topicId":1,"prompt":"%s","explanation":"Because.","difficulty":2,"yearGroup":%d,"options":[
+                """.formatted(prompt, yearGroup));
         for (int index = 0; index < options.length; index++) {
             if (index > 0) {
                 json.append(',');

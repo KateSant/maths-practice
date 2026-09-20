@@ -111,12 +111,21 @@ export const api = {
 
   history: () => apiRequest<HistoryItem[]>('/me/history'),
 
-  topics: () => apiRequest<Topic[]>('/topics'),
+  /**
+   * Topics the student can practise. Passing a year group counts only that year's questions and
+   * leaves out topics with none there, so the list is only ever things they can actually start.
+   */
+  topics: (yearGroup?: number) =>
+    apiRequest<Topic[]>(`/topics${yearGroup === undefined ? '' : `?yearGroup=${yearGroup}`}`),
 
-  startQuiz: (topicSlug: string | null, count: number) =>
+  /**
+   * Deals a set. `yearGroup` is the student's free choice of which year to work at, not a
+   * property of their account: asking for a year above their own is allowed on purpose.
+   */
+  startQuiz: (topicSlug: string | null, count: number, yearGroup?: number) =>
     apiRequest<QuizSession>('/quiz/sessions', {
       method: 'POST',
-      body: { topicSlug, count },
+      body: { topicSlug, count, yearGroup },
     }),
 
   submitAnswer: (sessionId: number, questionId: number, optionId: number, timeMs: number) =>

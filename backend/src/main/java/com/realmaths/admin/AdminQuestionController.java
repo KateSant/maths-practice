@@ -50,11 +50,12 @@ public class AdminQuestionController {
             @RequestParam(required = false) QuestionStatus status,
             @RequestParam(required = false) Integer difficulty,
             @RequestParam(required = false) QuestionOrigin origin,
+            @RequestParam(required = false) Integer yearGroup,
             // Named `q` rather than `search` so the query string reads like a search box.
             @RequestParam(required = false, name = "q") String search,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "25") int size) {
-        return questions.list(topicId, status, difficulty, origin, search, pageable(page, size));
+        return questions.list(topicId, status, difficulty, origin, yearGroup, search, pageable(page, size));
     }
 
     @GetMapping("/{id}")

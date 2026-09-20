@@ -7,12 +7,24 @@ import { bandTone, percent } from '../lib/format'
 /**
  * One topic tile.
  *
- * The link carries no question count: the set is a sample drawn at the student's level, so how
- * many questions the bank holds is not how many they will be asked. It is the level that decides
+ * The link carries the chosen year group as well as the topic, so the set is dealt from the year
+ * the student picked rather than whatever is remembered by the time the quiz page loads. It
+ * carries no question count: the set is a sample drawn at the student's level, so how many
+ * questions the bank holds is not how many they will be asked. It is the level that decides
  * which questions come back.
  */
-export function TopicCard({ topic, accuracy, level }: { topic: Topic; accuracy?: number; level?: number }) {
-  const href = `/quiz?topic=${encodeURIComponent(topic.slug)}`
+export function TopicCard({
+  topic,
+  yearGroup,
+  accuracy,
+  level,
+}: {
+  topic: Topic
+  yearGroup: number
+  accuracy?: number
+  level?: number
+}) {
+  const href = `/quiz?topic=${encodeURIComponent(topic.slug)}&year=${yearGroup}`
   // One colour for the card, and it is the band's, not the percentage's: the badge and the meter
   // then always agree with each other and with the word underneath them.
   const tone = level === undefined ? null : bandTone(level)

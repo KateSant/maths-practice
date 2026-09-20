@@ -11,20 +11,26 @@ import org.springframework.data.repository.query.Param;
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     /**
-     * Every published question's id and difficulty, optionally for one topic.
+     * Every published question's id and difficulty, optionally for one topic and one year group.
      *
      * <p>Deliberately not a random pick in SQL. Selection has to prefer the student's level and
      * reach further out only to make up the numbers, which needs the difficulties in hand; a
      * {@code limit :count} inside a widened difficulty window cannot express that, it just draws
      * the whole set from the wider window. The bank is small, so reading it costs nothing.
+     *
+     * <p>A null {@code yearGroup} means every year group, which is what the mixed practice path
+     * asks for. The student-facing path always passes one, because the dropdown always has a
+     * value.
      */
     @Query(value = """
             select id as id, difficulty as difficulty
             from questions
             where status = 'PUBLISHED'
               and (:topicId is null or topic_id = :topicId)
+              and (:yearGroup is null or year_group = :yearGroup)
             """, nativeQuery = true)
-    List<QuestionDifficulty> listPublishedDifficulty(@Param("topicId") Long topicId);
+    List<QuestionDifficulty> listPublishedDifficulty(
+            @Param("topicId") Long topicId, @Param("yearGroup") Integer yearGroup);
 
     interface QuestionDifficulty {
         Long getId();
@@ -36,14 +42,21 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query("select distinct q from Question q join fetch q.options where q.id in :ids")
     List<Question> findAllWithOptionsByIdIn(@Param("ids") Collection<Long> ids);
 
-    /** One query for the topic list, instead of a count query per topic. */
+    /**
+     * One query for the topic list, instead of a count query per topic.
+     *
+     * <p>{@code yearGroup} is nullable: a student's topic list counts only the year they have
+     * chosen, while an unfiltered caller sees the whole bank.
+     */
     @Query("""
             select q.topic.id as topicId, count(q) as total
             from Question q
             where q.status = :status
+              and (:yearGroup is null or q.yearGroup = :yearGroup)
             group by q.topic.id
             """)
-    List<TopicQuestionCount> countByTopicWithStatus(@Param("status") QuestionStatus status);
+    List<TopicQuestionCount> countByTopicWithStatus(
+            @Param("status") QuestionStatus status, @Param("yearGroup") Integer yearGroup);
 
     /**
      * Published questions per topic per band, for the coverage view.
@@ -88,6 +101,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
                       and (:status is null or q.status = :status)
                       and (:difficulty is null or q.difficulty = :difficulty)
                       and (:origin is null or q.origin = :origin)
+                      and (:yearGroup is null or q.yearGroup = :yearGroup)
                       and (:search is null or lower(q.prompt) like lower(concat('%', :search, '%')))
                     """,
             countQuery = """
@@ -96,6 +110,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
                       and (:status is null or q.status = :status)
                       and (:difficulty is null or q.difficulty = :difficulty)
                       and (:origin is null or q.origin = :origin)
+                      and (:yearGroup is null or q.yearGroup = :yearGroup)
                       and (:search is null or lower(q.prompt) like lower(concat('%', :search, '%')))
                     """)
     Page<Question> search(
@@ -103,6 +118,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             @Param("status") QuestionStatus status,
             @Param("difficulty") Integer difficulty,
             @Param("origin") QuestionOrigin origin,
+            @Param("yearGroup") Integer yearGroup,
             @Param("search") String search,
             Pageable pageable);
 
