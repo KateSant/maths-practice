@@ -47,19 +47,20 @@ export function AboutPage() {
 
       <h1 className="mt-8 text-2xl font-bold text-slate-900 sm:text-3xl">How these questions are designed</h1>
       <p className="mt-3 text-lg leading-relaxed text-slate-700">
-        Mistakes are good. They reveal misconceptions — the ideas that make a student get the answer
-        wrong.
+        Mistakes are good. They reveal what the DfE call “misconceptions” — the mix-ups, and the why.
       </p>
       <p className="mt-3 leading-relaxed text-slate-600">
-        A wrong answer is rarely a guess. It is usually the answer a student’s own method produced, so
-        it tells you something a right answer cannot: what they believe. Most practice just marks it
-        wrong and moves on. Here, every wrong answer says what the student was thinking — and corrects
-        the rule, not just the digit.
+        When a student picks a wrong answer it is rarely a guess. It shows what they know so far, and
+        what they might have muddled up — which a right answer never tells you. Most practice just
+        marks it wrong and moves on.
       </p>
       <p className="mt-3 leading-relaxed text-slate-600">
-        So these are not random wrong answers. Every option is written to catch one particular mistake
-        — a rule that works on the examples a student has met, and then stops working — and the
-        mistakes are drawn from the DfE and NCETM’s{' '}
+        So when we design a question, the “wrong” answers in the multiple choice are not random. Each
+        one is the answer a student arrives at if they have made one particular mix-up, so the option
+        they pick tells us which one — and the app can say so, instead of only scoring it.
+      </p>
+      <p className="mt-3 leading-relaxed text-slate-600">
+        Each mix-up comes from the DfE and NCETM’s{' '}
         <a
           href={GUIDANCE_URL}
           target="_blank"
@@ -68,7 +69,7 @@ export function AboutPage() {
         >
           Key Stage 3 mathematics guidance
         </a>
-        , where each unit carries a passage headed <em>Common difficulties and misconceptions</em>.
+        , where every unit carries a passage headed <em>Common difficulties and misconceptions</em>.
       </p>
 
       <h2 className="mt-10 text-lg font-semibold text-slate-900">An example</h2>
@@ -120,12 +121,12 @@ export function AboutPage() {
         marking the digit wrong.
       </p>
 
-      <h2 className="mt-10 text-lg font-semibold text-slate-900">Where the mistakes come from</h2>
+      <h2 className="mt-10 text-lg font-semibold text-slate-900">Where they come from</h2>
       <p className="mt-3 leading-relaxed text-slate-600">
-        Every mistake in the bank is recorded in one register: {total} entries across {topics} topics,
-        each with a one-line description of the error and an example of the answer it produces. Every
-        wrong option in a question names the entry it catches, so a wrong pick is read as a specific
-        error rather than as an anonymous mark lost.
+        Every mix-up in the bank is recorded in one register: {total} entries across {topics} topics,
+        each with a one-line description and an example of the answer it produces. Every wrong option
+        names the entry it catches, so a wrong pick is read as a known mix-up rather than as an
+        anonymous mark lost.
       </p>
       <p className="mt-3 leading-relaxed text-slate-600">
         None of them is invented. {quoted} of the entries are quoted from the Department for
@@ -144,7 +145,7 @@ export function AboutPage() {
           >
             Mathematics guidance: Key Stage 3 (PDF)
           </a>
-          <span className="text-slate-500"> — the DfE and NCETM guidance the mistakes are drawn from</span>
+          <span className="text-slate-500"> — the DfE and NCETM guidance they come from</span>
         </li>
         <li>
           <a
