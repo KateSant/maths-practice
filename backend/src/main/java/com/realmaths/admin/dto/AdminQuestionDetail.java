@@ -1,5 +1,6 @@
 package com.realmaths.admin.dto;
 
+import com.realmaths.question.AnswerType;
 import com.realmaths.question.Question;
 import com.realmaths.question.QuestionOrigin;
 import com.realmaths.question.QuestionStatus;
@@ -15,6 +16,7 @@ public record AdminQuestionDetail(
         String prompt,
         String explanation,
         int difficulty,
+        AnswerType answerType,
         QuestionStatus status,
         QuestionOrigin origin,
         Instant createdAt,
@@ -35,6 +37,7 @@ public record AdminQuestionDetail(
                 question.getPrompt(),
                 question.getExplanation(),
                 question.getDifficulty(),
+                question.getAnswerType(),
                 question.getStatus(),
                 question.getOrigin(),
                 question.getCreatedAt(),

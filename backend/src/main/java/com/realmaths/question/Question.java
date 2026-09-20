@@ -44,6 +44,14 @@ public class Question {
     @Column(nullable = false)
     private int difficulty;
 
+    /**
+     * How the question is answered and graded. Defaults to the single-choice behaviour every
+     * question had before this column existed, which is what makes the migration backfill-free.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "answer_type", nullable = false, length = 20)
+    private AnswerType answerType = AnswerType.SINGLE_CHOICE;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private QuestionStatus status = QuestionStatus.DRAFT;
@@ -63,11 +71,17 @@ public class Question {
         // for JPA
     }
 
-    public Question(Topic topic, String prompt, String explanation, int difficulty) {
+    /**
+     * The answer type is a constructor argument rather than a default plus a setter, so a new
+     * question cannot be created as one type and quietly left as another. Callers that want the
+     * ordinary behaviour pass {@link AnswerType#SINGLE_CHOICE} and say so.
+     */
+    public Question(Topic topic, String prompt, String explanation, int difficulty, AnswerType answerType) {
         this.topic = topic;
         this.prompt = prompt;
         this.explanation = explanation;
         this.difficulty = difficulty;
+        this.answerType = answerType == null ? AnswerType.SINGLE_CHOICE : answerType;
     }
 
     public void addOption(String label, String text, boolean correct) {
@@ -86,11 +100,12 @@ public class Question {
     }
 
     /** Applies an edit to the parts a teacher can change. Options are handled separately. */
-    public void revise(Topic topic, String prompt, String explanation, int difficulty) {
+    public void revise(Topic topic, String prompt, String explanation, int difficulty, AnswerType answerType) {
         this.topic = topic;
         this.prompt = prompt;
         this.explanation = explanation;
         this.difficulty = difficulty;
+        this.answerType = answerType == null ? AnswerType.SINGLE_CHOICE : answerType;
     }
 
     public void setStatus(QuestionStatus status) {
@@ -121,6 +136,10 @@ public class Question {
         return difficulty;
     }
 
+    public AnswerType getAnswerType() {
+        return answerType;
+    }
+
     /** True when this question may be served to students. */
     public boolean isPublished() {
         return status == QuestionStatus.PUBLISHED;
@@ -142,8 +161,15 @@ public class Question {
         return options;
     }
 
-    /** The single correct option, or empty if the question is misconfigured. */
-    public java.util.Optional<AnswerOption> correctOption() {
-        return options.stream().filter(AnswerOption::isCorrect).findFirst();
+    /**
+     * Every correct option, in position order.
+     *
+     * <p>A list rather than one option, because a tick-all question has several. A single-choice
+     * question is simply the case where this returns exactly one, which is what lets the grading
+     * rule be the same set comparison for both types. Empty means the question is misconfigured,
+     * and the validator refuses to publish one of those.
+     */
+    public List<AnswerOption> correctOptions() {
+        return options.stream().filter(AnswerOption::isCorrect).toList();
     }
 }

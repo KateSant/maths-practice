@@ -209,6 +209,91 @@ class AdminApiTest {
                 .andExpect(jsonPath("$.fieldErrors.topicId").exists());
     }
 
+    // ------------------------------------------------- tick all that apply (V6) ---
+
+    /**
+     * The point of the whole feature, through the real API: two right answers on a tick-all
+     * question are accepted by the service, by the publish gate and by the database trigger that
+     * replaced the old unconditional partial unique index.
+     */
+    @Test
+    void aTickAllQuestionCanBeSavedAndPublishedWithSeveralCorrectOptions() throws Exception {
+        String admin = adminToken();
+        String marker = "tickall" + System.nanoTime();
+
+        long id = idOf(mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(tickAllQuestion(
+                                marker + " tick every prime", new int[] {1, 2}, "21", "29", "37", "39")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.answerType").value("MULTI_SELECT"))
+                // Labels still derived from position, and the key survives the round trip.
+                .andExpect(jsonPath("$.options[0].label").value("A"))
+                .andExpect(jsonPath("$.options[1].correct").value(true))
+                .andExpect(jsonPath("$.options[2].correct").value(true))
+                .andExpect(jsonPath("$.options[3].correct").value(false))
+                .andReturn());
+
+        mockMvc.perform(post("/api/admin/questions/" + id + "/publish").header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("PUBLISHED"));
+
+        // Still a tick-all question after the reload the editor does.
+        mockMvc.perform(get("/api/admin/questions/" + id).header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.answerType").value("MULTI_SELECT"))
+                .andExpect(jsonPath("$.options[1].correct").value(true));
+    }
+
+    /**
+     * The mirror image. Two right answers on a single-choice question are refused at save, which is
+     * where the database trigger fires, and the teacher is told which input to fix rather than
+     * being handed the generic 409 a raw constraint violation would produce.
+     */
+    @Test
+    void aSingleChoiceQuestionCannotBeSavedWithTwoCorrectOptions() throws Exception {
+        String admin = adminToken();
+
+        mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(question("Two right answers", new int[] {0, 1}, "4", "5")))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.fieldErrors['options.correct']").exists());
+    }
+
+    /**
+     * An omitted answer type is a client written before tick-all existed, and what it means is a
+     * single choice - not an error, and not a coin flip.
+     */
+    @Test
+    void anOmittedAnswerTypeDefaultsToASingleChoice() throws Exception {
+        String admin = adminToken();
+
+        mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(question("No answer type sent", 0, "4", "5")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.answerType").value("SINGLE_CHOICE"));
+    }
+
+    @Test
+    void anUnknownAnswerTypeIsRejectedAsAClientError() throws Exception {
+        String admin = adminToken();
+
+        mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"topicId":1,"prompt":"x","explanation":null,"difficulty":1,
+                                 "answerType":"GUESS_ONE",
+                                 "options":[{"text":"a","correct":true},{"text":"b","correct":false}]}
+                                """))
+                .andExpect(status().isBadRequest());
+    }
+
     /**
      * A mistyped filter is a client mistake. Without an explicit handler the catch-all in
      * GlobalExceptionHandler turns it into a 500 and a stack trace.
@@ -295,21 +380,44 @@ class AdminApiTest {
     }
 
     private static String question(String prompt, String... options) {
-        return question(prompt, 0, options);
+        return question(prompt, new int[] {0}, options);
     }
 
     /** @param correctIndex which option is the right answer, zero-based */
     private static String question(String prompt, int correctIndex, String... options) {
+        return question(prompt, new int[] {correctIndex}, options);
+    }
+
+    /** @param correctIndexes which options are right answers, zero-based */
+    private static String question(String prompt, int[] correctIndexes, String... options) {
+        return questionJson(prompt, null, options, correctIndexes);
+    }
+
+    /**
+     * A tick-all question. The answer type is spelled out, because the point of these tests is that
+     * the API accepts more than one correct option when and only when a question says it has more
+     * than one.
+     */
+    private static String tickAllQuestion(String prompt, int[] correctIndexes, String... options) {
+        return questionJson(prompt, "MULTI_SELECT", options, correctIndexes);
+    }
+
+    private static String questionJson(String prompt, String answerType, String[] options, int[] correctIndexes) {
         StringBuilder json = new StringBuilder("""
-                {"topicId":1,"prompt":"%s","explanation":"Because.","difficulty":2,"options":[
-                """.formatted(prompt));
+                {"topicId":1,"prompt":"%s","explanation":"Because.","difficulty":2,%s"options":[
+                """.formatted(prompt, answerType == null ? "" : "\"answerType\":\"" + answerType + "\","));
         for (int index = 0; index < options.length; index++) {
             if (index > 0) {
                 json.append(',');
             }
-            json.append("{\"text\":\"%s\",\"correct\":%s}".formatted(options[index], index == correctIndex));
+            json.append("{\"text\":\"%s\",\"correct\":%s}"
+                    .formatted(options[index], contains(correctIndexes, index)));
         }
         return json.append("]}").toString();
+    }
+
+    private static boolean contains(int[] indexes, int value) {
+        return java.util.Arrays.stream(indexes).anyMatch(index -> index == value);
     }
 
     private long idOf(MvcResult result) throws Exception {

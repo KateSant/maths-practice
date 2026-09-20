@@ -10,11 +10,21 @@ import {
 } from '../../api/admin'
 import { Button, Card, Spinner, buttonClasses } from '../../components/ui'
 import { QuestionCard, type OptionState } from '../../components/QuestionCard'
+import type { AnswerType } from '../../api/types'
 import { AdminHeader, OriginBadge, StatusBadge } from './adminUi'
 import { DIFFICULTY_BANDS, difficultyLabel } from '../../lib/format'
 import { fieldClass } from './AdminQuestionListPage'
 
 const MAX_OPTIONS = 6
+
+const ANSWER_TYPES: { value: AnswerType; label: string; help: string }[] = [
+  { value: 'SINGLE_CHOICE', label: 'One correct answer', help: 'The student picks one option.' },
+  {
+    value: 'MULTI_SELECT',
+    label: 'Tick all that apply',
+    help: 'The student ticks any number of options and submits them together.',
+  },
+]
 
 interface DraftOption {
   /** Client-side only. New options have no id yet, and index keys would break on removal. */
@@ -47,6 +57,7 @@ export function AdminQuestionEditorPage() {
   const [prompt, setPrompt] = useState('')
   const [explanation, setExplanation] = useState('')
   const [difficulty, setDifficulty] = useState(2)
+  const [answerType, setAnswerType] = useState<AnswerType>('SINGLE_CHOICE')
   const [options, setOptions] = useState<DraftOption[]>(() => [newOption(), newOption()])
   const [status, setStatus] = useState<QuestionStatus>('DRAFT')
   const [origin, setOrigin] = useState<AdminQuestionDetail['origin']>('AUTHORED')
@@ -77,6 +88,7 @@ export function AdminQuestionEditorPage() {
         setPrompt(question.prompt)
         setExplanation(question.explanation ?? '')
         setDifficulty(question.difficulty)
+        setAnswerType(question.answerType)
         setStatus(question.status)
         setOrigin(question.origin)
         setOptions(
@@ -120,6 +132,7 @@ export function AdminQuestionEditorPage() {
         prompt,
         explanation: explanation.trim() === '' ? null : explanation,
         difficulty,
+        answerType,
         options: options.map((option) => ({ text: option.text, correct: option.correct })),
       }
 
@@ -178,8 +191,36 @@ export function AdminQuestionEditorPage() {
     setOptions((current) => current.map((option, at) => (at === index ? { ...option, text } : option)))
   }
 
-  const setCorrect = (index: number) => {
+  /**
+   * Turns an option's correctness on or off.
+   *
+   * Exclusive for a single choice, a toggle for a tick-all - which is exactly the difference
+   * between the two question types as far as a teacher is concerned, so it is the same control in
+   * two modes rather than two controls.
+   */
+  const toggleCorrect = (index: number) => {
+    if (answerType === 'MULTI_SELECT') {
+      setOptions((current) =>
+        current.map((option, at) => (at === index ? { ...option, correct: !option.correct } : option)),
+      )
+      return
+    }
     setOptions((current) => current.map((option, at) => ({ ...option, correct: at === index })))
+  }
+
+  /**
+   * Switching to a single choice has to drop any extra right answers, because the server will not
+   * store two - the database trigger refuses it. Doing it here rather than letting the save come
+   * back with an error keeps the editor from holding a state it cannot save.
+   */
+  const changeAnswerType = (next: AnswerType) => {
+    setAnswerType(next)
+    if (next === 'SINGLE_CHOICE') {
+      setOptions((current) => {
+        const firstCorrect = current.findIndex((option) => option.correct)
+        return current.map((option, index) => ({ ...option, correct: index === firstCorrect }))
+      })
+    }
   }
 
   const removeOption = (index: number) => {
@@ -268,6 +309,25 @@ export function AdminQuestionEditorPage() {
             </div>
 
             <label className="mt-4 block">
+              <span className="mb-1.5 block text-sm font-medium text-slate-700">How is it answered?</span>
+              <select
+                value={answerType}
+                onChange={(event) => changeAnswerType(event.target.value as AnswerType)}
+                className={fieldClass(fieldErrors['answerType'])}
+              >
+                {ANSWER_TYPES.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                ))}
+              </select>
+              <span className="mt-1 block text-xs text-slate-400">
+                {ANSWER_TYPES.find((type) => type.value === answerType)?.help}
+              </span>
+              <FieldError message={fieldErrors['answerType']} />
+            </label>
+
+            <label className="mt-4 block">
               <span className="mb-1.5 block text-sm font-medium text-slate-700">Question</span>
               <textarea
                 value={prompt}
@@ -297,7 +357,9 @@ export function AdminQuestionEditorPage() {
           <Card className="p-5">
             <div className="flex items-baseline justify-between gap-3">
               <span className="text-sm font-medium text-slate-700">Answers</span>
-              <span className="text-xs text-slate-400">Pick the correct one</span>
+              <span className="text-xs text-slate-400">
+                {answerType === 'MULTI_SELECT' ? 'Tick every correct answer' : 'Pick the correct one'}
+              </span>
             </div>
 
             <FieldError message={fieldErrors['options']} />
@@ -307,11 +369,15 @@ export function AdminQuestionEditorPage() {
               {options.map((option, index) => (
                 <div key={option.key} className="flex items-start gap-3">
                   <input
-                    type="radio"
+                    type={answerType === 'MULTI_SELECT' ? 'checkbox' : 'radio'}
                     name="correct-option"
                     checked={option.correct}
-                    onChange={() => setCorrect(index)}
-                    aria-label={`Mark option ${String.fromCharCode(65 + index)} as correct`}
+                    onChange={() => toggleCorrect(index)}
+                    aria-label={
+                      answerType === 'MULTI_SELECT'
+                        ? `Mark option ${String.fromCharCode(65 + index)} as correct`
+                        : `Mark option ${String.fromCharCode(65 + index)} as the correct answer`
+                    }
                     className="mt-3 h-4 w-4 shrink-0 accent-emerald-600"
                   />
                   <span className="mt-2.5 w-5 shrink-0 text-sm font-bold text-slate-500">
@@ -373,6 +439,7 @@ export function AdminQuestionEditorPage() {
           <QuestionCard
             prompt={prompt || 'Your question will appear here'}
             options={previewOptions}
+            variant={answerType === 'MULTI_SELECT' ? 'multi' : 'single'}
             stateFor={stateForPreview}
           >
             {explanation ? (

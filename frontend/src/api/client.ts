@@ -37,6 +37,14 @@ export function setUnauthorizedHandler(handler: UnauthorizedHandler | null): voi
   unauthorizedHandler = handler
 }
 
+/**
+ * The two ways an answer is submitted: one option for a single choice, a set for a tick-all.
+ *
+ * Modelled as a union rather than two optional fields so a caller cannot accidentally send both,
+ * and so the compiler asks which kind of question is being answered at the call site.
+ */
+export type AnswerSelection = { optionId: number } | { optionIds: number[] }
+
 interface RequestOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
   body?: unknown
@@ -101,7 +109,6 @@ export const api = {
    */
   signInWithGoogle: (idToken: string) =>
     apiRequest<AuthResponse>('/auth/google', { method: 'POST', body: { idToken } }),
-
   continueAsGuest: () => apiRequest<AuthResponse>('/auth/guest', { method: 'POST' }),
 
   profile: () => apiRequest<Profile>('/me'),
@@ -119,10 +126,14 @@ export const api = {
       body: { topicSlug, count },
     }),
 
-  submitAnswer: (sessionId: number, questionId: number, optionId: number, timeMs: number) =>
+  /**
+   * Submits one answer. Which field carries it is decided by the question's type on the server,
+   * not by the client, so the two cannot disagree about how an answer is graded.
+   */
+  submitAnswer: (sessionId: number, questionId: number, selection: AnswerSelection, timeMs: number) =>
     apiRequest<AnswerResult>(`/quiz/sessions/${sessionId}/answers`, {
       method: 'POST',
-      body: { questionId, optionId, timeMs },
+      body: { questionId, ...selection, timeMs },
     }),
 
   completeQuiz: (sessionId: number) =>

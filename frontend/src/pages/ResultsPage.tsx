@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { ApiRequestError, api } from '../api/client'
-import type { SessionSummary } from '../api/types'
+import type { ReviewOption, SessionSummary } from '../api/types'
 import { AccuracyRing } from '../components/AccuracyRing'
 import { LevelMeter } from '../components/LevelMeter'
 import { MiningReward } from '../components/MiningReward'
@@ -161,16 +161,16 @@ export function ResultsPage({ previewSummary }: { previewSummary?: SessionSummar
                   <p className="font-medium text-slate-900">
                     <span className="text-slate-400">{position + 1}.</span> {item.prompt}
                   </p>
+                  {item.answerType === 'MULTI_SELECT' ? (
+                    <p className="mt-0.5 text-xs font-medium text-indigo-500">Tick all that apply</p>
+                  ) : null}
 
                   <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm">
                     <span className={item.correct ? 'text-emerald-700' : 'text-rose-700'}>
-                      Your answer: {item.selectedLabel ? `${item.selectedLabel}) ` : ''}
-                      {item.selectedText ?? 'not answered'}
+                      Your answer: {renderAnswer(item.selectedOptions)}
                     </span>
-                    {!item.correct && item.correctText ? (
-                      <span className="text-emerald-700">
-                        Correct: {item.correctLabel}) {item.correctText}
-                      </span>
+                    {!item.correct ? (
+                      <span className="text-emerald-700">Correct: {renderAnswer(item.correctOptions)}</span>
                     ) : null}
                   </div>
 
@@ -216,4 +216,16 @@ function estimateDuration(summary: SessionSummary): number {
     return 0
   }
   return finished - started
+}
+
+/**
+ * An answer as one line of text: "A) 29, C) 37".
+ *
+ * The letters stay because they are how a student refers back to the question, and every option is
+ * listed rather than the first, because a tick-all answer is a set. An empty list is a question
+ * that was never answered, which is a real state on an abandoned round.
+ */
+function renderAnswer(options: ReviewOption[]): string {
+  if (options.length === 0) return 'not answered'
+  return options.map((option) => `${option.label}) ${option.text}`).join(', ')
 }

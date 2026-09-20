@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -59,6 +60,22 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors()
                 .forEach(error -> fieldErrors.putIfAbsent(error.getField(), error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(ApiError.validation("Please check the highlighted fields.", fieldErrors));
+    }
+
+    /**
+     * A body that cannot be read at all: malformed JSON, or a value for an enum field that does not
+     * exist, such as an unrecognised answer type. Declared explicitly for the same reason as the
+     * query-parameter handler above - it is a client mistake, and the catch-all below would
+     * otherwise answer it with a 500 and a stack trace.
+     *
+     * <p>Deliberately vague about which field, because Jackson's message names internal classes and
+     * a student hitting it is not going to act on the difference. Field-level detail belongs on the
+     * validator, which answers with real field keys.
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleUnreadableBody(HttpMessageNotReadableException ex) {
+        log.warn("Unreadable request body: {}", ex.getMostSpecificCause().getMessage());
+        return ResponseEntity.badRequest().body(ApiError.of(400, "That request body could not be read."));
     }
 
     @ExceptionHandler(BadCredentialsException.class)

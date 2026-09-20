@@ -1,5 +1,6 @@
 package com.realmaths.admin.dto;
 
+import com.realmaths.question.AnswerType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,10 @@ import java.util.List;
  * server, so a client cannot desync the two. There is no {@code status} or {@code origin}
  * either — status changes through publish and retire, and origin is not the client's to
  * claim.
+ *
+ * <p>{@code answerType} is nullable and defaults to {@code SINGLE_CHOICE}, so a client written
+ * before tick-all questions existed keeps producing the questions it meant to. An omitted answer
+ * type is a client that only knows about one type, not an ambiguous question.
  */
 public record SaveQuestionRequest(
         @NotNull(message = "Choose a topic.") Long topicId,
@@ -27,6 +32,7 @@ public record SaveQuestionRequest(
         @Min(value = 1, message = "Difficulty runs from 1 to 4.")
                 @Max(value = 4, message = "Difficulty runs from 1 to 4.")
                 int difficulty,
+        AnswerType answerType,
         @Size(max = 6, message = "A question can have at most six options.")
                 List<OptionDraft> options) {
 

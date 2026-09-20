@@ -18,7 +18,11 @@ import com.realmaths.user.User;
 import com.realmaths.user.UserRepository;
 import java.time.Clock;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +76,9 @@ public class QuizService {
      * Grades one answer server-side and updates points and streaks.
      *
      * Re-submitting the same question returns the original grade rather than
-     * double-awarding points, so a retried request (flaky wifi, double click) is safe.
+     * double-awarding points, so a retried request (flaky wifi, double click) is safe. That matters
+     * more for a tick-all question than it did before: the student now commits by pressing a button
+     * rather than by tapping an option, and a double click on that button is an ordinary thing to do.
      */
     @Transactional
     public AnswerResult submitAnswer(Long userId, Long sessionId, SubmitAnswerRequest request) {
@@ -91,12 +97,8 @@ public class QuizService {
             return toResult(session, previous.get());
         }
 
-        AnswerOption selected = question.getOptions().stream()
-                .filter(option -> option.getId().equals(request.optionId()))
-                .findFirst()
-                .orElseThrow(() -> ApiException.badRequest("That option does not belong to the question."));
-
-        boolean correct = selected.isCorrect();
+        List<AnswerOption> selected = resolveSelection(question, request);
+        boolean correct = isCorrect(question, selected);
         QuizAnswer answer = answerRepository.save(
                 new QuizAnswer(session, question, selected, correct, request.timeMs(), clock.instant()));
 
@@ -110,6 +112,70 @@ public class QuizService {
         }
 
         return toResult(session, answer);
+    }
+
+    /**
+     * Reads the answer out of whichever field the question's type deals in.
+     *
+     * <p>Chosen by the question, never by the request, so a client cannot change how its answer is
+     * graded by populating the other field. An option that is not part of this question is refused
+     * rather than ignored: it means the client is confused about what it is answering, and silently
+     * dropping it would turn a bug into a wrong answer.
+     */
+    private static List<AnswerOption> resolveSelection(Question question, SubmitAnswerRequest request) {
+        Map<Long, AnswerOption> byId = question.getOptions().stream()
+                .collect(Collectors.toMap(AnswerOption::getId, Function.identity()));
+
+        if (question.getAnswerType().isMultiSelect()) {
+            List<Long> ids = request.optionIds() == null ? List.of() : request.optionIds();
+            // distinct() so a client repeating an id cannot store the same option twice. The set
+            // comparison below would ignore a duplicate anyway, but the answer on file should say
+            // what the student did, and nobody ticks one box twice.
+            return ids.stream().distinct().map(id -> requireOption(byId, id)).toList();
+        }
+
+        if (request.optionId() == null) {
+            throw ApiException.badRequest("Choose an option to answer this question.");
+        }
+        return List.of(requireOption(byId, request.optionId()));
+    }
+
+    private static AnswerOption requireOption(Map<Long, AnswerOption> byId, Long optionId) {
+        AnswerOption option = byId.get(optionId);
+        if (option == null) {
+            throw ApiException.badRequest("That option does not belong to the question.");
+        }
+        return option;
+    }
+
+    /**
+     * Whether the chosen set is exactly the correct set.
+     *
+     * <p>One rule for both types. A single choice is simply the case where the correct set has one
+     * member - the old {@code selected.isCorrect()} check is what this reduces to - so there is no
+     * branch here to drift from the answer type, and a future option-based type is graded correctly
+     * without being mentioned.
+     *
+     * <p>Missing an option is wrong and ticking an extra one is wrong, which is the intended
+     * severity for a tick-all question: "some right answers" is not the same as "the right
+     * answers". No partial credit, because the score and the streak are counts of questions
+     * answered correctly and a half-marked question would make both mean less.
+     */
+    private static boolean isCorrect(Question question, List<AnswerOption> selected) {
+        Set<Long> correct = question.correctOptions().stream()
+                .map(AnswerOption::getId)
+                .collect(Collectors.toSet());
+
+        if (correct.isEmpty()) {
+            // Refused outright rather than compared. A misconfigured question has no correct
+            // answers, and an empty selection would then equal the empty key and be marked right -
+            // awarding full marks for ticking nothing. The publish gate makes this unreachable,
+            // but the failure mode is bad enough to be worth closing here as well.
+            return false;
+        }
+
+        Set<Long> chosen = selected.stream().map(AnswerOption::getId).collect(Collectors.toSet());
+        return chosen.equals(correct);
     }
 
     /** Finishing twice is harmless: the first completion time is kept, and play time is paid once. */
@@ -196,8 +262,9 @@ public class QuizService {
 
         return new AnswerResult(
                 question.getId(),
+                question.getAnswerType(),
                 answer.isCorrect(),
-                question.correctOption().map(AnswerOption::getId).orElse(null),
+                question.correctOptions().stream().map(AnswerOption::getId).toList(),
                 question.getExplanation(),
                 answer.isCorrect() ? properties.quiz().pointsPerCorrectAnswer() : 0,
                 user.getPoints(),

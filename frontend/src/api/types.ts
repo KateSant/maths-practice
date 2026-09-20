@@ -34,10 +34,20 @@ export interface AnswerOption {
   text: string
 }
 
+/**
+ * How a question is answered, and therefore how it is graded.
+ *
+ * The server sends this because the screen cannot otherwise tell a tick-all question from a single
+ * choice. It says how to answer, never what the answer is - the key stays on the server until the
+ * answer has been submitted.
+ */
+export type AnswerType = 'SINGLE_CHOICE' | 'MULTI_SELECT'
+
 export interface Question {
   id: number
   prompt: string
   difficulty: number
+  answerType: AnswerType
   options: AnswerOption[]
 }
 
@@ -52,8 +62,10 @@ export interface QuizSession {
 
 export interface AnswerResult {
   questionId: number
+  answerType: AnswerType
   correct: boolean
-  correctOptionId: number
+  /** The whole key. One entry for a single choice, several for a tick-all. */
+  correctOptionIds: number[]
   explanation?: string
   pointsAwarded: number
   totalPoints: number
@@ -63,14 +75,20 @@ export interface AnswerResult {
   correctSoFar: number
 }
 
+/** One option as the review shows it. */
+export interface ReviewOption {
+  label: string
+  text: string
+}
+
 export interface QuestionReview {
   questionId: number
   prompt: string
-  selectedLabel?: string
-  selectedText?: string
+  answerType: AnswerType
+  /** Empty when the question was never answered, which the review says in words. */
+  selectedOptions: ReviewOption[]
   correct: boolean
-  correctLabel?: string
-  correctText?: string
+  correctOptions: ReviewOption[]
   explanation?: string
 }
 

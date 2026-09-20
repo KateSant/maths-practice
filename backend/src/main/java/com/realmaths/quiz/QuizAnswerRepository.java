@@ -12,12 +12,20 @@ public interface QuizAnswerRepository extends JpaRepository<QuizAnswer, Long> {
 
     long countBySessionId(Long sessionId);
 
-    /** Everything needed to render a review screen, in one round trip. */
+    /**
+     * Every answer in one round, with the question and its options, ready for the review screen.
+     *
+     * <p>The student's selections are deliberately <em>not</em> fetch-joined here. Joining them
+     * alongside {@code q.options} would make the query return the cartesian product of the two
+     * collections, and because the question's options are a bag, each option would be listed once
+     * per selection - so a three-answer key would render six times over. They are loaded by
+     * subselect on first access instead ({@code QuizAnswer.selectedOptions}), which costs one extra
+     * query rather than producing a wrong answer.
+     */
     @Query("""
-            select a from QuizAnswer a
+            select distinct a from QuizAnswer a
             join fetch a.question q
             join fetch q.options
-            left join fetch a.selectedOption
             where a.session.id = :sessionId
             order by a.id asc
             """)

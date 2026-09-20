@@ -197,20 +197,33 @@ I'd take **A**, because it is one small migration at a time when the database is
 that the compiler will not catch that — the existing quiz tests should.
 
 Everything else the editor needs already exists: prompt, explanation, difficulty, topic,
-options with labels and positions.
+options with labels and positions, and (from `V6__multi_select_questions.sql`) the answer type
+that says whether a question is answered once or ticked.
 
 On drafts, one detail that matters for the editor's feel: **a draft is allowed to be invalid.**
-She must be able to save a question halfway through writing it. So:
-
-- `answer_options_one_correct_idx` (at most one correct) stays enforced always — you never want
-  two, at any stage.
-- "at least one option, exactly one correct, non-blank text" is checked at the
-  **`DRAFT` → `PUBLISHED` transition**, in one validator method that every route goes through —
-  the editor, the import, and any future bulk publish.
+She must be able to save a question halfway through writing it. So the rules that make a question
+answerable are checked at the **`DRAFT` → `PUBLISHED` transition**, in one validator method that
+every route goes through — the editor, the import, and any future bulk publish. "At least one option,
+non-blank text, and an answer key the question's type allows" — exactly one correct option for a
+single choice, at least one for a tick-all. The single-choice half is held by the database as well;
+see §3.1.
 
 The prototype can be blunt about deleting: offer **Retire** (`status = 'RETIRED'`) as the normal
 action and let hard delete exist for mistakes. Pre-users there is nothing to protect. The
 production answer is in §7.
+
+### 3.1 Superseded: the unconditional one-correct index
+
+`answer_options_one_correct_idx` made two correct options impossible for every question. Tick-all
+questions need several, so `V6__multi_select_questions.sql` replaced it with
+`answer_options_single_choice_insert` and its `UPDATE` counterpart: a pair of triggers that apply
+the same rule to single-choice questions only. A partial index could not do the same job, because
+its `WHERE` clause may only reference columns of the table being indexed, so it cannot read the
+parent question's answer type.
+
+The invariant stays in the database rather than moving to the validator, for the reason
+`V1__init.sql` gave — grading, and any future importer, should be able to rely on it — and
+`SchemaMigrationTest` asserts it in both directions.
 
 ---
 
@@ -313,7 +326,7 @@ Also parked:
   `answer_options.question_id` are `on delete cascade`, so deleting a question — or a topic,
   which cascades to its questions — destroys answer history and the provenance of points. Fix:
   retire instead of delete, enforced by a service guard and an `BEFORE DELETE` trigger, in the
-  spirit of the existing `answer_options_one_correct_idx` guarantee.
+  spirit of the conditional single-choice guarantee in `V6__multi_select_questions.sql`.
 - **`question_revisions`** — append-only JSON snapshot per publish/edit, for undo and "what did
   this look like before?". Deliberately a JSON blob: it's a historical record, never queried
   relationally.
@@ -354,6 +367,7 @@ other agent's checkout and branch stay untouched. 86 backend tests (was 63).
 | | |
 |---|---|
 | `V4__question_lifecycle.sql` | `status` replaces `active`; `origin` marks the 32 seeded questions |
+| `V6__multi_select_questions.sql` | `answer_type`; the one-correct index becomes a trigger; answer selections move to `quiz_answer_options`; one tick-all seed question |
 | `POST/PUT /api/admin/questions` | Create and edit. Labels derived from position, never sent by the client |
 | `GET /api/admin/questions` | Paged, filter by topic/status/difficulty/origin and prompt search |
 | `POST .../{id}/publish`, `.../retire` | The only two status transitions |

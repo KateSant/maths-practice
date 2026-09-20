@@ -1,3 +1,4 @@
+import type { AnswerType } from './types'
 import { apiRequest } from './client'
 
 /**
@@ -28,6 +29,7 @@ export interface AdminQuestionSummary {
   topicId: number
   topicName: string
   difficulty: number
+  answerType: AnswerType
   status: QuestionStatus
   origin: QuestionOrigin
   createdAt: string
@@ -40,6 +42,7 @@ export interface AdminQuestionDetail {
   prompt: string
   explanation?: string
   difficulty: number
+  answerType: AnswerType
   status: QuestionStatus
   origin: QuestionOrigin
   createdAt: string
@@ -65,6 +68,7 @@ export interface SaveQuestionRequest {
   prompt: string
   explanation?: string | null
   difficulty: number
+  answerType: AnswerType
   options: QuestionOptionDraft[]
 }
 
