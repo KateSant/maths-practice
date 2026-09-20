@@ -266,10 +266,3 @@ Other things that have actually gone wrong, so worth checking first:
 | Two dev servers fighting over 5174 | `strictPort` means the second one fails loudly rather than moving. A second worktree can use `--port 5173`, but Google sign-in will not work there until that origin is registered on the OAuth client. **Do not fix this by editing the port in `frontend/vite.config.ts`** — that is what breaks sign-in for everyone. |
 | An edited question 404s | It has no options yet, and a query used an inner join. Fixed, but a reminder that a draft may be empty. |
 | `{}` in a component | JSX syntax interpolating a value. It is not text on the page. |
-
----
-
-## Parked work
-
-See `docs/deferred.md`. It covers the missing privacy policy, case-insensitive email uniqueness,
-guest accounts losing their progress on signing in, and the untested admin screens.
