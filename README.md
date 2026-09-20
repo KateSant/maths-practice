@@ -241,7 +241,7 @@ administrator can call `/api/admin/**` whatever the navigation shows.
 ### A question has a lifecycle, and a draft may be invalid
 
 `status` is `DRAFT`, `PUBLISHED` or `RETIRED`. A teacher has to be able to save something
-half-written, so structural limits are checked on save (lengths, difficulty 1–5, at most six
+half-written, so structural limits are checked on save (lengths, difficulty 1–4, at most six
 options) while "is this answerable" — a prompt, at least two options, and an answer key its type
 allows — is checked only on the `DRAFT`→`PUBLISHED` transition, in `QuestionValidator`. The editor,
 a bulk publish and any future importer all pass through that one gate.
