@@ -1,7 +1,7 @@
 # Maths practice app
 
 Multiple-choice maths practice for secondary school students, plus a teacher-facing editable
-question bank. Finishing a set is gamified with a Minecraft-themed mining game.
+question bank. Finishing a set is gamified with a fun activity.
 
 ---
 
@@ -271,6 +271,5 @@ Other things that have actually gone wrong, so worth checking first:
 
 ## Parked work
 
-See `docs/deferred.md`. It covers publishing the Google OAuth app, the missing privacy policy,
-case-insensitive email uniqueness, guest accounts losing their progress on signing in, and the
-untested admin screens.
+See `docs/deferred.md`. It covers the missing privacy policy, case-insensitive email uniqueness,
+guest accounts losing their progress on signing in, and the untested admin screens.

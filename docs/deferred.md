@@ -16,20 +16,6 @@ listed in the section below.
 
 ---
 
-## Publishing the Google OAuth app
-
-Currently optional and deliberately skipped. An app requesting only basic identity scopes is exempt
-from the trusted-list restriction, so sign-in works for anybody with the app still in *Testing* and
-no branding filled in.
-
-It stops being optional the day we request any scope beyond `openid`, `email` and `profile` — Google
-Classroom being the plausible one — because the exemption is attached to the scopes. At that point:
-verify `thinktalkbuild.com` with a TXT record at Squarespace, fill in Branding, publish. Google will
-also want a homepage and privacy-policy URL, so **the privacy policy page would need to come back**
-(it is in git history).
-
----
-
 ## The privacy policy
 
 Removed at the product owner's request and not required while the app is unpublished. Worth
