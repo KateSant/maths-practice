@@ -3,6 +3,7 @@
   "name": "Solving linear equations",
   "strand": "Algebra",
   "dfeUnit": "Solving linear equations (Y8)",
+  "description": "Solving linear equations, including unknowns on both sides.",
   "yearGroup": 8,
   "planned": 18,
   "questions": [
@@ -13,10 +14,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Sam solves 4x − 5 = 27 and gets x = 5.5. Which mistake did Sam make?",
       "options": [
-        {"text": "Subtracted 5 instead of adding 5", "correct": true},
-        {"text": "Divided by 5 instead of by 4", "correct": false, "catches": "EQ-OP-CONFUSE"},
-        {"text": "Forgot to divide by 4", "correct": false, "catches": "EQ-ORDER-INVERSE"},
-        {"text": "Multiplied by 4 instead of dividing", "correct": false, "catches": "EQ-OP-CONFUSE"}
+        {
+          "text": "Subtracted 5 instead of adding 5",
+          "correct": true
+        },
+        {
+          "text": "Divided by 5 instead of by 4",
+          "correct": false,
+          "catches": "EQ-OP-CONFUSE"
+        },
+        {
+          "text": "Forgot to divide by 4",
+          "correct": false,
+          "catches": "EQ-ORDER-INVERSE"
+        },
+        {
+          "text": "Multiplied by 4 instead of dividing",
+          "correct": false,
+          "catches": "EQ-OP-CONFUSE"
+        }
       ],
       "explanation": "4x − 5 = 27 becomes 4x = 32 by adding 5 to both sides, so x = 8. Sam did 27 − 5 = 22 and then divided by 4, which gives 5.5. To undo 'subtract 5' you must add 5. Dividing by 5, forgetting to divide, or multiplying by 4 would all give different wrong answers."
     },
@@ -27,10 +43,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Solve 2x + 5 = 13.",
       "options": [
-        {"text": "x = 4", "correct": true},
-        {"text": "x = 9", "correct": false, "catches": "EQ-SIGN-ERROR"},
-        {"text": "x = 6.5", "correct": false, "catches": "EQ-ORDER-INVERSE"},
-        {"text": "x = 8", "correct": false, "catches": "EQ-ORDER-INVERSE"}
+        {
+          "text": "x = 4",
+          "correct": true
+        },
+        {
+          "text": "x = 9",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        },
+        {
+          "text": "x = 6.5",
+          "correct": false,
+          "catches": "EQ-ORDER-INVERSE"
+        },
+        {
+          "text": "x = 8",
+          "correct": false,
+          "catches": "EQ-STOP-EARLY"
+        }
       ],
       "explanation": "Subtract 5 from both sides to get 2x = 8, then divide by 2 to get x = 4. Adding 5 instead gives 2x = 18 and x = 9. Dividing by 2 first gives 6.5. Subtracting but stopping before dividing gives 8."
     },
@@ -41,12 +72,32 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "2x + 5 = 13 has solution x = 4", "correct": true},
-        {"text": "2x + 5 = 13 has solution x = 9", "correct": false, "catches": "EQ-SIGN-ERROR"},
-        {"text": "3x = 12 has solution x = 4", "correct": true},
-        {"text": "x − 7 = 3 has solution x = 10", "correct": true},
-        {"text": "x − 7 = 3 has solution x = −4", "correct": false, "catches": "EQ-SIGN-ERROR"},
-        {"text": "5x = 45 has solution x = 9", "correct": true}
+        {
+          "text": "2x + 5 = 13 has solution x = 4",
+          "correct": true
+        },
+        {
+          "text": "2x + 5 = 13 has solution x = 9",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        },
+        {
+          "text": "3x = 12 has solution x = 4",
+          "correct": true
+        },
+        {
+          "text": "x − 7 = 3 has solution x = 10",
+          "correct": true
+        },
+        {
+          "text": "x − 7 = 3 has solution x = −4",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        },
+        {
+          "text": "5x = 45 has solution x = 9",
+          "correct": true
+        }
       ],
       "explanation": "Undo each operation by doing the opposite to both sides. 2x + 5 = 13 gives 2x = 8 and x = 4; adding 5 gives x = 9. 3x = 12 gives x = 4, and 5x = 45 gives x = 9. x − 7 = 3 gives x = 10 by adding 7; writing −4 subtracts 7 again instead."
     },
@@ -57,10 +108,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Lina solves 3x + 2 = 11 by working out (11 + 2) ÷ 3 = 4.33. What has she done?",
       "options": [
-        {"text": "Added 2 instead of subtracting it", "correct": true},
-        {"text": "Divided by 3 before subtracting 2", "correct": false, "catches": "EQ-ORDER-INVERSE"},
-        {"text": "Multiplied both sides by 3", "correct": false, "catches": "EQ-OP-CONFUSE"},
-        {"text": "Forgot to divide by 3", "correct": false, "catches": "EQ-ORDER-INVERSE"}
+        {
+          "text": "Added 2 instead of subtracting it",
+          "correct": true
+        },
+        {
+          "text": "Divided by 3 before subtracting 2",
+          "correct": false,
+          "catches": "EQ-ORDER-INVERSE"
+        },
+        {
+          "text": "Multiplied both sides by 3",
+          "correct": false,
+          "catches": "EQ-OP-CONFUSE"
+        },
+        {
+          "text": "Forgot to divide by 3",
+          "correct": false,
+          "catches": "EQ-ORDER-INVERSE"
+        }
       ],
       "explanation": "3x + 2 = 11 becomes 3x = 9 by subtracting 2, so x = 3. Lina has added 2, giving 13 ÷ 3 = 4.33. Dividing by 3 first would give 11/3 − 2; multiplying by 3 or stopping at 3x = 9 would give different results again."
     },
@@ -71,12 +137,27 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Solve 5x = 2x + 9.",
       "options": [
-        {"text": "x = 3", "correct": true},
-        {"text": "x = 9/7", "correct": false, "catches": "EQ-BOTH-SIDES"},
-        {"text": "x = 9", "correct": false, "catches": "EQ-BOTH-SIDES"},
-        {"text": "x = 1.5", "correct": false, "catches": "EQ-BOTH-SIDES"}
+        {
+          "text": "x = 3",
+          "correct": true
+        },
+        {
+          "text": "x = 9/7",
+          "correct": false,
+          "catches": "EQ-BOTH-SIDES"
+        },
+        {
+          "text": "x = 9",
+          "correct": false,
+          "catches": "EQ-BOTH-SIDES"
+        },
+        {
+          "text": "x = 1.8",
+          "correct": false,
+          "catches": "EQ-BOTH-SIDES"
+        }
       ],
-      "explanation": "Subtract 2x from both sides to get 3x = 9, so x = 3. Adding the x terms, 5x + 2x = 7x, gives the equation 7x = 9 and the wrong answer 9/7. Ignoring the 2x leaves 5x = 9. Dividing only one side gives 1.5."
+      "explanation": "Subtract 2x from both sides to get 3x = 9, so x = 3. Adding the x terms, 5x + 2x = 7x, gives the equation 7x = 9 and the wrong answer 9/7. Ignoring the 2x leaves 5x = 9, so x = 1.8."
     },
     {
       "key": "eq-tick-both-sides",
@@ -85,12 +166,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "4x = x + 9 has solution x = 3", "correct": true},
-        {"text": "4x = x + 9 has solution x = 9/5", "correct": false, "catches": "EQ-BOTH-SIDES"},
-        {"text": "6x = 2x + 8 has solution x = 2", "correct": true},
-        {"text": "6x = 2x + 8 has solution x = 1", "correct": false, "catches": "EQ-BOTH-SIDES"},
-        {"text": "3x + 4 = x + 10 has solution x = 3", "correct": true},
-        {"text": "3x + 4 = x + 10 has solution x = 7", "correct": false, "catches": "EQ-BOTH-SIDES"}
+        {
+          "text": "4x = x + 9 has solution x = 3",
+          "correct": true
+        },
+        {
+          "text": "4x = x + 9 has solution x = 9/5",
+          "correct": false,
+          "catches": "EQ-BOTH-SIDES"
+        },
+        {
+          "text": "6x = 2x + 8 has solution x = 2",
+          "correct": true
+        },
+        {
+          "text": "6x = 2x + 8 has solution x = 1",
+          "correct": false,
+          "catches": "EQ-BOTH-SIDES"
+        },
+        {
+          "text": "3x + 4 = x + 10 has solution x = 3",
+          "correct": true
+        },
+        {
+          "text": "3x + 4 = x + 10 has solution x = 7",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        }
       ],
       "explanation": "Collect the x terms on one side by subtracting the smaller amount: 4x = x + 9 gives 3x = 9 and x = 3; 6x = 2x + 8 gives 4x = 8 and x = 2; 3x + 4 = x + 10 gives 2x = 6 and x = 3. Adding the x terms instead of subtracting, or combining the numbers and letters carelessly, gives 9/5, 1 and 7."
     },
@@ -101,10 +203,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Solve x + 5 = 2.",
       "options": [
-        {"text": "x = −3", "correct": true},
-        {"text": "x = 7", "correct": false, "catches": "EQ-SIGN-ERROR"},
-        {"text": "x = 3", "correct": false, "catches": "EQ-NO-NEGATIVE"},
-        {"text": "There is no solution", "correct": false, "catches": "EQ-NO-NEGATIVE"}
+        {
+          "text": "x = −3",
+          "correct": true
+        },
+        {
+          "text": "x = 7",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        },
+        {
+          "text": "x = 3",
+          "correct": false,
+          "catches": "EQ-NO-NEGATIVE"
+        },
+        {
+          "text": "There is no solution",
+          "correct": false,
+          "catches": "EQ-NO-NEGATIVE"
+        }
       ],
       "explanation": "Subtract 5 from both sides: x = 2 − 5 = −3. Adding 5 gives 7. Writing 3 keeps the size but drops the sign, and saying there is no solution assumes an answer cannot be negative. A negative value is perfectly possible."
     },
@@ -115,12 +232,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "x + 5 = 2 has solution x = −3", "correct": true},
-        {"text": "x + 5 = 2 has no solution", "correct": false, "catches": "EQ-NO-NEGATIVE"},
-        {"text": "2x = −8 has solution x = −4", "correct": true},
-        {"text": "2x = −8 has solution x = 4", "correct": false, "catches": "EQ-NO-NEGATIVE"},
-        {"text": "x − 3 = −7 has solution x = −4", "correct": true},
-        {"text": "Every equation must have a positive solution", "correct": false, "catches": "EQ-NO-NEGATIVE"}
+        {
+          "text": "x + 5 = 2 has solution x = −3",
+          "correct": true
+        },
+        {
+          "text": "x + 5 = 2 has no solution",
+          "correct": false,
+          "catches": "EQ-NO-NEGATIVE"
+        },
+        {
+          "text": "2x = −8 has solution x = −4",
+          "correct": true
+        },
+        {
+          "text": "2x = −8 has solution x = 4",
+          "correct": false,
+          "catches": "EQ-NO-NEGATIVE"
+        },
+        {
+          "text": "x − 3 = −7 has solution x = −4",
+          "correct": true
+        },
+        {
+          "text": "Every equation must have a positive solution",
+          "correct": false,
+          "catches": "EQ-NO-NEGATIVE"
+        }
       ],
       "explanation": "x + 5 = 2 gives x = −3, 2x = −8 gives x = −4, and x − 3 = −7 gives x = −4 by adding 3. None of these equations is impossible; the solutions are simply negative. Insisting that a solution must be positive rejects all three correct answers."
     },
@@ -131,10 +269,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Solve x/3 = 4.",
       "options": [
-        {"text": "x = 12", "correct": true},
-        {"text": "x = 4/3", "correct": false, "catches": "EQ-FRACTION-COEFF"},
-        {"text": "x = 7", "correct": false, "catches": "EQ-BALANCE-AS-ACTION"},
-        {"text": "x = 1/12", "correct": false, "catches": "EQ-FRACTION-COEFF"}
+        {
+          "text": "x = 12",
+          "correct": true
+        },
+        {
+          "text": "x = 4/3",
+          "correct": false,
+          "catches": "EQ-FRACTION-COEFF"
+        },
+        {
+          "text": "x = 7",
+          "correct": false,
+          "catches": "EQ-BALANCE-AS-ACTION"
+        },
+        {
+          "text": "x = 1/12",
+          "correct": false,
+          "catches": "EQ-FRACTION-COEFF"
+        }
       ],
       "explanation": "x is divided by 3, so multiply both sides by 3: x = 12. Dividing 4 by 3 gives 4/3, which does the wrong operation. Adding 3 instead of multiplying gives 7, and taking the reciprocal of 12 gives 1/12."
     },
@@ -145,10 +298,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "To solve (x + 4)/2 = 5, Priya writes x + 4 = 5/2. What has she done?",
       "options": [
-        {"text": "Divided the 5 by 2 instead of multiplying by 2", "correct": true},
-        {"text": "Subtracted 4 before multiplying by 2", "correct": false, "catches": "EQ-ORDER-INVERSE"},
-        {"text": "Multiplied only the x by 2", "correct": false, "catches": "EQ-DIVIDE-ALL"},
-        {"text": "Forgot the 4 altogether", "correct": false, "catches": "EQ-DIVIDE-ALL"}
+        {
+          "text": "Divided the 5 by 2 instead of multiplying by 2",
+          "correct": true
+        },
+        {
+          "text": "Subtracted 4 before multiplying by 2",
+          "correct": false,
+          "catches": "EQ-ORDER-INVERSE"
+        },
+        {
+          "text": "Multiplied only the x by 2",
+          "correct": false,
+          "catches": "EQ-DIVIDE-ALL"
+        },
+        {
+          "text": "Forgot the 4 altogether",
+          "correct": false,
+          "catches": "EQ-DIVIDE-ALL"
+        }
       ],
       "explanation": "The whole of x + 4 is divided by 2, so multiply both sides by 2 to get x + 4 = 10 and x = 6. Priya has divided 5 by 2 instead, which is the opposite of the operation needed. Subtracting before multiplying, multiplying only the x, or dropping the 4 would all give other wrong answers."
     },
@@ -159,10 +327,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Solve 3(x − 2) = 9.",
       "options": [
-        {"text": "x = 5", "correct": true},
-        {"text": "x = 1", "correct": false, "catches": "EQ-ORDER-INVERSE"},
-        {"text": "x = 9", "correct": false, "catches": "EQ-DIVIDE-ALL"},
-        {"text": "x = 11/3", "correct": false, "catches": "EQ-ORDER-INVERSE"}
+        {
+          "text": "x = 5",
+          "correct": true
+        },
+        {
+          "text": "x = 1",
+          "correct": false,
+          "catches": "EQ-ORDER-INVERSE"
+        },
+        {
+          "text": "x = 9",
+          "correct": false,
+          "catches": "EQ-DIVIDE-ALL"
+        },
+        {
+          "text": "x = 11/3",
+          "correct": false,
+          "catches": "EQ-ORDER-INVERSE"
+        }
       ],
       "explanation": "Divide both sides by 3 to get x − 2 = 3, then add 2 to get x = 5. Dividing 9 by 3 and then subtracting 2 instead of adding gives 1. Leaving the bracket alone and answering 9 ignores the 3, and 11/3 comes from dividing before undoing the subtraction in the wrong order."
     },
@@ -173,12 +356,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "4x − 5 = 27 has solution x = 8", "correct": true},
-        {"text": "4x − 5 = 27 has solution x = 5.5", "correct": false, "catches": "EQ-SIGN-ERROR"},
-        {"text": "2x + 7 = 1 has solution x = −3", "correct": true},
-        {"text": "2x + 7 = 1 has solution x = 4", "correct": false, "catches": "EQ-SIGN-ERROR"},
-        {"text": "x/4 = 3 has solution x = 12", "correct": true},
-        {"text": "x/4 = 3 has solution x = 0.75", "correct": false, "catches": "EQ-FRACTION-COEFF"}
+        {
+          "text": "4x − 5 = 27 has solution x = 8",
+          "correct": true
+        },
+        {
+          "text": "4x − 5 = 27 has solution x = 5.5",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        },
+        {
+          "text": "2x + 7 = 1 has solution x = −3",
+          "correct": true
+        },
+        {
+          "text": "2x + 7 = 1 has solution x = 4",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        },
+        {
+          "text": "x/4 = 3 has solution x = 12",
+          "correct": true
+        },
+        {
+          "text": "x/4 = 3 has solution x = 0.75",
+          "correct": false,
+          "catches": "EQ-FRACTION-COEFF"
+        }
       ],
       "explanation": "4x − 5 = 27 gives 4x = 32 and x = 8; subtracting the 5 gives 5.5. 2x + 7 = 1 gives 2x = −6 and x = −3; adding 7 gives 4. x/4 = 3 gives x = 12 by multiplying by 4; dividing 3 by 4 gives 0.75."
     },
@@ -189,12 +393,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "In 4x = 20 the = sign means the two sides have equal value", "correct": true},
-        {"text": "In 4x = 20 the = sign means \"work out the answer\"", "correct": false, "catches": "EQ-BALANCE-AS-ACTION"},
-        {"text": "Adding the same number to both sides keeps the balance", "correct": true},
-        {"text": "Subtracting 3 from one side and adding 3 to the other keeps the balance", "correct": false, "catches": "EQ-ONE-SIDE"},
-        {"text": "Multiplying both sides by 2 keeps the balance", "correct": true},
-        {"text": "Dividing one side by 4 and leaving the other side unchanged keeps the balance", "correct": false, "catches": "EQ-ONE-SIDE"}
+        {
+          "text": "In 4x = 20 the = sign means the two sides have equal value",
+          "correct": true
+        },
+        {
+          "text": "In 4x = 20 the = sign means \"work out the answer\"",
+          "correct": false,
+          "catches": "EQ-BALANCE-AS-ACTION"
+        },
+        {
+          "text": "Adding the same number to both sides keeps the balance",
+          "correct": true
+        },
+        {
+          "text": "Subtracting 3 from one side and adding 3 to the other keeps the balance",
+          "correct": false,
+          "catches": "EQ-ONE-SIDE"
+        },
+        {
+          "text": "Multiplying both sides by 2 keeps the balance",
+          "correct": true
+        },
+        {
+          "text": "Dividing one side by 4 and leaving the other side unchanged keeps the balance",
+          "correct": false,
+          "catches": "EQ-ONE-SIDE"
+        }
       ],
       "explanation": "An equals sign says the two sides are the same value; it is not an instruction to calculate. To keep that equality you must do the same thing to both sides. Adding to one side while subtracting from the other, or dividing only one side, breaks the balance and changes the solution."
     },
@@ -205,11 +430,28 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "3x = 15 has solution x = 5", "correct": true},
-        {"text": "If 4x = 12, then 4x + 3 = 12", "correct": false, "catches": "EQ-ONE-SIDE"},
-        {"text": "If x + 2 = 7, then x = 5", "correct": true},
-        {"text": "If x + 2 = 7, then x = 9", "correct": false, "catches": "EQ-ONE-SIDE"},
-        {"text": "If 2x = 8, then x = 4", "correct": true}
+        {
+          "text": "3x = 15 has solution x = 5",
+          "correct": true
+        },
+        {
+          "text": "If 4x = 12, then 4x + 3 = 12",
+          "correct": false,
+          "catches": "EQ-ONE-SIDE"
+        },
+        {
+          "text": "If x + 2 = 7, then x = 5",
+          "correct": true
+        },
+        {
+          "text": "If x + 2 = 7, then x = 9",
+          "correct": false,
+          "catches": "EQ-ONE-SIDE"
+        },
+        {
+          "text": "If 2x = 8, then x = 4",
+          "correct": true
+        }
       ],
       "explanation": "3x = 15 gives x = 5, x + 2 = 7 gives x = 5 by subtracting 2, and 2x = 8 gives x = 4. In the false statements an operation has been applied to one side only: 4x + 3 no longer equals 12, and x = 9 adds 2 to the right-hand side instead of subtracting it."
     },
@@ -221,10 +463,25 @@
       "bridge": true,
       "prompt": "I think of a number, multiply it by 4, then subtract 3. The result is 25. What was the number?",
       "options": [
-        {"text": "7", "correct": true},
-        {"text": "5.5", "correct": false, "catches": "EQ-SIGN-ERROR"},
-        {"text": "9.25", "correct": false, "catches": "EQ-ORDER-INVERSE"},
-        {"text": "28", "correct": false, "catches": "EQ-SIGN-ERROR"}
+        {
+          "text": "7",
+          "correct": true
+        },
+        {
+          "text": "5.5",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        },
+        {
+          "text": "9.25",
+          "correct": false,
+          "catches": "EQ-ORDER-INVERSE"
+        },
+        {
+          "text": "28",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        }
       ],
       "explanation": "The equation is 4x − 3 = 25. Add 3 to get 4x = 28, then divide by 4 to get x = 7. Subtracting 3 instead gives 22 ÷ 4 = 5.5. Dividing by 4 before adding 3 gives 6.25 + 3 = 9.25. Adding 3 and stopping gives 28."
     },
@@ -236,12 +493,33 @@
       "retention": true,
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "When x = 4, 2x + 1 = 9", "correct": true},
-        {"text": "When x = 4, 2x + 1 = 12", "correct": false, "catches": "ALG-MULT-NOT-ADD"},
-        {"text": "When x = 3, x + 5 = 8", "correct": true},
-        {"text": "When x = 3, x + 5 = 35", "correct": false, "catches": "ALG-LETTER-OBJECT"},
-        {"text": "When x = 2, 3x = 6", "correct": true},
-        {"text": "When x = 2, 3x = 5", "correct": false, "catches": "ALG-MULT-NOT-ADD"}
+        {
+          "text": "When x = 4, 2x + 1 = 9",
+          "correct": true
+        },
+        {
+          "text": "When x = 4, 2x + 1 = 12",
+          "correct": false,
+          "catches": "ALG-MULT-NOT-ADD"
+        },
+        {
+          "text": "When x = 3, x + 5 = 8",
+          "correct": true
+        },
+        {
+          "text": "When x = 3, x + 5 = 35",
+          "correct": false,
+          "catches": "ALG-LETTER-OBJECT"
+        },
+        {
+          "text": "When x = 2, 3x = 6",
+          "correct": true
+        },
+        {
+          "text": "When x = 2, 3x = 5",
+          "correct": false,
+          "catches": "ALG-MULT-NOT-ADD"
+        }
       ],
       "explanation": "Substituting means replacing the letter with its value: 2 × 4 + 1 = 9, 3 + 5 = 8, and 3 × 2 = 6. 2x + 1 = 12 adds instead of multiplying. Writing 35 puts the digits together as if the letter were not a number. 3x = 5 adds 3 and 2 rather than multiplying."
     },
@@ -252,14 +530,35 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "5x = 45 has solution x = 9", "correct": true},
-        {"text": "x/5 = 9 has solution x = 45", "correct": true},
-        {"text": "x/5 = 9 has solution x = 1.8", "correct": false, "catches": "EQ-FRACTION-COEFF"},
-        {"text": "2x + 3 = 11 has solution x = 4", "correct": true},
-        {"text": "2x + 3 = 11 has solution x = 7", "correct": false, "catches": "EQ-ORDER-INVERSE"},
-        {"text": "2x + 3 = 11 has solution x = 5.5", "correct": false, "catches": "EQ-SIGN-ERROR"}
+        {
+          "text": "5x = 45 has solution x = 9",
+          "correct": true
+        },
+        {
+          "text": "x/5 = 9 has solution x = 45",
+          "correct": true
+        },
+        {
+          "text": "x/5 = 9 has solution x = 1.8",
+          "correct": false,
+          "catches": "EQ-FRACTION-COEFF"
+        },
+        {
+          "text": "2x + 3 = 11 has solution x = 4",
+          "correct": true
+        },
+        {
+          "text": "2x + 3 = 11 has solution x = 7",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        },
+        {
+          "text": "2x + 3 = 11 has solution x = 5.5",
+          "correct": false,
+          "catches": "EQ-ORDER-INVERSE"
+        }
       ],
-      "explanation": "5x = 45 gives x = 9, and x/5 = 9 gives x = 45 by multiplying by 5; dividing 9 by 5 gives 1.8. 2x + 3 = 11 gives 2x = 8 and x = 4; stopping at 2x = 8 gives 7, and adding 3 instead of subtracting gives 5.5."
+      "explanation": "5x = 45 gives x = 9, and x/5 = 9 gives x = 45 by multiplying by 5; dividing 9 by 5 gives 1.8. 2x + 3 = 11 gives 2x = 8 and x = 4. Adding 3 instead of subtracting gives (11 + 3) ÷ 2 = 7, and dividing by 2 before subtracting gives 11 ÷ 2 = 5.5."
     },
     {
       "key": "eq-negative-both-sides",
@@ -268,10 +567,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Solve 3x − 4 = x + 2.",
       "options": [
-        {"text": "x = 3", "correct": true},
-        {"text": "x = 6", "correct": false, "catches": "EQ-ORDER-INVERSE"},
-        {"text": "x = 1.5", "correct": false, "catches": "EQ-BOTH-SIDES"},
-        {"text": "x = −3", "correct": false, "catches": "EQ-SIGN-ERROR"}
+        {
+          "text": "x = 3",
+          "correct": true
+        },
+        {
+          "text": "x = 6",
+          "correct": false,
+          "catches": "EQ-STOP-EARLY"
+        },
+        {
+          "text": "x = 1.5",
+          "correct": false,
+          "catches": "EQ-BOTH-SIDES"
+        },
+        {
+          "text": "x = −3",
+          "correct": false,
+          "catches": "EQ-SIGN-ERROR"
+        }
       ],
       "explanation": "Subtract x from both sides to get 2x − 4 = 2, then add 4 to get 2x = 6 and x = 3. Answering 6 is the value of 2x, not x. Adding the x terms instead of subtracting gives 4x = 6 and x = 1.5. Getting both signs wrong in the rearrangement gives −3."
     }

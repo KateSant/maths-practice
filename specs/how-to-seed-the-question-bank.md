@@ -1,6 +1,8 @@
 # Seeding content
 
-**Status:** decided. Nothing to build — this is a rule, not a system.
+**Status:** the rule is decided, and the bank is now loaded by it. What the loader has to carry is
+set out below. Flyway version numbers are not this spec's business — the implementing agent picks
+them.
 
 ## What it has to achieve
 
@@ -57,32 +59,29 @@ Getting `content/bank/*.json` into a database. Written once, after the second re
 
 An applied migration is frozen and content is never updated, so a loader that lands before the read
 finishes cannot absorb its corrections — they would have to be redone in the admin screens, item by
-item. The read is in progress as this is written and has already dropped a distractor that duplicated
-another's misconception and rewritten explanations across all twelve topics. That is precisely the
-kind of change the loader must not have to carry.
+item. The read is done: it re-checked every item's answerability and every distractor's tagged
+misconception, fixed explanations that did not support their answer, and removed an option that was
+in fact true. That is the kind of change the loader must not have to carry, and it does not have to.
 
 ### Generated, not hand-written
 
 200 questions is roughly 1,000 statements. Nobody writes that by hand, and `render.py` deliberately
-emits no SQL. So a generator sits beside it, reading the same JSON:
+emits no SQL. So a generator reads the same JSON:
 
 ```
-python3 content/to_sql.py > backend/src/main/resources/db/migration/V9__question_bank.sql
+python3 content/render.py --check          # the bank must be valid first
+python3 scripts/generate_bank_migration.py --version <next free>
 ```
 
-Commit the generator and the SQL it produced. The SQL is the record of what was loaded and is
-reviewed as such; the generator is what makes it reproducible when a topic is added later.
-Generating during the build is not an option — content is not part of the build.
+It writes the load migration and prints the counts. Commit the generator and the SQL it produced: the
+SQL is the record of what was loaded and is reviewed as such, and the generator is what makes a later
+batch reproducible. Flyway version numbers, and the ordering noted under *What each row needs*, are
+the implementing agent's to work out. Generating during the build is not an option — content is not
+part of the build.
 
-**One migration, not twelve.** Topic order does not matter, and twelve numbered files for one
-content drop is noise.
-
-### The version number
-
-`V8` is the highest applied anywhere, so this is `V9` — **unless** a database has the abandoned
-`seed_key` work applied. That was never pushed, but it recorded itself as `V9` on local machines, and
-an edited or deleted migration breaks that database at startup. Reset such a database rather than
-renumbering around it.
+**One migration for the bank, not twelve.** Topic order does not matter, and a file per topic for one
+content drop is noise. The prototype retirement is a migration of its own, because retiring is a
+separate act from seeding — and, as *origin* below explains, it has to run first.
 
 ### Topics first, and one of them already exists
 
@@ -108,24 +107,46 @@ will land. Deleting a topic cascades to its questions and takes the answer histo
 | `answer_type` | the question's `answerType` |
 | `year_group` | the **topic** file's `yearGroup` — see below |
 | `status` | `PUBLISHED`; the second read is the review, and the default is `DRAFT` |
-| `origin` | `IMPORTED` — see below |
+| `origin` | `SEED` — see below |
+| `misconception_code` | the option's `catches`, on wrong options only |
 
 **`year_group` is the trap.** It is `NOT NULL default 7`, so forgetting it is not an error — it files
 the question as Year 7. **62 of the 200 are Year 8**, and they would become invisible to anyone
-practising at Year 8, which is what `V8`'s own comment warns about. The value lives on the topic, not
+practising at Year 8, which is what the year-group migration's own comment warns about. The value lives on the topic, not
 the question; no question carries its own.
 
-**`origin` decides whether the new bank survives the sweep.** The prototype is retired with
-`update questions set status = 'RETIRED' where origin = 'SEED'`. Were the new bank also `SEED`, that
-statement would retire it too. `IMPORTED` keeps the two distinguishable, and then the sweep can run
-in either order. That value is currently unused; this is what it was for.
+**`origin` records where a question came from**, which is the only reason the column exists:
+
+- `SEED` — inserted by a migration, out of this repository. The app ships with it, and it is *ours*.
+  The prototype bank and the new bank are both `SEED`.
+- `AUTHORED` — typed by a teacher in the admin screens. Hers.
+- `IMPORTED` — brought in through the importer, from a spreadsheet that started outside this
+  repository. Also hers.
+
+The new bank is `SEED`. The consequence is an ordering, not a problem: the prototype sweep is
+`update questions set status = 'RETIRED' where origin = 'SEED'`, so it has to run **before** the bank
+is inserted, or it would retire the new bank too. Keep the retirement in its own migration, earlier
+than the load.
 
 **Do not add a `seed_key`.** It was designed, built, and dropped: Flyway's history already answers
 "has this been applied", and content is never updated, so nothing needs a second identity. The keys
 in the JSON files are for the files.
 
-**Do not store the misconception codes.** `cats`, `archetype` and the register are authoring
-metadata; the question-bank spec is explicit that the shorthand is not stored anywhere.
+**Store the misconception codes, and show them to the teacher.** Every wrong option is written to
+catch a named error, recorded as `catches` in the JSON. That is the bank's whole diagnostic value: a
+wrong answer should tell the teacher *which* error the student made, not merely that they made one.
+Dropping the code on load leaves the diagnosis written but unreadable, so the loader must store it:
+
+| table | column | value |
+|---|---|---|
+| `answer_options` | `misconception_code` | the option's `catches`, on wrong options only; null on a correct option |
+
+The code alone is not enough to show a teacher: `FRAC-ADD-ACROSS` is not a sentence. The register
+that defines it — the code, its description and its topic — is `content/misconceptions.json`, and it
+has to be readable at runtime too, so the admin screens can show, against a wrong option, what
+picking it usually means. A `misconceptions` table seeded from the file is the obvious home;
+bundling the file and serving it is the alternative. A stored code with nothing able to read it is
+the same half-built promise in a new place.
 
 ### Order within the migration
 
@@ -137,11 +158,13 @@ first, because `answer_options_single_choice_insert` reads the parent's `answer_
 
 The loader is silent when it works and silent when it half-works, so assert it:
 
-- 200 questions with `origin = 'IMPORTED'`
+- 200 questions with `origin = 'SEED'`, and the 33 prototype questions `RETIRED`
 - the twelve per-topic counts: 14, 18, 18, 16, 20, 18, 16, 18, 16, 18, 16, 12
 - 138 in `year_group` 7 and 62 in 8
 - 90 `MULTI_SELECT` and 110 `SINGLE_CHOICE`
 - every question has 2–6 options; every single choice exactly one correct; every tick-all at least one
+- every wrong option carries a `misconception_code`, no correct option does, and every code appears
+  in the register
 - the prototype bank is `RETIRED`, and its answers still resolve
 
 A migration test in the style of `SchemaMigrationTest` is the right home — it applies the real
@@ -179,13 +202,13 @@ five prototype topics but leaves them in place — and one of them, `fractions`,
 bank wants for a different topic: the existing "Fractions, Decimals & Percentages" against the
 planned "Fractions". `topics.slug` is unique, so one of them has to move.
 
-Two things to settle before the new bank lands:
+Both loose ends are handled:
 
-- **Hide topics with no published questions** from the student list, or the five dead ones will look
-  entirely normal — the question count is never displayed — and give "There are no questions
-  available for that topic yet" when clicked. The teacher's screens must keep showing them, because
-  she needs to see a topic she has just created.
-- **Resolve `fractions`:** reuse the existing row for the new topic, or give one of them a new slug.
+- **The student list already hides a topic with nothing published** for the chosen year —
+  `QuestionCatalogService.listTopics` filters on the published count. The teacher's screens keep
+  showing every topic, because she needs to see one she has just created.
+- **`fractions` is reused** for the new topic and renamed, and `fractions-decimals-percentages` is
+  created fresh. See *Writing the loader*.
 
 Deleting a topic is not an option. `questions` cascades on topic delete, which would take the answer
 history with it.
@@ -229,10 +252,15 @@ copy of what Flyway does: the key existed only to answer "has this been applied?
 what `flyway_schema_history` answers, and the file existed only to allow editing content that this
 rule says is never edited.
 
+The generator that writes the load migration is not that process. It runs by hand, once, and its
+output is committed; it holds no state and never opens a database.
+
 ## Not needed, and why
 
 - **`teacher_edited_at`** — only earns its place if a process ever *updates* existing questions
   unattended, and has to decide whether a row is still ours. Insert-only never updates, so there is
   nothing to decide.
-- **A content file as the source of truth** — that is bulk content management. The real bank arrives
-  through the admin API and the CSV import (`specs/question-bank-probing-misconceptions.md`), not through here.
+- **A content file as the source of truth at runtime** — `content/bank` is where the load migration
+  is generated from, and `content/misconceptions.json` is where the codes are defined. Neither is
+  read by the running app or mirrored back out once loaded: a question is changed in the admin
+  screens, not in the file.

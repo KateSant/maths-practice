@@ -1,9 +1,14 @@
 # The question bank
 
 This directory holds the written bank: 200 diagnostic questions for Year 7/8 Number & Algebra,
-as specified in `specs/question-bank-probing-misconceptions.md`. It is **content**, not a loader. How it reaches a
-database — the admin API, a CSV import, or the seeder — is a separate decision and is deliberately
-not encoded here.
+as specified in `specs/question-bank-probing-misconceptions.md`. It is the source, not the loader:
+the bank is seed content, and `scripts/generate_bank_migration.py` turns these files into the
+insert-only migration that loads them. See `specs/how-to-seed-the-question-bank.md`.
+
+| | |
+|---|---|
+| Validate and read | `python3 content/render.py --check` · `python3 content/render.py` |
+| Generate the load migration | `python3 scripts/generate_bank_migration.py --version <next free>` |
 
 ```
 content/
@@ -16,6 +21,9 @@ content/
   render.py                validate the bank and render it for reading
 ```
 
+The generator lives in `scripts/` rather than here, because it produces a migration — a build
+artefact — and this directory is content.
+
 ## The item shape
 
 One file per topic. The file names a topic and lists its questions in a fixed order.
@@ -26,6 +34,7 @@ One file per topic. The file names a topic and lists its questions in a fixed or
   "name": "Place value & ordering",
   "strand": "Number",
   "dfeUnit": "Place value (Y7)",
+  "description": "Place value, ordering decimals and negative numbers.",
   "yearGroup": 7,
   "planned": 14,
   "questions": [
@@ -48,19 +57,21 @@ One file per topic. The file names a topic and lists its questions in a fixed or
 | Field | Meaning |
 |---|---|
 | `key` | Stable identity, unique across the whole bank, ≤ 60 characters. Never a row id. |
+| `description` | One line for the topic, used as the topic's description in the app. |
 | `band` | Difficulty 1–4, the range the API enforces. |
 | `archetype` | A–H from `specs/question-bank-probing-misconceptions.md` §3. |
 | `answerType` | `SINGLE_CHOICE` or `MULTI_SELECT` (tick-all). |
 | `prompt` | What the student reads. Plain text maths: `/` for fractions, `× − ÷ ² ³ √`. |
 | `options[].correct` | The key. Option labels A–F are derived from position, never stored. |
-| `options[].catches` | The misconception code this wrong option catches. Required on every wrong option; must exist in `misconceptions.json`. |
+| `options[].catches` | The misconception code this wrong option catches. Required on every wrong option; must exist in `misconceptions.json`, and is loaded into `answer_options.misconception_code`. |
 | `explanation` | Names the correct method, the likely error, and why it is wrong. For tick-all, it runs through the false claims. |
 | `bridge` | Optional `true`: the topic's one word-problem item. |
 | `retention` | Optional `true`: the topic's one item revisiting a prerequisite. |
 
 Option arrays run 2–6 long. A single-choice item has exactly one correct option; a tick-all item
-has at least one. The database does not hold the misconception tags — they are a writing tool and a
-record of why each distractor exists.
+has at least one. The database does hold the misconception tags, in `answer_options.misconception_code`:
+they are the bank's diagnostic value, and the register behind them is what lets the teacher be told
+what a wrong answer usually means.
 
 ## Checks
 

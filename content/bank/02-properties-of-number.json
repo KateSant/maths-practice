@@ -3,6 +3,7 @@
   "name": "Factors, multiples, primes, squares & cubes",
   "strand": "Number",
   "dfeUnit": "Properties of number: factors, multiples, squares & cubes (Y7)",
+  "description": "Factors, multiples, primes, square and cube numbers, HCF and LCM.",
   "yearGroup": 7,
   "planned": 18,
   "questions": [
@@ -13,12 +14,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "4 is a factor of 12", "correct": true},
-        {"text": "4 is a multiple of 12", "correct": false, "catches": "PROP-FACTOR-MULTIPLE"},
-        {"text": "12 is a multiple of 4", "correct": true},
-        {"text": "Every number has exactly 12 multiples", "correct": false, "catches": "PROP-MULTIPLE-LIMIT"},
-        {"text": "2 is the only even prime", "correct": true},
-        {"text": "1 is a prime number", "correct": false, "catches": "PROP-ONE-IS-PRIME"}
+        {
+          "text": "4 is a factor of 12",
+          "correct": true
+        },
+        {
+          "text": "4 is a multiple of 12",
+          "correct": false,
+          "catches": "PROP-FACTOR-MULTIPLE"
+        },
+        {
+          "text": "12 is a multiple of 4",
+          "correct": true
+        },
+        {
+          "text": "Every number has exactly 12 multiples",
+          "correct": false,
+          "catches": "PROP-MULTIPLE-LIMIT"
+        },
+        {
+          "text": "2 is the only even prime",
+          "correct": true
+        },
+        {
+          "text": "1 is a prime number",
+          "correct": false,
+          "catches": "PROP-ONE-IS-PRIME"
+        }
       ],
       "explanation": "A factor divides into a number exactly; a multiple is what you get from its times table. 4 divides into 12, so 4 is a factor of 12 and 12 is a multiple of 4 — the second claim turns that round. Multiples carry on for ever, so no number has a fixed number of them. A prime has exactly two factors; 1 has only one factor, itself, so it is not prime. 2 is prime because its only factors are 1 and 2."
     },
@@ -29,12 +51,34 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "1 is prime", "correct": false, "catches": "PROP-ONE-IS-PRIME"},
-        {"text": "9 is prime", "correct": false, "catches": "PROP-ONE-IS-PRIME"},
-        {"text": "51 is prime", "correct": false, "catches": "PROP-ONE-IS-PRIME"},
-        {"text": "2 is prime", "correct": true},
-        {"text": "29 is prime", "correct": true},
-        {"text": "Every prime number is odd", "correct": false, "catches": "PROP-ONE-IS-PRIME"}
+        {
+          "text": "1 is prime",
+          "correct": false,
+          "catches": "PROP-ONE-IS-PRIME"
+        },
+        {
+          "text": "9 is prime",
+          "correct": false,
+          "catches": "PROP-ONE-IS-PRIME"
+        },
+        {
+          "text": "51 is prime",
+          "correct": false,
+          "catches": "PROP-ONE-IS-PRIME"
+        },
+        {
+          "text": "2 is prime",
+          "correct": true
+        },
+        {
+          "text": "29 is prime",
+          "correct": true
+        },
+        {
+          "text": "Every prime number is odd",
+          "correct": false,
+          "catches": "PROP-ONE-IS-PRIME"
+        }
       ],
       "explanation": "A prime number has exactly two factors: 1 and itself. 1 has one factor, so it fails. 9 = 3 × 3 and 51 = 3 × 17, so both are composite. 2 has factors 1 and 2 only and is prime, which is why 'every prime is odd' is false. 29 has no factor other than 1 and 29."
     },
@@ -45,10 +89,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Which statement is true?",
       "options": [
-        {"text": "6 is a factor of 18", "correct": true},
-        {"text": "6 is a multiple of 18", "correct": false, "catches": "PROP-FACTOR-MULTIPLE"},
-        {"text": "18 is a factor of 6", "correct": false, "catches": "PROP-FACTOR-MULTIPLE"},
-        {"text": "36 is a factor of 18", "correct": false, "catches": "PROP-FACTOR-MULTIPLE"}
+        {
+          "text": "6 is a factor of 18",
+          "correct": true
+        },
+        {
+          "text": "6 is a multiple of 18",
+          "correct": false,
+          "catches": "PROP-FACTOR-MULTIPLE"
+        },
+        {
+          "text": "18 is a factor of 6",
+          "correct": false,
+          "catches": "PROP-FACTOR-MULTIPLE"
+        },
+        {
+          "text": "36 is a factor of 18",
+          "correct": false,
+          "catches": "PROP-FACTOR-MULTIPLE"
+        }
       ],
       "explanation": "6 divides into 18 exactly (18 ÷ 6 = 3), so 6 is a factor of 18. A multiple of 18 is at least 18, so 6 cannot be a multiple of 18. 18 is bigger than 6, so it cannot divide into 6, and 36 is bigger than 18, so it cannot divide into 18 either."
     },
@@ -59,12 +118,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "The multiples of 7 carry on for ever", "correct": true},
-        {"text": "7 has 12 multiples", "correct": false, "catches": "PROP-MULTIPLE-LIMIT"},
-        {"text": "84 is the last multiple of 7", "correct": false, "catches": "PROP-MULTIPLE-LIMIT"},
-        {"text": "70 is a multiple of 7", "correct": true},
-        {"text": "7 is a multiple of 70", "correct": false, "catches": "PROP-FACTOR-MULTIPLE"},
-        {"text": "7 is a factor of 70", "correct": true}
+        {
+          "text": "The multiples of 7 carry on for ever",
+          "correct": true
+        },
+        {
+          "text": "7 has 12 multiples",
+          "correct": false,
+          "catches": "PROP-MULTIPLE-LIMIT"
+        },
+        {
+          "text": "84 is the last multiple of 7",
+          "correct": false,
+          "catches": "PROP-MULTIPLE-LIMIT"
+        },
+        {
+          "text": "70 is a multiple of 7",
+          "correct": true
+        },
+        {
+          "text": "7 is a multiple of 70",
+          "correct": false,
+          "catches": "PROP-FACTOR-MULTIPLE"
+        },
+        {
+          "text": "7 is a factor of 70",
+          "correct": true
+        }
       ],
       "explanation": "The multiples of 7 are 7, 14, 21, and so on without end: after 84 comes 91. Nothing stops them, so the idea of a last multiple or a fixed count of twelve comes from the times table grid rather than from the numbers. 70 = 7 × 10, so 70 is a multiple of 7 and 7 is a factor of 70 — the two are not interchangeable."
     },
@@ -75,12 +155,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "The HCF of 4 and 6 is 2", "correct": true},
-        {"text": "The HCF of 4 and 6 is 12", "correct": false, "catches": "PROP-HCF-LCM"},
-        {"text": "The LCM of 4 and 6 is 12", "correct": true},
-        {"text": "The LCM of 4 and 6 is 24", "correct": false, "catches": "PROP-HCF-LCM"},
-        {"text": "The HCF of 8 and 9 is 1", "correct": true},
-        {"text": "The LCM of 8 and 9 is 1", "correct": false, "catches": "PROP-HCF-LCM"}
+        {
+          "text": "The HCF of 4 and 6 is 2",
+          "correct": true
+        },
+        {
+          "text": "The HCF of 4 and 6 is 12",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        },
+        {
+          "text": "The LCM of 4 and 6 is 12",
+          "correct": true
+        },
+        {
+          "text": "The LCM of 4 and 6 is 24",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        },
+        {
+          "text": "The HCF of 8 and 9 is 1",
+          "correct": true
+        },
+        {
+          "text": "The LCM of 8 and 9 is 1",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        }
       ],
       "explanation": "The highest common factor is the biggest number that divides into both, so it can never be bigger than either number — 12 cannot be the HCF of 4 and 6. The lowest common multiple is the smallest number both divide into, so it can never be smaller than either — 1 cannot be the LCM of 8 and 9. Multiplying the two numbers gives 24 for 4 and 6, which is a common multiple but not the lowest. 8 and 9 share no factor other than 1, and their lowest common multiple is 72."
     },
@@ -91,12 +192,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "5² = 25", "correct": true},
-        {"text": "5² = 10", "correct": false, "catches": "PROP-SQUARE-DOUBLE"},
-        {"text": "5³ = 125", "correct": true},
-        {"text": "5³ = 15", "correct": false, "catches": "PROP-CUBE-TRIPLE"},
-        {"text": "√16 = 8", "correct": false, "catches": "PROP-SQUARE-ROOT-HALVE"},
-        {"text": "√16 = 4", "correct": true}
+        {
+          "text": "5² = 25",
+          "correct": true
+        },
+        {
+          "text": "5² = 10",
+          "correct": false,
+          "catches": "PROP-SQUARE-DOUBLE"
+        },
+        {
+          "text": "5³ = 125",
+          "correct": true
+        },
+        {
+          "text": "5³ = 15",
+          "correct": false,
+          "catches": "PROP-CUBE-TRIPLE"
+        },
+        {
+          "text": "√16 = 8",
+          "correct": false,
+          "catches": "PROP-SQUARE-ROOT-HALVE"
+        },
+        {
+          "text": "√16 = 4",
+          "correct": true
+        }
       ],
       "explanation": "A square multiplies the number by itself, so 5² = 5 × 5 = 25. A cube multiplies it by itself twice, so 5³ = 5 × 5 × 5 = 125. Doubling or tripling the base instead (5 × 2, 5 × 3) gives 10 and 15. A square root asks which number squares to give the value: 4 × 4 = 16, so √16 = 4; halving gives 8, which would square to 64."
     },
@@ -107,12 +229,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "60 = 2 × 2 × 3 × 5", "correct": true},
-        {"text": "60 = 4 × 3 × 5", "correct": false, "catches": "PROP-PRIME-FACTOR"},
-        {"text": "36 = 2 × 2 × 3 × 3", "correct": true},
-        {"text": "36 = 2 × 2 × 9", "correct": false, "catches": "PROP-PRIME-FACTOR"},
-        {"text": "24 = 2 × 2 × 2 × 3", "correct": true},
-        {"text": "24 = 2 × 12", "correct": false, "catches": "PROP-PRIME-FACTOR"}
+        {
+          "text": "60 = 2 × 2 × 3 × 5",
+          "correct": true
+        },
+        {
+          "text": "60 = 4 × 3 × 5",
+          "correct": false,
+          "catches": "PROP-PRIME-FACTOR"
+        },
+        {
+          "text": "36 = 2 × 2 × 3 × 3",
+          "correct": true
+        },
+        {
+          "text": "36 = 2 × 2 × 9",
+          "correct": false,
+          "catches": "PROP-PRIME-FACTOR"
+        },
+        {
+          "text": "24 = 2 × 2 × 2 × 3",
+          "correct": true
+        },
+        {
+          "text": "24 = 2 × 12",
+          "correct": false,
+          "catches": "PROP-PRIME-FACTOR"
+        }
       ],
       "explanation": "A prime factorisation keeps going until every factor is prime: each of 2, 3 and 5 has no factors but 1 and itself. 4 = 2 × 2, 9 = 3 × 3 and 12 = 2 × 2 × 3, so those factorisations have stopped too early. The product is right in every false option; it is the unfinished factor that is wrong."
     },
@@ -123,12 +266,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "The factors of 12 are 1, 2, 3, 4, 6 and 12", "correct": true},
-        {"text": "12 has exactly 5 factors", "correct": false, "catches": "PROP-FACTOR-PAIRS"},
-        {"text": "8 is a factor of 24 and 24 is a multiple of 8", "correct": true},
-        {"text": "The factors of 15 are 1, 3, 5 and 15", "correct": true},
-        {"text": "3 is a factor of 15 and 15 is a factor of 3", "correct": false, "catches": "PROP-FACTOR-MULTIPLE"},
-        {"text": "Every number has exactly two factors", "correct": false, "catches": "PROP-FACTOR-PAIRS"}
+        {
+          "text": "The factors of 12 are 1, 2, 3, 4, 6 and 12",
+          "correct": true
+        },
+        {
+          "text": "12 has exactly 5 factors",
+          "correct": false,
+          "catches": "PROP-FACTOR-PAIRS"
+        },
+        {
+          "text": "8 is a factor of 24 and 24 is a multiple of 8",
+          "correct": true
+        },
+        {
+          "text": "The factors of 15 are 1, 3, 5 and 15",
+          "correct": true
+        },
+        {
+          "text": "3 is a factor of 15 and 15 is a factor of 3",
+          "correct": false,
+          "catches": "PROP-FACTOR-MULTIPLE"
+        },
+        {
+          "text": "Every number has exactly two factors",
+          "correct": false,
+          "catches": "PROP-FACTOR-PAIRS"
+        }
       ],
       "explanation": "Factors come in pairs that multiply to the number: 1 × 12, 2 × 6 and 3 × 4, so 12 has six factors, not five. 15 pairs as 1 × 15 and 3 × 5, giving four factors. Only prime numbers have exactly two factors; 12 has six and 1 has one. 15 is larger than 3, so 15 cannot divide into 3 — a factor must divide into the number, not the other way round."
     },
@@ -139,10 +303,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Which of these numbers is prime?",
       "options": [
-        {"text": "1", "correct": false, "catches": "PROP-ONE-IS-PRIME"},
-        {"text": "9", "correct": false, "catches": "PROP-ONE-IS-PRIME"},
-        {"text": "21", "correct": false, "catches": "PROP-ONE-IS-PRIME"},
-        {"text": "17", "correct": true}
+        {
+          "text": "1",
+          "correct": false,
+          "catches": "PROP-ONE-IS-PRIME"
+        },
+        {
+          "text": "9",
+          "correct": false,
+          "catches": "PROP-ONE-IS-PRIME"
+        },
+        {
+          "text": "21",
+          "correct": false,
+          "catches": "PROP-ONE-IS-PRIME"
+        },
+        {
+          "text": "17",
+          "correct": true
+        }
       ],
       "explanation": "17 has no factors other than 1 and 17, so it is prime. 9 = 3 × 3 and 21 = 3 × 7, so both are composite. 1 has only one factor, itself, and a prime needs exactly two."
     },
@@ -153,11 +332,27 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "What is 4³?",
       "options": [
-        {"text": "12", "correct": false, "catches": "PROP-CUBE-TRIPLE"},
-        {"text": "16", "correct": false, "catches": "PROP-SQUARE-DOUBLE"},
-        {"text": "64", "correct": true}
+        {
+          "text": "12",
+          "correct": false,
+          "catches": "PROP-CUBE-TRIPLE"
+        },
+        {
+          "text": "16",
+          "correct": false,
+          "catches": "PROP-SQUARE-DOUBLE"
+        },
+        {
+          "text": "64",
+          "correct": true
+        },
+        {
+          "text": "43",
+          "correct": false,
+          "catches": "PROP-INDEX-AS-NUMBER"
+        }
       ],
-      "explanation": "4³ means 4 × 4 × 4, which is 64. Multiplying the base by the exponent, 4 × 3 = 12, is the cube-triple error. Squaring instead only uses two 4s, giving 16."
+      "explanation": "4³ means 4 × 4 × 4, which is 64. Multiplying the base by the exponent, 4 × 3 = 12, is the cube-triple error. Squaring instead only uses two 4s, giving 16. Writing 43 reads the index as a digit beside the base rather than as a power."
     },
     {
       "key": "prop-hcf-24-36",
@@ -166,10 +361,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "What is the highest common factor of 24 and 36?",
       "options": [
-        {"text": "6", "correct": false, "catches": "PROP-HCF-PARTIAL"},
-        {"text": "12", "correct": true},
-        {"text": "72", "correct": false, "catches": "PROP-HCF-LCM"},
-        {"text": "2", "correct": false, "catches": "PROP-HCF-PARTIAL"}
+        {
+          "text": "6",
+          "correct": false,
+          "catches": "PROP-HCF-PARTIAL"
+        },
+        {
+          "text": "12",
+          "correct": true
+        },
+        {
+          "text": "72",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        },
+        {
+          "text": "2",
+          "correct": false,
+          "catches": "PROP-HCF-PARTIAL"
+        }
       ],
       "explanation": "Both 24 and 36 are divisible by 12: 24 = 2 × 12 and 36 = 3 × 12, and no bigger number divides into both. 6 and 2 do divide into both, but they are not the highest. 72 is bigger than either number, so it cannot be a common factor at all — it is the lowest common multiple."
     },
@@ -180,10 +390,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "What is the lowest common multiple of 6 and 8?",
       "options": [
-        {"text": "24", "correct": true},
-        {"text": "48", "correct": false, "catches": "PROP-HCF-LCM"},
-        {"text": "14", "correct": false, "catches": "PROP-LCM-ADDITIVE"},
-        {"text": "2", "correct": false, "catches": "PROP-HCF-LCM"}
+        {
+          "text": "24",
+          "correct": true
+        },
+        {
+          "text": "48",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        },
+        {
+          "text": "14",
+          "correct": false,
+          "catches": "PROP-LCM-ADDITIVE"
+        },
+        {
+          "text": "2",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        }
       ],
       "explanation": "The multiples of 6 are 6, 12, 18, 24 and the multiples of 8 are 8, 16, 24, so 24 is the smallest number in both lists. 6 × 8 = 48 is a common multiple but not the lowest. Adding 6 + 8 gives 14, which is not a multiple of either. 2 divides into both, so it is a common factor, not a multiple."
     },
@@ -194,10 +419,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Mia writes 3² = 6 and says \"you multiply by 2\". What has she done?",
       "options": [
-        {"text": "Multiplied the base by the exponent instead of by itself", "correct": true},
-        {"text": "Found the square root instead of the square", "correct": false, "catches": "PROP-SQUARE-ROOT-HALVE"},
-        {"text": "Worked out 2³ instead of 3²", "correct": false, "catches": "PROP-CUBE-TRIPLE"},
-        {"text": "Added the base and the exponent instead of multiplying", "correct": false, "catches": "PROP-SQUARE-DOUBLE"}
+        {
+          "text": "Multiplied the base by the exponent instead of by itself",
+          "correct": true
+        },
+        {
+          "text": "Found the square root instead of the square",
+          "correct": false,
+          "catches": "PROP-SQUARE-ROOT-HALVE"
+        },
+        {
+          "text": "Worked out 2³ instead of 3²",
+          "correct": false,
+          "catches": "PROP-CUBE-TRIPLE"
+        },
+        {
+          "text": "Added the base and the exponent instead of multiplying",
+          "correct": false,
+          "catches": "PROP-INDEX-AS-NUMBER"
+        }
       ],
       "explanation": "3² means 3 × 3 = 9. Mia has multiplied by the exponent, 3 × 2 = 6. Working out 2³ would give 8. Adding 3 + 2 gives 5, not 6. A square root of 3 is not a whole number, so that is not what she did."
     },
@@ -206,14 +446,29 @@
       "band": 4,
       "archetype": "C",
       "answerType": "SINGLE_CHOICE",
-      "prompt": "The prime factorisation of 90 starts 90 = 2 × 3 × 3 × ?. What number goes in the gap?",
+      "prompt": "Which of these is the complete prime factorisation of 90?",
       "options": [
-        {"text": "5", "correct": true},
-        {"text": "15", "correct": false, "catches": "PROP-PRIME-FACTOR"},
-        {"text": "9", "correct": false, "catches": "PROP-PRIME-FACTOR"},
-        {"text": "45", "correct": false, "catches": "PROP-PRIME-FACTOR"}
+        {
+          "text": "2 × 3 × 3 × 5",
+          "correct": true
+        },
+        {
+          "text": "2 × 3 × 15",
+          "correct": false,
+          "catches": "PROP-PRIME-FACTOR"
+        },
+        {
+          "text": "2 × 9 × 5",
+          "correct": false,
+          "catches": "PROP-PRIME-FACTOR"
+        },
+        {
+          "text": "3 × 3 × 10",
+          "correct": false,
+          "catches": "PROP-PRIME-FACTOR"
+        }
       ],
-      "explanation": "Work out 2 × 3 × 3 = 18, and 90 ÷ 18 = 5, which is prime. Each of 15, 9 and 45 would make the product correct but none of them is prime: 15 = 3 × 5, 9 = 3 × 3 and 45 = 3 × 3 × 5, so the factorisation would not have finished."
+      "explanation": "Every factor must be prime. 2 × 3 × 3 × 5 = 90 and every factor is prime. Each of the others also multiplies to 90, but each contains a composite factor: 15 = 3 × 5, 9 = 3 × 3 and 10 = 2 × 5, so the factorisation has stopped too early."
     },
     {
       "key": "prop-tick-powers-and-roots",
@@ -222,12 +477,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "2⁴ = 16", "correct": true},
-        {"text": "2⁴ = 8", "correct": false, "catches": "PROP-POWER-AS-PRODUCT"},
-        {"text": "10² = 100", "correct": true},
-        {"text": "10² = 20", "correct": false, "catches": "PROP-SQUARE-DOUBLE"},
-        {"text": "√25 = 5", "correct": true},
-        {"text": "√25 = 12.5", "correct": false, "catches": "PROP-SQUARE-ROOT-HALVE"}
+        {
+          "text": "2⁴ = 16",
+          "correct": true
+        },
+        {
+          "text": "2⁴ = 8",
+          "correct": false,
+          "catches": "PROP-POWER-AS-PRODUCT"
+        },
+        {
+          "text": "10² = 100",
+          "correct": true
+        },
+        {
+          "text": "10² = 20",
+          "correct": false,
+          "catches": "PROP-SQUARE-DOUBLE"
+        },
+        {
+          "text": "√25 = 5",
+          "correct": true
+        },
+        {
+          "text": "√25 = 12.5",
+          "correct": false,
+          "catches": "PROP-SQUARE-ROOT-HALVE"
+        }
       ],
       "explanation": "2⁴ means four 2s multiplied: 2 × 2 × 2 × 2 = 16, whereas 2 × 4 = 8. 10² = 10 × 10 = 100, not 10 × 2 = 20. √25 asks which number squares to 25; 5 × 5 = 25, so it is 5, not half of 25."
     },
@@ -239,10 +515,25 @@
       "bridge": true,
       "prompt": "A rectangular path is 24 tiles long and 18 tiles wide. A designer wants the largest square slab that covers the rectangle exactly, with no cutting. How many tiles along each side of the slab?",
       "options": [
-        {"text": "6", "correct": true},
-        {"text": "3", "correct": false, "catches": "PROP-HCF-PARTIAL"},
-        {"text": "72", "correct": false, "catches": "PROP-HCF-LCM"},
-        {"text": "432", "correct": false, "catches": "PROP-HCF-LCM"}
+        {
+          "text": "6",
+          "correct": true
+        },
+        {
+          "text": "3",
+          "correct": false,
+          "catches": "PROP-HCF-PARTIAL"
+        },
+        {
+          "text": "72",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        },
+        {
+          "text": "432",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        }
       ],
       "explanation": "A square that fits both dimensions exactly has a side that divides into both 24 and 18; the largest is the highest common factor. 24 = 4 × 6 and 18 = 3 × 6, so 6 tiles works. 3 divides into both but gives a smaller slab. 72 and 432 are both larger than 18, so they cannot divide into the width."
     },
@@ -254,12 +545,32 @@
       "retention": true,
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "7 × 8 = 56", "correct": true},
-        {"text": "56 ÷ 7 = 8", "correct": true},
-        {"text": "8 is a factor of 56", "correct": true},
-        {"text": "7 is a multiple of 56", "correct": false, "catches": "PROP-FACTOR-MULTIPLE"},
-        {"text": "56 is a multiple of 8", "correct": true},
-        {"text": "56 has no factor bigger than 8", "correct": false, "catches": "PROP-FACTOR-PAIRS"}
+        {
+          "text": "7 × 8 = 56",
+          "correct": true
+        },
+        {
+          "text": "56 ÷ 7 = 8",
+          "correct": true
+        },
+        {
+          "text": "8 is a factor of 56",
+          "correct": true
+        },
+        {
+          "text": "7 is a multiple of 56",
+          "correct": false,
+          "catches": "PROP-FACTOR-MULTIPLE"
+        },
+        {
+          "text": "56 is a multiple of 8",
+          "correct": true
+        },
+        {
+          "text": "56 has no factor bigger than 8",
+          "correct": false,
+          "catches": "PROP-FACTOR-PAIRS"
+        }
       ],
       "explanation": "From 7 × 8 = 56 we get both 56 ÷ 7 = 8 and 56 ÷ 8 = 7, so 7 and 8 are factors of 56 and 56 is a multiple of each. 7 is smaller than 56, so 7 cannot be a multiple of 56. Every number is a factor of itself, so 56 is a factor of 56 and the claim that 8 is the biggest factor is false."
     },
@@ -270,12 +581,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "The HCF of 10 and 15 is 5", "correct": true},
-        {"text": "The HCF of 10 and 15 is 30", "correct": false, "catches": "PROP-HCF-LCM"},
-        {"text": "The LCM of 10 and 15 is 30", "correct": true},
-        {"text": "The LCM of 10 and 15 is 150", "correct": false, "catches": "PROP-HCF-LCM"},
-        {"text": "5 is a factor of both 10 and 15", "correct": true},
-        {"text": "30 is a factor of both 10 and 15", "correct": false, "catches": "PROP-FACTOR-MULTIPLE"}
+        {
+          "text": "The HCF of 10 and 15 is 5",
+          "correct": true
+        },
+        {
+          "text": "The HCF of 10 and 15 is 30",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        },
+        {
+          "text": "The LCM of 10 and 15 is 30",
+          "correct": true
+        },
+        {
+          "text": "The LCM of 10 and 15 is 150",
+          "correct": false,
+          "catches": "PROP-HCF-LCM"
+        },
+        {
+          "text": "5 is a factor of both 10 and 15",
+          "correct": true
+        },
+        {
+          "text": "30 is a factor of both 10 and 15",
+          "correct": false,
+          "catches": "PROP-FACTOR-MULTIPLE"
+        }
       ],
       "explanation": "5 divides into both 10 and 15 and nothing bigger does, so it is the highest common factor. 30 is the smallest number both divide into, so it is the lowest common multiple. A common factor cannot be larger than either number, which rules out 30 and 150 as factors; 150 is a common multiple but not the lowest."
     }

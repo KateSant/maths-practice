@@ -3,6 +3,7 @@
   "name": "Expanding & factorising",
   "strand": "Algebra",
   "dfeUnit": "Expressions and equations: distributive law (Y7)",
+  "description": "Expanding brackets and taking out common factors.",
   "yearGroup": 7,
   "planned": 16,
   "questions": [
@@ -13,12 +14,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "3(x + 4) = 3x + 12", "correct": true},
-        {"text": "3(x + 4) = 3x + 4", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"},
-        {"text": "−(x + 3) = −x − 3", "correct": true},
-        {"text": "−(x + 3) = −x + 3", "correct": false, "catches": "EXP-MINUS-BRACKET"},
-        {"text": "6x + 9 = 3(2x + 3)", "correct": true},
-        {"text": "6x + 9 = 3(2x + 9)", "correct": false, "catches": "FAC-PARTIAL"}
+        {
+          "text": "3(x + 4) = 3x + 12",
+          "correct": true
+        },
+        {
+          "text": "3(x + 4) = 3x + 4",
+          "correct": false,
+          "catches": "EXP-FIRST-TERM-ONLY"
+        },
+        {
+          "text": "−(x + 3) = −x − 3",
+          "correct": true
+        },
+        {
+          "text": "−(x + 3) = −x + 3",
+          "correct": false,
+          "catches": "EXP-MINUS-BRACKET"
+        },
+        {
+          "text": "6x + 9 = 3(2x + 3)",
+          "correct": true
+        },
+        {
+          "text": "6x + 9 = 3(2x + 9)",
+          "correct": false,
+          "catches": "FAC-PARTIAL"
+        }
       ],
       "explanation": "The multiplier outside a bracket applies to every term inside it, so 3(x + 4) = 3x + 12. A minus sign in front of a bracket changes the sign of every term, so −(x + 3) = −x − 3. When factorising, the highest common factor must be taken out of both terms: 3 divides both 6x and 9, giving 3(2x + 3). Taking it from only the first term leaves 3(2x + 9), which expands back to 3x + 9."
     },
@@ -29,10 +51,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Expand 4(x + 5).",
       "options": [
-        {"text": "4x + 20", "correct": true},
-        {"text": "4x + 5", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"},
-        {"text": "4x + 9", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"},
-        {"text": "x + 20", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"}
+        {
+          "text": "4x + 20",
+          "correct": true
+        },
+        {
+          "text": "4x + 5",
+          "correct": false,
+          "catches": "EXP-FIRST-TERM-ONLY"
+        },
+        {
+          "text": "4x + 9",
+          "correct": false,
+          "catches": "EXP-FIRST-TERM-ONLY"
+        },
+        {
+          "text": "x + 20",
+          "correct": false,
+          "catches": "EXP-FIRST-TERM-ONLY"
+        }
       ],
       "explanation": "Multiply both terms inside the bracket by 4: 4 × x = 4x and 4 × 5 = 20, so the answer is 4x + 20. Leaving the 5 alone gives 4x + 5, and adding 4 and 5 gives 4x + 9. Dropping the 4 from the x term gives x + 20."
     },
@@ -43,10 +80,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Expand −(x + 4).",
       "options": [
-        {"text": "−x − 4", "correct": true},
-        {"text": "−x + 4", "correct": false, "catches": "EXP-MINUS-BRACKET"},
-        {"text": "x + 4", "correct": false, "catches": "EXP-MINUS-BRACKET"},
-        {"text": "x − 4", "correct": false, "catches": "EXP-MINUS-BRACKET"}
+        {
+          "text": "−x − 4",
+          "correct": true
+        },
+        {
+          "text": "−x + 4",
+          "correct": false,
+          "catches": "EXP-MINUS-BRACKET"
+        },
+        {
+          "text": "x + 4",
+          "correct": false,
+          "catches": "EXP-MINUS-BRACKET"
+        },
+        {
+          "text": "x − 4",
+          "correct": false,
+          "catches": "EXP-MINUS-BRACKET"
+        }
       ],
       "explanation": "The minus sign in front of the bracket applies to both terms: −x − 4. Applying it only to the x gives −x + 4. Dropping the minus altogether gives x + 4, and moving it to the wrong term gives x − 4."
     },
@@ -57,12 +109,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "−2(x − 3) = −2x + 6", "correct": true},
-        {"text": "−2(x − 3) = −2x − 6", "correct": false, "catches": "EXP-MINUS-BRACKET"},
-        {"text": "−(a + b) = −a − b", "correct": true},
-        {"text": "−(a + b) = −a + b", "correct": false, "catches": "EXP-MINUS-BRACKET"},
-        {"text": "5 − (x + 2) = 3 − x", "correct": true},
-        {"text": "5 − (x + 2) = 7 − x", "correct": false, "catches": "EXP-MINUS-BRACKET"}
+        {
+          "text": "−2(x − 3) = −2x + 6",
+          "correct": true
+        },
+        {
+          "text": "−2(x − 3) = −2x − 6",
+          "correct": false,
+          "catches": "EXP-MINUS-BRACKET"
+        },
+        {
+          "text": "−(a + b) = −a − b",
+          "correct": true
+        },
+        {
+          "text": "−(a + b) = −a + b",
+          "correct": false,
+          "catches": "EXP-MINUS-BRACKET"
+        },
+        {
+          "text": "5 − (x + 2) = 3 − x",
+          "correct": true
+        },
+        {
+          "text": "5 − (x + 2) = 7 − x",
+          "correct": false,
+          "catches": "EXP-MINUS-BRACKET"
+        }
       ],
       "explanation": "Multiply every term by −2: −2 × x = −2x and −2 × (−3) = +6, so −2(x − 3) = −2x + 6. In the same way −(a + b) = −a − b. For 5 − (x + 2), the bracket is subtracted, so both signs inside change: 5 − x − 2 = 3 − x. Leaving the term unchanged, as in −2x − 6 or 7 − x, applies the sign to only one term."
     },
@@ -73,10 +146,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Factorise fully 6x + 9.",
       "options": [
-        {"text": "3(2x + 3)", "correct": true},
-        {"text": "3(2x + 9)", "correct": false, "catches": "FAC-PARTIAL"},
-        {"text": "9(x + 1)", "correct": false, "catches": "FAC-PARTIAL"},
-        {"text": "6(x + 3)", "correct": false, "catches": "FAC-COMMON-TERM"}
+        {
+          "text": "3(2x + 3)",
+          "correct": true
+        },
+        {
+          "text": "3(2x + 9)",
+          "correct": false,
+          "catches": "FAC-PARTIAL"
+        },
+        {
+          "text": "9(x + 1)",
+          "correct": false,
+          "catches": "FAC-PARTIAL"
+        },
+        {
+          "text": "6(x + 3)",
+          "correct": false,
+          "catches": "FAC-COMMON-TERM"
+        }
       ],
       "explanation": "3 is the highest common factor of 6x and 9, so 6x + 9 = 3(2x + 3). Taking the 3 out of only the first term gives 3(2x + 9). Using 9 as the factor gives 9x + 9, which is not the original. Using 6, the coefficient of the first term only, gives 6x + 18."
     },
@@ -87,12 +175,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "4x + 8 = 4(x + 2)", "correct": true},
-        {"text": "4x + 8 = 4(x + 8)", "correct": false, "catches": "FAC-PARTIAL"},
-        {"text": "5x + 10 = 5(x + 2)", "correct": true},
-        {"text": "5x + 10 = 5(x + 10)", "correct": false, "catches": "FAC-PARTIAL"},
-        {"text": "x² + 3x = x(x + 3)", "correct": true},
-        {"text": "x² + 3x = x(x + 3x)", "correct": false, "catches": "FAC-PARTIAL"}
+        {
+          "text": "4x + 8 = 4(x + 2)",
+          "correct": true
+        },
+        {
+          "text": "4x + 8 = 4(x + 8)",
+          "correct": false,
+          "catches": "FAC-PARTIAL"
+        },
+        {
+          "text": "5x + 10 = 5(x + 2)",
+          "correct": true
+        },
+        {
+          "text": "5x + 10 = 5(x + 10)",
+          "correct": false,
+          "catches": "FAC-PARTIAL"
+        },
+        {
+          "text": "x² + 3x = x(x + 3)",
+          "correct": true
+        },
+        {
+          "text": "x² + 3x = x(x + 3x)",
+          "correct": false,
+          "catches": "FAC-PARTIAL"
+        }
       ],
       "explanation": "Take the common factor out of both terms: 4 from 4x and 8, 5 from 5x and 10, and x from x² and 3x. Writing 4(x + 8) leaves the 8 untouched; 5(x + 10) leaves the 10 untouched; and x(x + 3x) leaves the x in the second term."
     },
@@ -103,10 +212,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Factorise 2x + 4.",
       "options": [
-        {"text": "2(x + 2)", "correct": true},
-        {"text": "2(x + 4)", "correct": false, "catches": "FAC-PARTIAL"},
-        {"text": "2(x + 1)", "correct": false, "catches": "FAC-PARTIAL"},
-        {"text": "x(2 + 4)", "correct": false, "catches": "FAC-COMMON-TERM"}
+        {
+          "text": "2(x + 2)",
+          "correct": true
+        },
+        {
+          "text": "2(x + 4)",
+          "correct": false,
+          "catches": "FAC-PARTIAL"
+        },
+        {
+          "text": "2(x + 1)",
+          "correct": false,
+          "catches": "FAC-PARTIAL"
+        },
+        {
+          "text": "x(2 + 4)",
+          "correct": false,
+          "catches": "FAC-COMMON-TERM"
+        }
       ],
       "explanation": "2 divides both 2x and 4, so 2x + 4 = 2(x + 2). Writing 2(x + 4) expands back to 2x + 8, and 2(x + 1) expands to 2x + 2. Taking x out is wrong because the 4 has no x in it, and x(2 + 4) expands to 6x."
     },
@@ -117,10 +241,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Factorise x² + 7x + 12.",
       "options": [
-        {"text": "(x + 3)(x + 4)", "correct": true},
-        {"text": "(x + 7)(x + 12)", "correct": false, "catches": "FAC-SUM-PRODUCT"},
-        {"text": "(x + 1)(x + 12)", "correct": false, "catches": "FAC-SUM-PRODUCT"},
-        {"text": "(x + 2)(x + 6)", "correct": false, "catches": "FAC-SUM-PRODUCT"}
+        {
+          "text": "(x + 3)(x + 4)",
+          "correct": true
+        },
+        {
+          "text": "(x + 7)(x + 12)",
+          "correct": false,
+          "catches": "FAC-SUM-PRODUCT"
+        },
+        {
+          "text": "(x + 1)(x + 12)",
+          "correct": false,
+          "catches": "FAC-SUM-PRODUCT"
+        },
+        {
+          "text": "(x + 2)(x + 6)",
+          "correct": false,
+          "catches": "FAC-SUM-PRODUCT"
+        }
       ],
       "explanation": "The two numbers must multiply to 12 and add to 7: 3 × 4 = 12 and 3 + 4 = 7. Using the 7 and 12 from the expression gives (x + 7)(x + 12), which multiplies to x² + 19x + 12. 1 × 12 = 12 but 1 + 12 = 13. 2 × 6 = 12 but 2 + 6 = 8."
     },
@@ -131,12 +270,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "(x + 3)(x + 4) = x² + 7x + 12", "correct": true},
-        {"text": "x² + 7x + 12 = (x + 7)(x + 12)", "correct": false, "catches": "FAC-SUM-PRODUCT"},
-        {"text": "(x + 2)(x + 5) = x² + 7x + 10", "correct": true},
-        {"text": "x² + 7x + 10 = (x + 7)(x + 10)", "correct": false, "catches": "FAC-SUM-PRODUCT"},
-        {"text": "x² + 5x + 6 = (x + 2)(x + 3)", "correct": true},
-        {"text": "x² + 5x + 6 = (x + 5)(x + 6)", "correct": false, "catches": "FAC-SUM-PRODUCT"}
+        {
+          "text": "(x + 3)(x + 4) = x² + 7x + 12",
+          "correct": true
+        },
+        {
+          "text": "x² + 7x + 12 = (x + 7)(x + 12)",
+          "correct": false,
+          "catches": "FAC-SUM-PRODUCT"
+        },
+        {
+          "text": "(x + 2)(x + 5) = x² + 7x + 10",
+          "correct": true
+        },
+        {
+          "text": "x² + 7x + 10 = (x + 7)(x + 10)",
+          "correct": false,
+          "catches": "FAC-SUM-PRODUCT"
+        },
+        {
+          "text": "x² + 5x + 6 = (x + 2)(x + 3)",
+          "correct": true
+        },
+        {
+          "text": "x² + 5x + 6 = (x + 5)(x + 6)",
+          "correct": false,
+          "catches": "FAC-SUM-PRODUCT"
+        }
       ],
       "explanation": "To factorise x² + bx + c, find two numbers that multiply to c and add to b. For x² + 7x + 12 they are 3 and 4; for x² + 7x + 10 they are 2 and 5; for x² + 5x + 6 they are 2 and 3. Using the coefficients 7 and 12, or 5 and 6, directly gives brackets that multiply out to the wrong middle term."
     },
@@ -147,10 +307,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Expand (x + 2)(x + 3).",
       "options": [
-        {"text": "x² + 5x + 6", "correct": true},
-        {"text": "x² + 6", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"},
-        {"text": "x² + 5x + 5", "correct": false, "catches": "EXP-BRACKET-MULT"},
-        {"text": "x² + 6x + 6", "correct": false, "catches": "EXP-BRACKET-MULT"}
+        {
+          "text": "x² + 5x + 6",
+          "correct": true
+        },
+        {
+          "text": "x² + 6",
+          "correct": false,
+          "catches": "EXP-BRACKET-MULT"
+        },
+        {
+          "text": "x² + 5x + 5",
+          "correct": false,
+          "catches": "EXP-BRACKET-MULT"
+        },
+        {
+          "text": "x² + 6x + 6",
+          "correct": false,
+          "catches": "EXP-BRACKET-MULT"
+        }
       ],
       "explanation": "Multiply every term in the first bracket by every term in the second: x × x = x², x × 3 = 3x, 2 × x = 2x and 2 × 3 = 6, giving x² + 5x + 6. Multiplying only the first terms gives x² + 6. Adding the constants wrongly gives 5, and adding the x terms wrongly gives 6x."
     },
@@ -161,10 +336,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Expand x(x + 3).",
       "options": [
-        {"text": "x² + 3x", "correct": true},
-        {"text": "x² + 3", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"},
-        {"text": "x + 3x", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"},
-        {"text": "2x + 3", "correct": false, "catches": "EXP-BRACKET-MULT"}
+        {
+          "text": "x² + 3x",
+          "correct": true
+        },
+        {
+          "text": "x² + 3",
+          "correct": false,
+          "catches": "EXP-FIRST-TERM-ONLY"
+        },
+        {
+          "text": "x + 3x",
+          "correct": false,
+          "catches": "EXP-FIRST-TERM-ONLY"
+        },
+        {
+          "text": "2x + 3",
+          "correct": false,
+          "catches": "ALG-MULT-NOT-ADD"
+        }
       ],
       "explanation": "Multiply both terms inside by x: x × x = x² and x × 3 = 3x, so x(x + 3) = x² + 3x. Multiplying only the first term gives x² + 3. Writing x + 3x treats x × x as x. 2x + 3 adds the x to itself instead of multiplying by x."
     },
@@ -175,10 +365,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Expand (x + 3)².",
       "options": [
-        {"text": "x² + 6x + 9", "correct": true},
-        {"text": "x² + 9", "correct": false, "catches": "EXP-BRACKET-MULT"},
-        {"text": "x² + 3x + 9", "correct": false, "catches": "EXP-BRACKET-MULT"},
-        {"text": "x² + 6x + 6", "correct": false, "catches": "EXP-BRACKET-MULT"}
+        {
+          "text": "x² + 6x + 9",
+          "correct": true
+        },
+        {
+          "text": "x² + 9",
+          "correct": false,
+          "catches": "EXP-BRACKET-MULT"
+        },
+        {
+          "text": "x² + 3x + 9",
+          "correct": false,
+          "catches": "EXP-BRACKET-MULT"
+        },
+        {
+          "text": "x² + 6x + 6",
+          "correct": false,
+          "catches": "EXP-BRACKET-MULT"
+        }
       ],
       "explanation": "(x + 3)² means (x + 3)(x + 3), which expands to x² + 3x + 3x + 9 = x² + 6x + 9. Squaring each term separately gives x² + 9 and loses the two middle terms. Using only one 3x loses the other, and squaring the 3 to 6 is an arithmetic slip."
     },
@@ -189,10 +394,25 @@
       "answerType": "SINGLE_CHOICE",
       "prompt": "Expand and simplify 3(x + 2) + 2x.",
       "options": [
-        {"text": "5x + 6", "correct": true},
-        {"text": "3x + 6 + 2x", "correct": false, "catches": "EXP-COLLECT"},
-        {"text": "5x + 2", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"},
-        {"text": "7x + 6", "correct": false, "catches": "EXP-COLLECT"}
+        {
+          "text": "5x + 6",
+          "correct": true
+        },
+        {
+          "text": "3x + 6 + 2x",
+          "correct": false,
+          "catches": "EXP-COLLECT"
+        },
+        {
+          "text": "5x + 2",
+          "correct": false,
+          "catches": "EXP-FIRST-TERM-ONLY"
+        },
+        {
+          "text": "7x + 6",
+          "correct": false,
+          "catches": "EXP-COLLECT"
+        }
       ],
       "explanation": "Expand first: 3x + 6 + 2x. Then collect the like terms 3x and 2x to get 5x + 6. Stopping before collecting leaves 3x + 6 + 2x. Adding only the 2 to the bracket gives 5x + 2, and treating 3 + 2 + 2 as 7 gives 7x + 6."
     },
@@ -203,12 +423,33 @@
       "answerType": "MULTI_SELECT",
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "2(x + 3) + 4x = 6x + 6", "correct": true},
-        {"text": "2(x + 3) + 4x = 2x + 3 + 4x", "correct": false, "catches": "EXP-COLLECT"},
-        {"text": "5(x + 1) − x = 4x + 5", "correct": true},
-        {"text": "5(x + 1) − x = 5x + 5 − x", "correct": false, "catches": "EXP-COLLECT"},
-        {"text": "4(x + 2) − 3x = x + 8", "correct": true},
-        {"text": "4(x + 2) − 3x = 4x + 8 − 3x", "correct": false, "catches": "EXP-COLLECT"}
+        {
+          "text": "2(x + 3) + 4x = 6x + 6",
+          "correct": true
+        },
+        {
+          "text": "2(x + 3) + 4x = 2x + 6 + 4x",
+          "correct": false,
+          "catches": "EXP-COLLECT"
+        },
+        {
+          "text": "5(x + 1) − x = 4x + 5",
+          "correct": true
+        },
+        {
+          "text": "5(x + 1) − x = 5x + 5 − x",
+          "correct": false,
+          "catches": "EXP-COLLECT"
+        },
+        {
+          "text": "4(x + 2) − 3x = x + 8",
+          "correct": true
+        },
+        {
+          "text": "4(x + 2) − 3x = 4x + 8 − 3x",
+          "correct": false,
+          "catches": "EXP-COLLECT"
+        }
       ],
       "explanation": "Expand and then collect: 2x + 6 + 4x = 6x + 6; 5x + 5 − x = 4x + 5; and 4x + 8 − 3x = x + 8. Each false option is the expanded form with the x terms still uncollected, so the expression is not wrong but it is not simplified."
     },
@@ -220,10 +461,25 @@
       "bridge": true,
       "prompt": "A rectangle is (x + 5) cm long and 3 cm wide. Which expression gives its area in cm²?",
       "options": [
-        {"text": "3x + 15", "correct": true},
-        {"text": "3x + 5", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"},
-        {"text": "3x + 8", "correct": false, "catches": "EXP-BRACKET-MULT"},
-        {"text": "x + 15", "correct": false, "catches": "EXP-FIRST-TERM-ONLY"}
+        {
+          "text": "3x + 15",
+          "correct": true
+        },
+        {
+          "text": "3x + 5",
+          "correct": false,
+          "catches": "EXP-FIRST-TERM-ONLY"
+        },
+        {
+          "text": "3x + 8",
+          "correct": false,
+          "catches": "INT-OP-CONFUSE"
+        },
+        {
+          "text": "x + 15",
+          "correct": false,
+          "catches": "EXP-FIRST-TERM-ONLY"
+        }
       ],
       "explanation": "Area is length × width, so 3(x + 5) = 3x + 15. Multiplying only the x by 3 gives 3x + 5. Adding 3 and 5 instead of multiplying gives 3x + 8. Dropping the 3 from the x term gives x + 15."
     },
@@ -235,12 +491,32 @@
       "retention": true,
       "prompt": "Tick every statement that is true.",
       "options": [
-        {"text": "2x + 3x = 5x", "correct": true},
-        {"text": "2x + 3y = 5xy", "correct": false, "catches": "ALG-UNLIKE-TERMS"},
-        {"text": "4a − a = 3a", "correct": true},
-        {"text": "3 + 2x = 5x", "correct": false, "catches": "ALG-ADD-COEFFICIENT"},
-        {"text": "5x − 5 cannot be simplified", "correct": true},
-        {"text": "x + x = 2x", "correct": true}
+        {
+          "text": "2x + 3x = 5x",
+          "correct": true
+        },
+        {
+          "text": "2x + 3y = 5xy",
+          "correct": false,
+          "catches": "ALG-UNLIKE-TERMS"
+        },
+        {
+          "text": "4a − a = 3a",
+          "correct": true
+        },
+        {
+          "text": "3 + 2x = 5x",
+          "correct": false,
+          "catches": "ALG-ADD-COEFFICIENT"
+        },
+        {
+          "text": "5x − 5 cannot be simplified",
+          "correct": true
+        },
+        {
+          "text": "x + x = 2x",
+          "correct": true
+        }
       ],
       "explanation": "2x and 3x are like terms and add to 5x; 4a − a = 3a; and x + x = 2x. 2x and 3y are different terms and cannot be combined, so 5xy is wrong. 3 and 2x are a number and a letter term, so they stay separate; 5x − 5 is likewise as simple as it gets."
     }
