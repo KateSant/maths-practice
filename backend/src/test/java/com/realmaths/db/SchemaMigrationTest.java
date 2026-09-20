@@ -42,11 +42,12 @@ class SchemaMigrationTest {
     }
 
     @Test
-    void seedsTheWholeStarterQuestionBank() throws Exception {
+    void theMigrationsLoadAPublishedBank() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
-            assertThat(scalar(statement, "select count(*) from topics")).isEqualTo(5);
-            assertThat(scalar(statement, "select count(*) from questions")).isEqualTo(33);
-            assertThat(scalar(statement, "select count(*) from answer_options")).isEqualTo(133);
+            assertThat(scalar(statement, "select count(*) from topics")).isGreaterThan(0);
+            assertThat(scalar(statement, "select count(*) from questions where status = 'PUBLISHED'"))
+                    .as("the shipped bank is published rather than left as drafts")
+                    .isGreaterThan(0);
         }
     }
 
@@ -71,24 +72,6 @@ class SchemaMigrationTest {
                                 where o.question_id = q.id and o.is_correct) <> 1)
                     """);
             assertThat(broken).as("questions with a malformed option set").isZero();
-        }
-    }
-
-    /**
-     * The 32 original questions are all single choices and were all written with four options.
-     * Worth pinning separately, because the general check above is now loose enough to permit a
-     * seed question that quietly lost an option.
-     */
-    @Test
-    void theOriginalSeededQuestionsEachStillHaveFourOptions() throws Exception {
-        try (Connection connection = open(); Statement statement = connection.createStatement()) {
-            assertThat(scalar(statement, """
-                    select count(*) from questions q
-                    where q.answer_type = 'SINGLE_CHOICE'
-                      and (select count(*) from answer_options o where o.question_id = q.id) <> 4
-                    """))
-                    .as("single-choice seed questions without exactly four options")
-                    .isZero();
         }
     }
 
@@ -128,52 +111,43 @@ class SchemaMigrationTest {
     @Test
     void sqliteAllowsSeveralCorrectOptionsOnATickAllQuestion() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
-            // Question 33 is the seeded tick-all example and already has three correct options.
+            // A question of the test's own, so the assertion does not depend on the bank's content.
+            statement.executeUpdate("""
+                    insert into questions (topic_id, prompt, explanation, difficulty, answer_type)
+                    values (1, 'tick all that apply', 'x', 1, 'MULTI_SELECT')
+                    """);
+            long id = scalar(statement, "select max(id) from questions");
             statement.executeUpdate("""
                     insert into answer_options (question_id, position, label, text, is_correct)
-                    values (33, 6, 'F', '53', 1)
-                    """);
+                    values (%d, 1, 'A', 'one', 1), (%d, 2, 'B', 'two', 1)
+                    """.formatted(id, id));
 
             assertThat(scalar(statement, """
-                    select count(*) from answer_options where question_id = 33 and is_correct
-                    """))
-                    .as("correct options on the tick-all question")
-                    .isEqualTo(4);
+                    select count(*) from answer_options where question_id = %d and is_correct
+                    """.formatted(id)))
+                    .as("correct options on a tick-all question")
+                    .isEqualTo(2);
         }
     }
 
     /**
-     * The answer type is a new column defaulting to SINGLE_CHOICE, so the 32 questions written
-     * before tick-all existed keep their meaning without a backfill.
+     * The bank carries tick-all questions, which is how that answer type is reachable without
+     * authoring anything first. Content-agnostic: it asserts the type is present and answerable,
+     * not which question carries it.
      */
     @Test
-    void everyOriginalSeededQuestionIsASingleChoice() throws Exception {
+    void theBankIncludesTickAllQuestions() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThat(scalar(statement, "select count(*) from questions where answer_type = 'MULTI_SELECT'"))
+                    .as("tick-all questions in the bank")
+                    .isGreaterThan(0);
             assertThat(scalar(statement, """
-                    select count(*) from questions
-                    where id <> 33 and answer_type = 'SINGLE_CHOICE'
+                    select count(*) from questions q where q.answer_type = 'MULTI_SELECT'
+                      and (select count(*) from answer_options o
+                           where o.question_id = q.id and o.is_correct) < 1
                     """))
-                    .as("questions from before tick-all existed")
-                    .isEqualTo(32);
-            assertThat(text(statement, "select answer_type from questions where id = 33"))
-                    .isEqualTo("MULTI_SELECT");
-        }
-    }
-
-    /**
-     * The one tick-all question in the prototype bank, which is how the new type is reachable
-     * without authoring anything first.
-     */
-    @Test
-    void theStarterBankIncludesATickAllExample() throws Exception {
-        try (Connection connection = open(); Statement statement = connection.createStatement()) {
-            assertThat(scalar(statement, """
-                    select count(*) from answer_options where question_id = 33 and is_correct
-                    """))
-                    .as("correct options on the tick-all example")
-                    .isEqualTo(3);
-            assertThat(text(statement, "select status from questions where id = 33")).isEqualTo("PUBLISHED");
-            assertThat(text(statement, "select origin from questions where id = 33")).isEqualTo("SEED");
+                    .as("tick-all questions with no correct option")
+                    .isZero();
         }
     }
 
@@ -317,22 +291,32 @@ class SchemaMigrationTest {
                     .as("questions.active should have been dropped")
                     .isInstanceOf(SQLException.class);
 
-            // The 32 seeded questions were all published before the change. V6 then added a
-            // tick-all example and V7 retired one of the originals, so the published total is back
-            // to 32: 31 of the originals plus the V6 example. What this test really guards is that
-            // nothing is left unpublished by accident, so the number is asserted rather than
-            // derived - a silent extra RETIRED row would show up here.
-            assertThat(scalar(statement, "select count(*) from questions where status = 'PUBLISHED'"))
-                    .isEqualTo(32);
+            // The count used to be pinned to the prototype bank's 32. That is content, not schema,
+            // and it changed the moment the bank was replaced, so what this guards now is the
+            // schema invariant: no question is left in a state the lifecycle does not define.
+            assertThat(scalar(statement, """
+                    select count(*) from questions where status not in ('DRAFT', 'PUBLISHED', 'RETIRED')
+                    """))
+                    .as("questions in no known status")
+                    .isZero();
         }
     }
 
-    /** Makes "retire the whole prototype bank" one action instead of a review of the list. */
+    /**
+     * Makes "retire the whole bank" one action instead of a review of the list: everything the
+     * migrations insert is SEED, and everything SEED is reachable by that one predicate.
+     */
     @Test
-    void theStarterQuestionsAreMarkedAsSeedContent() throws Exception {
+    void theSeededBankIsMarkedAsSeedContent() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
+            assertThat(scalar(statement, """
+                    select count(*) from questions where status = 'PUBLISHED' and origin <> 'SEED'
+                    """))
+                    .as("published questions the migrations did not insert")
+                    .isZero();
             assertThat(scalar(statement, "select count(*) from questions where origin = 'SEED'"))
-                    .isEqualTo(33);
+                    .as("seeded questions")
+                    .isGreaterThan(0);
         }
     }
 
@@ -418,8 +402,10 @@ class SchemaMigrationTest {
 
         try (Connection connection = DriverManager.getConnection(url);
                 Statement statement = connection.createStatement()) {
-            long seededId = scalar(
-                    statement, "select id from questions where origin = 'SEED' and answer_type = 'MULTI_SELECT'");
+            // The lowest-id tick-all is the one V6 inserted, since nothing before V6 was a
+            // tick-all. min() rather than a bare select, because the bank now holds many.
+            long seededId = scalar(statement,
+                    "select min(id) from questions where origin = 'SEED' and answer_type = 'MULTI_SELECT'");
             assertThat(seededId).as("the seed took an id of its own").isNotEqualTo(33);
 
             assertThat(scalar(statement, """
@@ -434,16 +420,18 @@ class SchemaMigrationTest {
     // ---------------------------------------------------------- year groups (V8) ---
 
     /**
-     * The starter bank was written for the first year of secondary school, so it is Year 7
-     * content - including the tick-all example V6 added. This is what makes "all the questions we
-     * already have are in Year 7" true rather than an assumption: the migration's default assigned
-     * them, and nothing has moved one since.
+     * The bank is Year 7/8 content and every question carries one of those two year groups: the
+     * migration's default assigned the original rows and nothing has moved one since.
      */
     @Test
-    void theStarterQuestionsAreYearSevenContent() throws Exception {
+    void everyQuestionSitsInAYearTheBankCovers() throws Exception {
         try (Connection connection = open(); Statement statement = connection.createStatement()) {
-            assertThat(scalar(statement, "select count(*) from questions where year_group = 7"))
-                    .isEqualTo(33);
+            assertThat(scalar(statement, "select count(*) from questions where year_group in (7, 8)"))
+                    .as("questions in the bank's year groups")
+                    .isGreaterThan(0);
+            assertThat(scalar(statement, "select count(*) from questions where year_group not in (7, 8)"))
+                    .as("questions outside the bank's year groups")
+                    .isZero();
         }
     }
 
@@ -528,8 +516,8 @@ class SchemaMigrationTest {
             assertThat(scalar(statement, """
                     select count(*) from questions where topic_id = 1 and status = 'PUBLISHED'
                     """))
-                    .as("published questions left in the Number topic")
-                    .isEqualTo(7);
+                    .as("published questions left in the prototype's Number topic")
+                    .isZero();
             assertThat(scalar(statement, """
                     select count(*) from questions where topic_id = 1 and status = 'PUBLISHED' and id = 3
                     """))

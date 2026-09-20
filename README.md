@@ -84,7 +84,14 @@ questions applied by Flyway. To reset it, delete that file and any `-wal`/`-shm`
 **A reset drops every account, and with it any role.** Flyway carries schema and seed content, not
 users: your row is created by signing in, so after a reset you sign in again and come back as
 `STUDENT`. Promote yourself again with `./scripts/make-admin.sh <your email>` (see *Roles, and how to
-grant ADMIN* below).
+grant ADMIN* below). `scripts/dev-reset.sh` does the wipe and the promotion together.
+
+**If you rename or delete a migration, run `mvn clean`.** Maven copies resources into
+`backend/target/classes` but never removes what is no longer in `src`, so a deleted migration keeps
+running from its stale copy - and Flyway reports versions that no longer exist, or fails with "Found
+more than one migration with version N". A deleted migration that is still on the classpath once
+cost a session an afternoon. `mvn clean test` is the reliable check; `mvn -o spring-boot:run` alone
+will happily use the stale copy.
 
 ### Docker
 

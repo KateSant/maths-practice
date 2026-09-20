@@ -177,8 +177,9 @@ def main():
     chunks = [header(args.version, topics), topic_rows(topics), repurpose_fractions(topics)]
     chunks.append(
         "\n-- The id of the question just inserted, one row at a time. Cleared before each capture, so\n"
-        "-- the subquery below can only ever match one row. `if not exists` because an earlier load\n"
-        "-- migration in the same Flyway run leaves its own temp table on the connection.\n"
+        "-- the subquery below can only ever match one row. `if not exists` so that a later load\n"
+        "-- migration in the same Flyway run, which reuses the connection, does not collide with this\n"
+        "-- one's temp table.\n"
         "create temp table if not exists seed_question (id integer);\n"
     )
     for topic in topics:
