@@ -43,13 +43,13 @@ export function AppLayout() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-200/70 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 sm:px-6">
-          {/* The M is the mark: a monogram needs no glyph beside it. Purple is the brand's colour,
-              kept to the logo and nowhere else. */}
+          {/* The M is the mark: a monogram needs no glyph beside it, and it wears the same blue as
+              every button in the app, so the brand and the interface are one colour. */}
           <Link
             to={inAdmin ? '/admin/questions' : '/'}
             aria-label={`${APP_FULL_NAME} home`}
             title={APP_FULL_NAME}
-            className="grid h-8 w-8 place-items-center rounded-lg bg-purple-600 text-sm font-bold text-white shadow-sm shadow-purple-600/30"
+            className="grid h-8 w-8 place-items-center rounded-lg bg-indigo-600 text-sm font-bold text-white shadow-sm shadow-indigo-600/30"
           >
             {APP_MARK}
           </Link>
@@ -95,14 +95,14 @@ export function AppLayout() {
                 {!inAdmin ? (
                   <>
                     <span
-                      className="hidden items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700 sm:inline-flex"
+                      className="hidden items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 sm:inline-flex"
                       title="Points earned"
                     >
                       <span aria-hidden="true">★</span>
                       <span className="tabular-nums">{profile.user.points}</span>
                     </span>
                     <span
-                      className="hidden items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-700 sm:inline-flex"
+                      className="hidden items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 sm:inline-flex"
                       title="Current streak of correct answers"
                     >
                       <span aria-hidden="true">🔥</span>

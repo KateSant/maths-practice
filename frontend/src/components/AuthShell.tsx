@@ -19,7 +19,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
         <div className="flex flex-col items-center">
           <span
             aria-hidden="true"
-            className="grid h-10 w-10 place-items-center rounded-xl bg-purple-600 text-base font-bold text-white shadow-sm shadow-purple-600/30"
+            className="grid h-10 w-10 place-items-center rounded-xl bg-indigo-600 text-base font-bold text-white shadow-sm shadow-indigo-600/30"
           >
             {APP_MARK}
           </span>
