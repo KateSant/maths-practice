@@ -110,6 +110,18 @@
       }
     },
     {
+      "code": "PV-POWER-FORM",
+      "topic": "place-value",
+      "misconception": "A power of ten is not recognised in its written form: a product of tens is rejected as too small or spoiled by a 1, or a sum of tens is taken for one.",
+      "example": "10 × 10 × 10 × 10 not counted as a power of 10",
+      "source": {
+        "kind": "subject-knowledge",
+        "unit": "NCETM KS3 core concept 1.1 'Place value, estimation and rounding'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Place value",
+        "keyIdea": "1.1.1.2",
+        "note": "Not named in a Common difficulties passage; standard subject knowledge for the key idea. Recognising a power of ten in its written form is what the place-value chart rests on."
+      }
+    },
+    {
       "code": "PROP-FACTOR-MULTIPLE",
       "topic": "properties-of-number",
       "misconception": "Factors and multiples are the same thing.",
@@ -148,7 +160,7 @@
     {
       "code": "PROP-POWER-AS-PRODUCT",
       "topic": "properties-of-number",
-      "misconception": "A power means multiply the base by the exponent, so aⁿ = a × n.",
+      "misconception": "A power means multiply the base by the exponent (aⁿ = a × n), or it is worked out with the wrong number of factors (5³ as 5 × 5).",
       "example": "2⁴ = 8",
       "source": {
         "kind": "subject-knowledge",
@@ -304,7 +316,7 @@
     {
       "code": "INT-TWO-NEG",
       "topic": "integers-and-decimals",
-      "misconception": "Two minus signs always make a plus, however they are used.",
+      "misconception": "Signs are handled by a rule applied mechanically instead of by working the value out: two minus signs are taken to make a plus, or the sign of the answer is guessed from the numbers in the question.",
       "example": "−3 + (−5) = 8",
       "source": {
         "kind": "quoted",
@@ -316,7 +328,7 @@
     {
       "code": "INT-SUB-NEG",
       "topic": "integers-and-decimals",
-      "misconception": "Subtracting a negative is just subtracting.",
+      "misconception": "Subtracting a negative is taken as an ordinary subtraction, or as making the answer negative, rather than as adding.",
       "example": "4 − (−3) = 1",
       "source": {
         "kind": "quoted",
@@ -1082,6 +1094,28 @@
       }
     },
     {
+      "code": "ALG-CONSTANT-SIGN",
+      "topic": "expressions-and-simplifying",
+      "misconception": "A constant term is applied with the wrong sign when a value is substituted: 4x − 1 is worked out as 4 × 3 + 1.",
+      "example": "4x − 1 at x = 3 giving 13 instead of 11",
+      "source": {
+        "kind": "subject-knowledge",
+        "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
+        "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under."
+      }
+    },
+    {
+      "code": "ALG-POWER-CONFUSED",
+      "topic": "expressions-and-simplifying",
+      "misconception": "The index of a term is carried into a multiplication that does not change it, or dropped from one that does: x × 3 written as 3x², and x × x written as x.",
+      "example": "x(x + 3) expanded as x² + 3x²",
+      "source": {
+        "kind": "subject-knowledge",
+        "unit": "NCETM KS3 core concept 1.4 'Simplifying and manipulating expressions, equations and formulae'; DfE Mathematics guidance: Key Stage 3, Year 7 autumn, Expressions and equations",
+        "note": "Not named in a Common difficulties and misconceptions passage; standard subject knowledge for the key idea it sits under."
+      }
+    },
+    {
       "code": "EXP-FIRST-TERM-ONLY",
       "topic": "expanding-and-factorising",
       "misconception": "A multiplier is applied to only the first term in a bracket.",
@@ -1300,7 +1334,7 @@
     {
       "code": "SEQ-OFF-BY-ONE",
       "topic": "sequences",
-      "misconception": "The nth term is out by one step, fitting the first term or missing it.",
+      "misconception": "The rule is nearly right: the nth term is fitted to the wrong term, the gap is misread, or the constant in the rule is wrong.",
       "example": "4, 7, 10, … gives nth term 4n",
       "source": {
         "kind": "quoted",
@@ -1382,9 +1416,21 @@
       }
     },
     {
+      "code": "SEQ-ADDED-NOT-TERM",
+      "topic": "sequences",
+      "misconception": "The amount added over the steps is given as the term itself, instead of being added to the starting term.",
+      "example": "16 with 4 more each layer, the 5th layer answered 20 instead of 36",
+      "source": {
+        "kind": "subject-knowledge",
+        "unit": "NCETM KS3 core concept 4.1 'Sequences'; DfE Mathematics guidance: Key Stage 3, Year 8 autumn, Sequences",
+        "keyIdea": "4.1.2.1",
+        "note": "Not named in a Common difficulties passage; standard subject knowledge for the key idea. It is the term-to-term rule used as the whole answer, which 4.1.2.1 separates from the position-to-term rule."
+      }
+    },
+    {
       "code": "GRPH-ADD-NOT-TIMES",
       "topic": "coordinates-and-linear-graphs",
-      "misconception": "From a table, the y-step is added to x instead of multiplied.",
+      "misconception": "From a table, the y-step is added to x instead of multiplied, or the constant is multiplied by x instead of added.",
       "example": "y: −2, 1, 4 gives y = x + 3",
       "source": {
         "kind": "quoted",
@@ -1432,7 +1478,7 @@
     {
       "code": "GRPH-GRADIENT",
       "topic": "coordinates-and-linear-graphs",
-      "misconception": "Gradient is found without dividing the rise by the run, or with the division the wrong way up.",
+      "misconception": "Gradient is found without dividing the rise by the run — the coordinates are added or multiplied instead — or with the division the wrong way up.",
       "example": "slope of 9 gives gradient 9",
       "source": {
         "kind": "subject-knowledge",
@@ -1463,6 +1509,61 @@
         "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
         "keyIdea": "",
         "note": "Not named in a Common difficulties passage; standard subject knowledge for the features of linear graphs (4.2.2.1)."
+      }
+    },
+    {
+      "code": "GRPH-CONSTANT-DROPPED",
+      "topic": "coordinates-and-linear-graphs",
+      "misconception": "The equation is written without a separate constant, so the line is taken to pass through the origin: the crossing point is left out, or folded into the gradient.",
+      "example": "y = 4x for a taxi that charges £1 plus £3 a kilometre",
+      "source": {
+        "kind": "subject-knowledge",
+        "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
+        "note": "Not named in a Common difficulties passage; standard subject knowledge for the key idea. The DfE does name the mirror error — reading the y-step as a constant added to x — under 4.2.2.2."
+      }
+    },
+    {
+      "code": "GRPH-SIGN-DROPPED",
+      "topic": "coordinates-and-linear-graphs",
+      "misconception": "A sign is dropped from the gradient or the intercept, so a line that goes down is given a positive gradient, or a negative intercept is read as positive.",
+      "example": "y = 5x − 3 taken to cross the y-axis at (0, 3)",
+      "source": {
+        "kind": "subject-knowledge",
+        "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
+        "note": "Not named in a Common difficulties passage; standard subject knowledge for the key idea. The guidance names the confusion between gradient and intercept (y = mx + c, 4.2.2.4), not a dropped sign."
+      }
+    },
+    {
+      "code": "GRPH-NOT-CHECKED",
+      "topic": "coordinates-and-linear-graphs",
+      "misconception": "A claim about a line is answered without working anything out: a point that satisfies the equation is called off the line, or a crossing is read off the wrong term.",
+      "example": "(1, 1) called off y = 3x − 2 when 3 × 1 − 2 = 1",
+      "source": {
+        "kind": "subject-knowledge",
+        "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
+        "note": "Not named in a Common difficulties passage; standard subject knowledge for the key idea. Substituting to test a claim is the method 4.2.1.3 and 4.2.2.2 ask for."
+      }
+    },
+    {
+      "code": "GRPH-AXIS-CONFUSED",
+      "topic": "coordinates-and-linear-graphs",
+      "misconception": "A point is put on the wrong axis: (0, 2) is taken to be on the x-axis, or a point with no zero coordinate is taken to be on one.",
+      "example": "(0, 2) called a point of the x-axis",
+      "source": {
+        "kind": "subject-knowledge",
+        "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
+        "note": "Not named in a Common difficulties passage; standard subject knowledge for the key idea. The guidance names confusing the equations x = a and y = a (4.2.1.3), not which axis a given point lies on."
+      }
+    },
+    {
+      "code": "GRPH-DIRECTION-SIGN",
+      "topic": "coordinates-and-linear-graphs",
+      "misconception": "A coordinate's sign is read from the wrong direction: 2 below the origin is written as +2, or 3 to the right is written as -3.",
+      "example": "3 right and 2 down written as (3, 2)",
+      "source": {
+        "kind": "subject-knowledge",
+        "unit": "NCETM KS3 core concept 4.2 'Graphical representations'; DfE Mathematics guidance: Key Stage 3, Year 7 spring, Plotting coordinates; Year 8 autumn, Graphical representations of linear relationships",
+        "note": "Not named in a Common difficulties passage; standard subject knowledge for the key idea. Reading a position in all four quadrants is 4.2.1.1."
       }
     }
   ]

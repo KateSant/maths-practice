@@ -245,20 +245,20 @@
         {
           "text": "20",
           "correct": false,
-          "catches": "SEQ-OFF-BY-ONE",
-          "feedback": "You might have thought that the 4th term is 20, but that is 5 × 4 without subtracting 2."
+          "catches": "ALG-PARTIAL-SUBSTITUTION",
+          "feedback": "You might have thought that the 4th term is 20, but that is 5 × 4 with the −2 left out: 5 × 4 − 2 = 18."
         },
         {
           "text": "22",
           "correct": false,
-          "catches": "SEQ-OFF-BY-ONE",
-          "feedback": "You might have thought that the 4th term is 22, but that adds the 2 instead of subtracting it."
+          "catches": "ALG-CONSTANT-SIGN",
+          "feedback": "You might have thought that the 4th term is 22, but that adds the 2 instead of subtracting it: 5 × 4 − 2 = 18."
         },
         {
           "text": "3",
           "correct": false,
-          "catches": "SEQ-OFF-BY-ONE",
-          "feedback": "You might have thought that the 4th term is 3, but that is 5 − 2. Substitute n = 4: 5 × 4 − 2 = 18."
+          "catches": "ALG-OP-CONFUSE",
+          "feedback": "You might have thought that the 4th term is 3, but that is 5 − 2. The 5 multiplies n: 5 × 4 − 2 = 18."
         }
       ],
       "explanation": "Substitute n = 4: 5 × 4 − 2 = 18. Forgetting the − 2 gives 20, adding instead of subtracting gives 22, and multiplying 5 by 4 then subtracting 2 the wrong way gives 3. The formula gives the term directly for any n."
@@ -283,8 +283,8 @@
         {
           "text": "20",
           "correct": false,
-          "catches": "SEQ-OFF-BY-ONE",
-          "feedback": "You might have thought that the answer is 20, but that is the number of bricks added, not the total: 16 + 20 = 36."
+          "catches": "SEQ-ADDED-NOT-TERM",
+          "feedback": "You might have thought that the answer is 20, but that is only the number of bricks added over the five layers: 16 + 5 × 4 = 36."
         },
         {
           "text": "56",
@@ -322,7 +322,7 @@
           "text": "15",
           "correct": false,
           "catches": "SEQ-OFF-BY-ONE",
-          "feedback": "You might have thought that the missing term is 15, but that is 14 + 1. The sequence increases by 5."
+          "feedback": "You might have thought that the missing term is 15, but that is 14 + 1. The sequence increases by 5, so the missing term is 19."
         }
       ],
       "explanation": "The terms increase by 5 each time, so the missing term is 14 + 5 = 19, and 19 + 5 = 24 matches the next term given. 18 and 20 do not fit the gap from 14 to 24."
@@ -343,7 +343,7 @@
           "text": "23",
           "correct": false,
           "catches": "SEQ-OFF-BY-ONE",
-          "feedback": "You might have thought that row 10 has 23 tiles, but that is 2 × 10 + 3. The rule is 2n + 1."
+          "feedback": "You might have thought that row 10 has 23 tiles, but that is 2 × 10 + 3. The rule adds 1, not 3: 2n + 1 gives 21."
         },
         {
           "text": "30",

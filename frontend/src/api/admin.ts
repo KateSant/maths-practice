@@ -23,6 +23,14 @@ export interface AdminOption {
   correct: boolean
   /** The misconception code this wrong option catches, or null/absent when it catches none. */
   misconceptionCode?: string | null
+  /**
+   * What the student reads when they pick this option.
+   *
+   * Per option rather than per code, because one code covers different misreadings of the same
+   * question: on "what is the value of the 2 in 5.320?", 0.2 means tenths and 0.002 means
+   * thousandths, and both catch PV-COLUMN-NAME.
+   */
+  feedback?: string | null
 }
 
 export interface AdminQuestionSummary {
@@ -67,6 +75,8 @@ export interface QuestionOptionDraft {
   correct: boolean
   /** The misconception this option catches. Null for a correct option, and for an undiagnosed distractor. */
   misconceptionCode?: string | null
+  /** The message the student reads when they pick this option. Required to publish a named error. */
+  feedback?: string | null
 }
 
 export interface SaveQuestionRequest {

@@ -40,10 +40,6 @@ export function TopicCard({
         )}
       </div>
 
-      {topic.description ? (
-        <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{topic.description}</p>
-      ) : null}
-
       {level !== undefined ? (
         <div className="mt-3">
           <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Working at</p>

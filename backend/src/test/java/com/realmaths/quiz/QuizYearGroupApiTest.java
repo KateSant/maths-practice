@@ -156,7 +156,7 @@ class QuizYearGroupApiTest {
                         .content("""
                                 {"topicId":1,"prompt":"%s what is 2 plus 2","explanation":"Because.",
                                  "difficulty":1,"yearGroup":%d,
-                                 "options":[{"text":"4","correct":true},{"text":"5","correct":false}]}
+                                 "options":[{"text":"4","correct":true},{"text":"5","correct":false,"feedback":"You might have thought that 5 is the answer, but 2 + 2 = 4."}]}
                                 """.formatted(marker, yearGroup)))
                 .andExpect(status().isCreated())
                 .andReturn());

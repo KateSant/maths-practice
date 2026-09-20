@@ -54,11 +54,24 @@ public class QuestionValidator {
         }
 
         for (int index = 0; index < options.size(); index++) {
-            String text = options.get(index).getText();
+            AnswerOption option = options.get(index);
+            String text = option.getText();
             if (text == null || text.isBlank()) {
                 // Keyed by index so the editor can highlight that specific input. The client
                 // is expected to read this as options[index].text.
                 errors.put("options[" + index + "].text", "This option is empty.");
+            }
+
+            // Every wrong option has to say what a student who picks it should understand. Note
+            // that this is not tied to the misconception code: a code says the distractor catches a
+            // catalogued error, which a plausible distractor need not, but the message is what the
+            // student actually reads. Without one the student gets only the item's explanation,
+            // which lists every error the question catches rather than the one they made. Drafts are
+            // unaffected - this runs on publish, so a half-written question can still be saved.
+            if (!option.isCorrect() && !hasText(option.getFeedback())) {
+                errors.put(
+                        "options[" + index + "].feedback",
+                        "Write the message the student reads if they pick this option.");
             }
         }
 
@@ -83,5 +96,9 @@ public class QuestionValidator {
         if (!errors.isEmpty()) {
             throw new ApiValidationException("This question is not ready to publish yet.", errors);
         }
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 }

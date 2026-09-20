@@ -59,8 +59,8 @@
         {
           "text": "−7",
           "correct": false,
-          "catches": "INT-SIGN-PRODUCT",
-          "feedback": "You might have thought that the answer stays negative, but two minus signs together make a plus: 4 + 3 = 7."
+          "catches": "INT-TWO-NEG",
+          "feedback": "You might have thought that taking away −3 leaves the answer negative, but the two minus signs make it positive: 4 + 3 = 7."
         },
         {
           "text": "−1",
@@ -338,8 +338,8 @@
         {
           "text": "11 °C",
           "correct": false,
-          "catches": "INT-SUB-NEG",
-          "feedback": "You might have thought that the temperature rose both times, but it fell 6 °C at the end: −4 + 9 = 5, then 5 − 6 = −1."
+          "catches": "INT-TWO-NEG",
+          "feedback": "You might have thought that the temperature rose both times, but the second change was a fall of 6 °C: −4 + 9 = 5, then 5 − 6 = −1."
         },
         {
           "text": "1 °C",
@@ -350,7 +350,7 @@
         {
           "text": "−11 °C",
           "correct": false,
-          "catches": "INT-SUB-NEG",
+          "catches": "INT-TWO-NEG",
           "feedback": "You might have thought that the whole calculation is negative, but take it in steps: −4 + 9 = 5, then 5 − 6 = −1."
         }
       ],
@@ -468,7 +468,7 @@
           "text": "4 − (−3)",
           "correct": false,
           "catches": "INT-SUB-NEG",
-          "feedback": "You might have thought that 4 − (−3) is not positive, but it is 7."
+          "feedback": "You might have thought that 4 − (−3) is not positive, but taking away −3 moves 3 places to the right: 4 + 3 = 7."
         },
         {
           "text": "4 + 3",

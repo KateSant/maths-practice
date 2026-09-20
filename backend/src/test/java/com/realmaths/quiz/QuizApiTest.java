@@ -122,28 +122,41 @@ class QuizApiTest {
     }
 
     /**
-     * An option a teacher writes may name a code without writing a message of its own. The result
-     * then carries the code with no message, and the client falls back to the register's line for
-     * that code - which is why both halves travel together.
+     * An option that names an error has to say what the student thought, because the register no
+     * longer carries a line written for a student. Saving is still allowed, so a question can sit
+     * half-written; publishing is not, because what goes live reaches an eleven-year-old.
      */
     @Test
-    void anOptionWithNoMessageOfItsOwnStillNamesTheCode() throws Exception {
+    void refusesToPublishAnOptionThatNamesAnErrorWithNoMessage() throws Exception {
         String admin = adminToken();
-        long questionId = publishedQuestionCatching(admin, "PROP-ONE-IS-PRIME", null);
-        long[] options = optionIdsOf(admin, questionId);
+        String prompt = "catching " + System.nanoTime() + " what is 2 + 2";
 
-        String student = studentToken();
-        JsonNode session = startSession(student, 50);
-        findQuestion(session, questionId);
-        JsonNode wrong = answerOne(student, session.path("sessionId").asLong(), questionId, options[0]);
+        MvcResult created = mockMvc.perform(post("/api/admin/questions")
+                        .header("Authorization", "Bearer " + admin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"topicId":1,"prompt":"%s","explanation":"Because.","difficulty":1,
+                                 "answerType":"SINGLE_CHOICE",
+                                 "options":[{"text":"5","correct":false,"misconceptionCode":"PROP-ONE-IS-PRIME"},
+                                            {"text":"4","correct":true}]}
+                                """.formatted(prompt)))
+                .andExpect(status().isCreated())
+                .andReturn();
 
-        assertThat(wrong.path("caught")).hasSize(1);
-        assertThat(wrong.path("caught").get(0).path("misconceptionCode").asText())
-                .isEqualTo("PROP-ONE-IS-PRIME");
-        assertThat(wrong.path("caught").get(0).path("feedback").isMissingNode()
-                        || wrong.path("caught").get(0).path("feedback").isNull())
-                .as("no message of its own, so the register's line stands in")
-                .isTrue();
+        long id = objectMapper.readTree(created.getResponse().getContentAsString()).path("id").asLong();
+
+        MvcResult refused = mockMvc.perform(post("/api/admin/questions/" + id + "/publish")
+                        .header("Authorization", "Bearer " + admin))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+
+        assertThat(objectMapper
+                        .readTree(refused.getResponse().getContentAsString())
+                        .path("fieldErrors")
+                        .path("options[0].feedback")
+                        .asText())
+                .as("the option that needs the message is the one named")
+                .isNotEmpty();
     }
 
     /** A right answer names no error, because there is nothing to explain away. */
@@ -281,15 +294,13 @@ class QuizApiTest {
     /**
      * Creates and publishes a single-choice question whose wrong option names an error, and
      * returns its id. The code is a real register code, so the whole round trip can be checked:
-     * stored on the option, graded, and handed back to name the mistake. A null {@code feedback}
-     * stands for an option a teacher wrote with a code but no message of their own.
+     * stored on the option, graded, and handed back to name the mistake. The message goes with it,
+     * because publishing without one is refused.
      */
     private long publishedQuestionCatching(String admin, String code, String feedback) throws Exception {
         String prompt = "catching " + System.nanoTime() + " what is 2 + 2";
-        String wrongOption = feedback == null
-                ? "{\"text\":\"5\",\"correct\":false,\"misconceptionCode\":\"%s\"}".formatted(code)
-                : "{\"text\":\"5\",\"correct\":false,\"misconceptionCode\":\"%s\",\"feedback\":\"%s\"}"
-                        .formatted(code, feedback);
+        String wrongOption = "{\"text\":\"5\",\"correct\":false,\"misconceptionCode\":\"%s\",\"feedback\":\"%s\"}"
+                .formatted(code, feedback);
 
         MvcResult created = mockMvc.perform(post("/api/admin/questions")
                         .header("Authorization", "Bearer " + admin)
@@ -321,10 +332,10 @@ class QuizApiTest {
                                 {"topicId":1,"prompt":"%s","explanation":"Because.","difficulty":1,
                                  "answerType":"MULTI_SELECT",
                                  "options":[
-                                   {"text":"21","correct":false},
+                                   {"text":"21","correct":false,"feedback":"You might have thought that 21 is prime, but 21 = 3 × 7."},
                                    {"text":"29","correct":true},
                                    {"text":"37","correct":true},
-                                   {"text":"39","correct":false},
+                                   {"text":"39","correct":false,"feedback":"You might have thought that 39 is prime, but 39 = 3 × 13."},
                                    {"text":"47","correct":true}]}
                                 """.formatted(prompt)))
                 .andExpect(status().isCreated())

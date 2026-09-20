@@ -91,14 +91,14 @@
         {
           "text": "x² + 3x²",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY",
-          "feedback": "You might have thought that x × 3 is 3x², but it is 3x."
+          "catches": "ALG-POWER-CONFUSED",
+          "feedback": "You might have thought that x × 3 is 3x², but multiplying by a number leaves the letter's power alone: it is 3x."
         },
         {
           "text": "x + 3x",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY",
-          "feedback": "You might have thought that x × x is x, but it is x²."
+          "catches": "ALG-POWER-CONFUSED",
+          "feedback": "You might have thought that x × x is x, but multiplying a letter by itself gives x²: x² + 3x."
         }
       ],
       "explanation": "The x multiplies both terms: x × x = x² and x × 3 = 3x, so x(x + 3) = x² + 3x. Multiplying only the first term gives x² + 3. x × 3x is 3x², not 3x² added to x², and x + 3x does not multiply the x by itself."
@@ -187,14 +187,14 @@
         {
           "text": "5x + 8",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY",
-          "feedback": "You might have thought that 2 × 3x is 5x, but it is 6x."
+          "catches": "ALG-MULT-NOT-ADD",
+          "feedback": "You might have thought that 2 × 3x is 5x, but that adds the 2 and the 3. Multiplying gives 6x, so the answer is 6x + 8."
         },
         {
           "text": "6x + 6",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY",
-          "feedback": "You might have thought that 2 × 4 is 6, but it is 8."
+          "catches": "ALG-MULT-NOT-ADD",
+          "feedback": "You might have thought that 2 × 4 is 6, but that adds the 2 and the 4. Multiplying gives 8: 6x + 8."
         }
       ],
       "explanation": "Multiply both terms by 2: 2 × 3x = 6x and 2 × 4 = 8, so 2(3x + 4) = 6x + 8. 6x + 4 multiplies only the first term, 5x + 8 adds 2 and 3 instead of multiplying, and 6x + 6 adds 2 and 4."
@@ -320,8 +320,8 @@
         {
           "text": "3x + 7",
           "correct": false,
-          "catches": "EXP-FIRST-TERM-ONLY",
-          "feedback": "You might have thought that 3x + 7 is equivalent, but that adds 3 and 4. Multiplying gives 12."
+          "catches": "ALG-MULT-NOT-ADD",
+          "feedback": "You might have thought that 3x + 7 is equivalent, but the 3 and the 4 are multiplied, not added: 3 × 4 = 12, so it is 3x + 12."
         },
         {
           "text": "3x + 3",

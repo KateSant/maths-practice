@@ -10,10 +10,10 @@ import {
 } from '../../api/admin'
 import { Button, Card, Spinner, buttonClasses } from '../../components/ui'
 import { QuestionCard, type OptionState } from '../../components/QuestionCard'
+import { optionState, toggleSelection } from '../../lib/answerState'
 import type { AnswerType } from '../../api/types'
 import { AdminHeader, OriginBadge, StatusBadge } from './adminUi'
 import { MisconceptionPicker } from './MisconceptionPicker'
-import { GUIDANCE_URL } from '../../lib/guidance'
 import { DIFFICULTY_BANDS, difficultyLabel } from '../../lib/format'
 import { DEFAULT_YEAR_GROUP, YEAR_GROUPS, yearGroupLabel } from '../../lib/yearGroups'
 import { fieldClass } from './AdminQuestionListPage'
@@ -27,12 +27,19 @@ interface DraftOption {
   correct: boolean
   /** A code from the misconception register, or '' for "not diagnosed". */
   misconceptionCode: string
+  /**
+   * What the student reads when they pick this option, or '' for nothing written yet.
+   *
+   * Held even while the option is the correct one, and dropped when saving, so a teacher who
+   * marks an answer by accident does not lose a paragraph they typed.
+   */
+  feedback: string
 }
 
 let optionKeySeed = 0
 function newOption(): DraftOption {
   optionKeySeed += 1
-  return { key: `option-${optionKeySeed}`, text: '', correct: false, misconceptionCode: '' }
+  return { key: `option-${optionKeySeed}`, text: '', correct: false, misconceptionCode: '', feedback: '' }
 }
 
 /**
@@ -60,6 +67,12 @@ export function AdminQuestionEditorPage() {
   const [options, setOptions] = useState<DraftOption[]>(() => [newOption(), newOption()])
   const [status, setStatus] = useState<QuestionStatus>('DRAFT')
   const [origin, setOrigin] = useState<AdminQuestionDetail['origin']>('AUTHORED')
+
+  // What the teacher has done in the preview: which options they picked, and whether the answer has
+  // been revealed yet. A preview a teacher cannot answer only shows the question, and the thing they
+  // most need to check is the message a student gets after picking a wrong answer.
+  const [previewPicked, setPreviewPicked] = useState<number[]>([])
+  const [previewGraded, setPreviewGraded] = useState(false)
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -98,6 +111,7 @@ export function AdminQuestionEditorPage() {
                 text: option.text,
                 correct: option.correct,
                 misconceptionCode: option.misconceptionCode ?? '',
+                feedback: option.feedback ?? '',
               }))
             : [newOption(), newOption()],
         )
@@ -145,6 +159,9 @@ export function AdminQuestionEditorPage() {
           // A correct option catches nothing, so the code is dropped even if one was left on it
           // before it was marked correct. An empty string means the same as absent.
           misconceptionCode: option.correct ? null : option.misconceptionCode || null,
+          // Likewise no message for a correct option - there is nothing to explain away - but it
+          // stays in the draft, so unticking the answer brings the teacher's words back.
+          feedback: option.correct ? null : option.feedback.trim() || null,
         })),
       }
 
@@ -217,6 +234,8 @@ export function AdminQuestionEditorPage() {
           if (at !== index) return option
           // A correct option catches nothing, so the code goes when the option becomes the
           // answer. It is not restored if the option is later unticked; the teacher picks again.
+          // The message is not dropped here, only from what is saved: it is prose, and losing it
+          // to a mis-click would cost more than re-picking a code does.
           return option.correct
             ? { ...option, correct: false }
             : { ...option, correct: true, misconceptionCode: '' }
@@ -239,6 +258,10 @@ export function AdminQuestionEditorPage() {
     )
   }
 
+  const setOptionFeedback = (index: number, feedback: string) => {
+    setOptions((current) => current.map((option, at) => (at === index ? { ...option, feedback } : option)))
+  }
+
   const removeOption = (index: number) => {
     setOptions((current) => current.filter((_, at) => at !== index))
   }
@@ -254,9 +277,47 @@ export function AdminQuestionEditorPage() {
     text: option.text,
   }))
 
-  const stateForPreview = (optionId: number): OptionState => {
-    const option = options[optionId]
-    return option?.correct ? 'correct' : 'idle'
+  const previewMulti = answerType === 'MULTI_SELECT'
+  const correctPreviewIds = options.flatMap((option, index) => (option.correct ? [index] : []))
+
+  // The same function the quiz uses, so the preview cannot drift from it in behaviour either.
+  const stateForPreview = (optionId: number): OptionState =>
+    optionState({
+      optionId,
+      selectedIds: previewPicked,
+      correctOptionIds: correctPreviewIds,
+      graded: previewGraded,
+    })
+
+  const previewCorrect =
+    previewGraded &&
+    previewPicked.length === correctPreviewIds.length &&
+    previewPicked.every((id) => correctPreviewIds.includes(id))
+
+  // The messages for the wrong answers picked, which is what a teacher is checking here.
+  const previewFeedback = previewGraded
+    ? previewPicked
+        .flatMap((id) => {
+          const option = options[id]
+          return option && !option.correct && option.feedback.trim() ? [option.feedback.trim()] : []
+        })
+        .slice(0, 2)
+    : []
+
+  const previewChoose = (optionId: number) => {
+    if (previewGraded) return
+    if (previewMulti) {
+      setPreviewPicked((current) => toggleSelection(current, optionId))
+    } else {
+      // A single choice is answered by the click itself, as it is in the quiz.
+      setPreviewPicked([optionId])
+      setPreviewGraded(true)
+    }
+  }
+
+  const resetPreview = () => {
+    setPreviewPicked([])
+    setPreviewGraded(false)
   }
 
   // The register groups its codes by topic slug, and the question's own topic is shown first in
@@ -280,27 +341,6 @@ export function AdminQuestionEditorPage() {
         }
       />
 
-      {/* The two things a teacher needs to know before the options, and neither is obvious from
-          the form: that the green badge is the key, and where the mistakes in the list come from. */}
-      <div className="space-y-1">
-        <p className="text-xs leading-relaxed text-slate-500">
-          Green marks the right answer. Under each wrong answer, set the mistake it catches — that is
-          what lets the app explain what a student got wrong.
-        </p>
-        <p className="text-xs leading-relaxed text-slate-400">
-          Mistakes are sourced from the DfE and NCETM’s{' '}
-          <a
-            href={GUIDANCE_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="font-medium text-indigo-600 hover:text-indigo-700"
-          >
-            Key Stage 3 mathematics guidance
-          </a>
-          , or marked as standard subject knowledge where the guidance is silent.
-        </p>
-      </div>
-
       {error ? (
         <p role="alert" className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
@@ -312,7 +352,9 @@ export function AdminQuestionEditorPage() {
         </p>
       ) : null}
 
-      <div className="grid min-w-0 gap-6 lg:grid-cols-2">
+      {/* Three fifths to the form, two to the preview. Equal halves left the diagnostic block -
+          the part being written - narrower than the card showing the result. */}
+      <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <div className="min-w-0 space-y-5">
           <Card className="p-5">
             <div className="grid gap-4 sm:grid-cols-3">
@@ -365,35 +407,48 @@ export function AdminQuestionEditorPage() {
                 <FieldError message={fieldErrors['difficulty']} />
               </label>
             </div>
+          </Card>
 
-            <label className="mt-4 block">
-              <span className="mb-1.5 block text-sm font-medium text-slate-700">Question</span>
+          {/* The question itself, in its own card and the biggest type on the screen. The prompt is
+              the item's headline, not one input among many; the explanation lives at the bottom of
+              the form, because it is what a student reads after answering rather than part of asking. */}
+          <Card className="p-5 sm:p-6">
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-semibold text-slate-800">Question</span>
               <textarea
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
-                rows={3}
+                rows={2}
                 placeholder="What is 15 + 6 × 4?"
-                className={fieldClass(fieldErrors['prompt'])}
+                // The same size the student sees the question at, so what the teacher writes looks
+                // like what the class reads. Two rows, because the box is for a sentence, not a
+                // page - it stays draggable if a longer one is needed.
+                className={fieldClass(fieldErrors['prompt'], 'text-xl font-medium leading-snug')}
               />
               <FieldError message={fieldErrors['prompt']} />
             </label>
-
           </Card>
 
+          {/* One card for all the answers. Each option is a row inside it rather than a card of its
+              own: they are one list, and the tinted block under each wrong one already separates
+              them. */}
           <Card className="p-5">
             <div className="flex items-baseline justify-between gap-3">
-              <span className="text-sm font-medium text-slate-700">Answers</span>
+              <span className="text-sm font-semibold text-slate-800">Answers</span>
               <span className="text-xs text-slate-400">
-                {answerType === 'MULTI_SELECT' ? 'Tick every correct answer' : 'Pick the correct one'}
+                {answerType === 'MULTI_SELECT'
+                  ? 'Tick every correct answer - the rest are the wrong answers students pick'
+                  : 'Pick the correct one - the rest are the wrong answers students pick'}
               </span>
             </div>
 
             <FieldError message={fieldErrors['options']} />
             <FieldError message={fieldErrors['options.correct']} />
 
-            <div className="mt-3 space-y-3">
+            <div className="mt-4 space-y-6">
               {options.map((option, index) => (
-                <div key={option.key} className="flex items-start gap-3">
+                <div key={option.key} className="space-y-2">
+                  <div className="flex items-start gap-3">
                   <button
                     type="button"
                     // The letter is the state and the control in one: green means this is the
@@ -408,9 +463,12 @@ export function AdminQuestionEditorPage() {
                     }
                     className={[
                       'mt-1.5 grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-lg text-sm font-bold transition',
+                      // Green is the answer, rose is a wrong answer. The letter is a control, not a
+                      // label, so it also says what clicking will do: a rose letter turns green when
+                      // it is marked correct, and a green one can be unmarked.
                       option.correct
-                        ? 'bg-emerald-600 text-white'
-                        : 'border border-slate-200 bg-white text-slate-500 hover:border-emerald-400 hover:text-emerald-600',
+                        ? 'bg-emerald-600 text-white ring-2 ring-emerald-600/20'
+                        : 'border border-rose-200 bg-rose-50 text-rose-600 hover:border-emerald-400 hover:bg-white hover:text-emerald-600',
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30',
                     ].join(' ')}
                   >
@@ -425,24 +483,35 @@ export function AdminQuestionEditorPage() {
                       className={fieldClass(fieldErrors[`options[${index}].text`])}
                     />
                     <FieldError message={fieldErrors[`options[${index}].text`]} />
-                    {!option.correct ? (
-                      <MisconceptionPicker
-                        value={option.misconceptionCode}
-                        onChange={(code) => setOptionMisconception(index, code)}
-                        topicSlug={selectedTopic?.slug}
-                        topicName={(slug) => topicNameBySlug.get(slug) ?? slug}
-                      />
-                    ) : null}
                   </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
+                  {/* Small and quiet: removing an option is housekeeping, and the block below is
+                      the work. It used to be a full Button competing for the row's width. */}
+                  <button
+                    type="button"
                     onClick={() => removeOption(index)}
                     disabled={options.length <= 1}
                     aria-label={`Remove option ${String.fromCharCode(65 + index)}`}
+                    className="mt-2 shrink-0 rounded-md px-2 py-1 text-xs font-medium text-slate-400 transition hover:bg-rose-50 hover:text-rose-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400"
                   >
                     Remove
-                  </Button>
+                  </button>
+                  </div>
+                  {/* Full width, indented to line up with the option text. The diagnostic block is
+                      what a teacher is here to write, so it is not squeezed into a column beside
+                      the row's controls. pl-11 is the letter button (w-8) plus the gap (gap-3). */}
+                  {!option.correct ? (
+                    <div className="pl-11">
+                      <MisconceptionPicker
+                        value={option.misconceptionCode}
+                        onChange={(code) => setOptionMisconception(index, code)}
+                        feedback={option.feedback}
+                        onFeedbackChange={(message) => setOptionFeedback(index, message)}
+                        error={fieldErrors[`options[${index}].feedback`]}
+                        topicSlug={selectedTopic?.slug}
+                        topicName={(slug) => topicNameBySlug.get(slug) ?? slug}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>
@@ -458,10 +527,12 @@ export function AdminQuestionEditorPage() {
             </Button>
           </Card>
 
+          {/* Last, after the answers. It is the working a student reads once they have answered, so
+              it follows the options rather than sitting up with the question. */}
           <Card className="p-5">
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-slate-700">
-                Explanation <span className="font-normal text-slate-400">(shown after answering)</span>
+                Explanation <span className="font-normal text-slate-400">(what the student sees after they answer)</span>
               </span>
               <textarea
                 value={explanation}
@@ -496,20 +567,43 @@ export function AdminQuestionEditorPage() {
           <QuestionCard
             prompt={prompt || 'Your question will appear here'}
             options={previewOptions}
-            variant={answerType === 'MULTI_SELECT' ? 'multi' : 'single'}
+            variant={previewMulti ? 'multi' : 'single'}
             stateFor={stateForPreview}
+            onChoose={previewChoose}
+            disabled={previewGraded}
           >
-            {explanation ? (
-              <div className="mt-6 rounded-xl bg-emerald-50 px-5 py-4 text-emerald-900">
-                <p className="font-semibold">Explanation</p>
-                <p className="mt-1.5 text-sm leading-relaxed opacity-90">{explanation}</p>
+            {previewGraded ? (
+              <div
+                className={`mt-6 rounded-xl px-5 py-4 ${
+                  previewCorrect ? 'bg-emerald-50 text-emerald-900' : 'bg-orange-50 text-orange-900'
+                }`}
+              >
+                <p className="font-semibold">{previewCorrect ? 'Correct' : 'Good try'}</p>
+                {previewFeedback.map((line) => (
+                  <p key={line} className="mt-2 text-sm font-medium leading-relaxed">
+                    {line}
+                  </p>
+                ))}
+                {explanation ? (
+                  <p className="mt-1.5 text-sm leading-relaxed opacity-90">{explanation}</p>
+                ) : null}
               </div>
             ) : null}
+            {previewMulti && previewPicked.length > 0 && !previewGraded ? (
+              <Button size="sm" className="mt-6" onClick={() => setPreviewGraded(true)}>
+                Check answer
+              </Button>
+            ) : null}
+            {previewGraded ? (
+              <button
+                type="button"
+                onClick={resetPreview}
+                className="mt-3 text-xs font-medium text-slate-500 underline decoration-dotted underline-offset-2 hover:text-indigo-600"
+              >
+                Try another answer
+              </button>
+            ) : null}
           </QuestionCard>
-          <p className="mt-3 text-xs text-slate-400">
-            This preview is the same component the practice questions use, so it cannot drift from what
-            students actually see.
-          </p>
         </div>
       </div>
     </div>

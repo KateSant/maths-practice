@@ -304,9 +304,16 @@ export function AdminQuestionListPage() {
   )
 }
 
-export function fieldClass(error?: string): string {
+/**
+ * The one input style, so every field on the admin screens looks like a field.
+ *
+ * @param error a publish error, which reddens the border
+ * @param text the font size, for the few fields that are not ordinary - the question prompt is the
+ *     item's headline rather than one input among many, and at text-sm it read as lost among them
+ */
+export function fieldClass(error?: string, text = 'text-sm'): string {
   return [
-    'w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400',
+    `w-full rounded-xl border bg-white px-3.5 py-2.5 ${text} text-slate-900 placeholder:text-slate-400`,
     'focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20',
     error ? 'border-rose-300' : 'border-slate-200',
   ].join(' ')

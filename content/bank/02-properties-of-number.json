@@ -28,7 +28,7 @@
           "text": "25",
           "correct": false,
           "catches": "PROP-POWER-AS-PRODUCT",
-          "feedback": "You might have thought that 5³ is 5 × 5, but that is 5². Cubing uses three 5s."
+          "feedback": "You might have thought that 5³ is 5 × 5, but that uses two fives. The index counts the fives: 5 × 5 × 5 = 125."
         },
         {
           "text": "53",

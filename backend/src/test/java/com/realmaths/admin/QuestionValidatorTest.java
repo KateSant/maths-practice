@@ -26,8 +26,16 @@ class QuestionValidatorTest {
     private Question question(String prompt, String... options) {
         Question question = new Question(topic, prompt, "Because.", 1, YearGroups.MIN, AnswerType.SINGLE_CHOICE);
         for (int index = 0; index < options.length; index++) {
-            // First option correct unless a test says otherwise.
-            question.addOption(String.valueOf((char) ('A' + index)), options[index], index == 0);
+            // First option correct unless a test says otherwise. Wrong options carry a message,
+            // because publishing requires one; a test that wants a message-less option builds the
+            // question itself, as the refusal cases below do.
+            boolean correct = index == 0;
+            question.addOption(
+                    String.valueOf((char) ('A' + index)),
+                    options[index],
+                    correct,
+                    null,
+                    correct ? null : Fixtures.WRONG_OPTION_MESSAGE);
         }
         return question;
     }
@@ -72,6 +80,55 @@ class QuestionValidatorTest {
                 .isInstanceOf(ApiValidationException.class)
                 .satisfies(ex -> assertThat(((ApiValidationException) ex).getFieldErrors())
                         .containsKey("options[1].text"));
+    }
+
+    /**
+     * The rule that makes the student's feedback possible at all: every wrong option says what a
+     * student who picks it should understand.
+     *
+     * <p>Keyed by index, like the empty-text rule, so the editor can put the message on the offending
+     * option. Note that the mistake's code is irrelevant here - a code says a distractor catches a
+     * catalogued error, which a plausible distractor need not, but the message is what the student
+     * actually reads. Without one they get only the item's explanation, which lists every error the
+     * question catches rather than the one they made.
+     */
+    @Test
+    void refusesAWrongOptionWithNoMessage() {
+        Question question = new Question(
+                topic, "What is 2 + 2?", "Because.", 1, YearGroups.MIN, AnswerType.SINGLE_CHOICE);
+        question.addOption("A", "4", true);
+        question.addOption("B", "5", false, "ADD-CARRY");
+
+        assertThatThrownBy(() -> validator.requirePublishable(question))
+                .isInstanceOf(ApiValidationException.class)
+                .satisfies(ex -> assertThat(((ApiValidationException) ex).getFieldErrors())
+                        .containsKey("options[1].feedback"));
+    }
+
+    /** The same rule with no code at all, so it cannot be read as a rule about the register. */
+    @Test
+    void refusesAWrongOptionWithNoMessageEvenWhenItNamesNoError() {
+        Question question = new Question(
+                topic, "What is 2 + 2?", "Because.", 1, YearGroups.MIN, AnswerType.SINGLE_CHOICE);
+        question.addOption("A", "4", true);
+        question.addOption("B", "5", false);
+
+        assertThatThrownBy(() -> validator.requirePublishable(question))
+                .isInstanceOf(ApiValidationException.class)
+                .satisfies(ex -> assertThat(((ApiValidationException) ex).getFieldErrors())
+                        .containsKey("options[1].feedback"));
+    }
+
+
+    @Test
+    void acceptsAWrongOptionThatNamesAnErrorAndSaysWhatTheStudentThought() {
+        Question question = new Question(
+                topic, "What is 2 + 2?", "Because.", 1, YearGroups.MIN, AnswerType.SINGLE_CHOICE);
+        question.addOption("A", "4", true);
+        question.addOption(
+                "B", "5", false, "ADD-CARRY", "You might have thought that 2 + 2 is 5, but it is 4.");
+
+        assertThatCode(() -> validator.requirePublishable(question)).doesNotThrowAnyException();
     }
 
     @Test

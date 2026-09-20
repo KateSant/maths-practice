@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { HomeMark } from '../components/HomeMark'
 import { PrototypeBadge } from '../components/PrototypeBadge'
 import { APP_FULL_NAME } from '../lib/branding'
 import { GUIDANCE_URL, PUBLICATION_URL } from '../lib/guidance'
@@ -34,6 +35,7 @@ export function AboutPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-12 sm:py-16">
       <div className="flex items-center gap-3">
+        <HomeMark />
         <span className="text-sm font-bold tracking-tight text-slate-900">{APP_FULL_NAME}</span>
         <Link to="/login" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
           ← Back to sign in

@@ -106,10 +106,7 @@ export function AdminTopicsPage() {
 
   return (
     <div className="space-y-6">
-      <AdminHeader
-        title="Topics"
-        subtitle="Her wording, and the order they appear in."
-      />
+      <AdminHeader title="Topics" />
 
       {error ? (
         <p role="alert" className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
@@ -121,11 +118,6 @@ export function AdminTopicsPage() {
           {message}
         </p>
       ) : null}
-
-      <p className="rounded-xl bg-slate-100 px-4 py-3 text-sm text-slate-600">
-        The slug is the part that appears in practice links. Changing it will not break a student's saved
-        progress — that is stored by id — but any link already shared will stop working.
-      </p>
 
       <div className="space-y-3">
         {rows.map((row) => (

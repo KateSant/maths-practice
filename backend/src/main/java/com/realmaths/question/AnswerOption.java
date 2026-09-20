@@ -130,4 +130,31 @@ public class AnswerOption {
     public String getFeedback() {
         return feedback;
     }
+
+    /**
+     * Applies an edit to an option in place, keeping its row and therefore its id.
+     *
+     * <p>The id is what a recorded answer points at ({@code quiz_answer_options.option_id}), and
+     * that link cascades on delete. Rebuilding the option set - which is what this replaced -
+     * deleted these rows and took every recorded pick with them, so fixing a typo in a question
+     * silently destroyed the misconception history for it. Editing in place leaves the id alone, so
+     * a text change or a re-coding keeps the answers that point at it.
+     */
+    public void revise(String text, boolean correct, String misconceptionCode, String feedback) {
+        this.text = text;
+        this.correct = correct;
+        this.misconceptionCode = misconceptionCode;
+        this.feedback = feedback;
+    }
+
+    /**
+     * Clears the correct flag, on its own.
+     *
+     * <p>Separate from {@link #revise} because the single-choice trigger refuses a second correct
+     * option per statement: moving the key from one option to another has to pass through a moment
+     * where none is marked. Callers clear every option, flush, then set the flags they want.
+     */
+    public void markIncorrect() {
+        this.correct = false;
+    }
 }

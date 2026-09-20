@@ -1,6 +1,6 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
-import { APP_FULL_NAME, APP_MARK } from '../lib/branding'
+import { HomeMark } from './HomeMark'
 import { initials } from '../lib/format'
 import { PrototypeBadge } from './PrototypeBadge'
 import { YearGroupSelect } from './YearGroupSelect'
@@ -34,6 +34,12 @@ export function AppLayout() {
 
   const inAdmin = pathname.startsWith('/admin')
 
+  // Admin screens are workbenches - a list of questions, an editor with a preview beside it - so
+  // they take the width. Student screens keep the narrower reading measure, where a quiz card and
+  // its prose would only stretch. One variable rather than four class strings, so the header, the
+  // teacher banner, the page and the footer always line up with each other.
+  const shellWidth = inAdmin ? 'max-w-7xl' : 'max-w-5xl'
+
   const handleSignOut = () => {
     logout()
     navigate('/login', { replace: true })
@@ -42,17 +48,11 @@ export function AppLayout() {
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-200/70 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 sm:px-6">
-          {/* The M is the mark: a monogram needs no glyph beside it, and it wears the same blue as
-              every button in the app, so the brand and the interface are one colour. */}
-          <Link
-            to={inAdmin ? '/admin/questions' : '/'}
-            aria-label={`${APP_FULL_NAME} home`}
-            title={APP_FULL_NAME}
-            className="grid h-8 w-8 place-items-center rounded-lg bg-indigo-600 text-sm font-bold text-white shadow-sm shadow-indigo-600/30"
-          >
-            {APP_MARK}
-          </Link>
+        <div className={`mx-auto flex ${shellWidth} items-center gap-3 px-4 py-3 sm:px-6`}>
+          {/* A teacher's home is the question bank, so the mark follows the half of the product
+              you are in rather than sending them to the practice screens. Its size, its colour and
+              where it points a visitor all belong to the mark itself, which every screen shares. */}
+          <HomeMark to={inAdmin ? '/admin/questions' : '/'} />
 
           <nav className="ml-2 flex items-center gap-1">
             {inAdmin ? (
@@ -129,7 +129,7 @@ export function AppLayout() {
             already, but a teacher should not have to infer that from a link being absent. */}
         {inAdmin ? (
           <div className="border-t border-amber-200 bg-amber-50">
-            <div className="mx-auto max-w-5xl px-4 py-1.5 sm:px-6">
+            <div className={`mx-auto ${shellWidth} px-4 py-1.5 sm:px-6`}>
               <p className="text-xs font-semibold uppercase tracking-wide text-amber-800">
                 Teacher mode
               </p>
@@ -138,11 +138,11 @@ export function AppLayout() {
         ) : null}
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
+      <main className={`mx-auto ${shellWidth} px-4 py-6 sm:px-6 sm:py-10`}>
         <Outlet />
       </main>
 
-      <footer className="mx-auto max-w-5xl px-4 pb-10 pt-4 text-center text-xs text-slate-400 sm:px-6">
+      <footer className={`mx-auto ${shellWidth} px-4 pb-10 pt-4 text-center text-xs text-slate-400 sm:px-6`}>
         <p>Questions are a starter set</p>
       </footer>
 

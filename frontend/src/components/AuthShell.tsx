@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { APP_DESCRIPTOR, APP_FULL_NAME, APP_MARK } from '../lib/branding'
+import { HomeMark } from './HomeMark'
+import { APP_DESCRIPTOR, APP_FULL_NAME } from '../lib/branding'
 import { GUIDANCE_URL } from '../lib/guidance'
 import { PrototypeBadge } from './PrototypeBadge'
 
@@ -8,22 +9,20 @@ import { PrototypeBadge } from './PrototypeBadge'
  * The centred layout both sign-in steps sit in, so the choice and the sign-in look like one
  * continuous flow rather than two unrelated screens.
  *
- * The full name sits above the page's own heading, as text — the badge is the header's logo and
- * nowhere else. It spells out the acronym, which is the only place a visitor can learn it. The
- * page's own heading is still the first thing to read.
+ * The full name sits above the page's own heading, as text, and spells out the acronym for the
+ * only time a visitor sees it. The mark above it is not this layout's: it is the same {@link
+ * HomeMark} every other screen carries, pinned top left, so the way out of a sign-in page is always
+ * in the same corner. The page's own heading is still the first thing to read.
  */
 export function AuthShell({ children }: { children: ReactNode }) {
   return (
     <div className="grid min-h-screen place-items-center px-6 py-12">
+      <div className="fixed left-4 top-4 z-20 sm:left-6">
+        <HomeMark />
+      </div>
       <div className="w-full max-w-md animate-rise">
         <div className="flex flex-col items-center">
-          <span
-            aria-hidden="true"
-            className="grid h-10 w-10 place-items-center rounded-xl bg-indigo-600 text-base font-bold text-white shadow-sm shadow-indigo-600/30"
-          >
-            {APP_MARK}
-          </span>
-          <p className="mt-2.5 text-center text-lg font-bold tracking-tight text-slate-900">{APP_FULL_NAME}</p>
+          <p className="text-center text-lg font-bold tracking-tight text-slate-900">{APP_FULL_NAME}</p>
           <p className="text-center text-sm text-slate-500">{APP_DESCRIPTOR}</p>
         </div>
         {children}

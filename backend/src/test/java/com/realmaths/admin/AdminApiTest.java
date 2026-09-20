@@ -566,8 +566,16 @@ class AdminApiTest {
             if (index > 0) {
                 json.append(',');
             }
-            json.append("{\"text\":\"%s\",\"correct\":%s}"
-                    .formatted(options[index], contains(correctIndexes, index)));
+            // Wrong options carry a message, as publishing requires. The ceiling is exercised by its
+            // own test, so a fixture here only has to look like something a teacher could publish.
+            boolean correct = contains(correctIndexes, index);
+            json.append("{\"text\":\"%s\",\"correct\":%s%s}"
+                    .formatted(
+                            options[index],
+                            correct,
+                            correct
+                                    ? ""
+                                    : ",\"feedback\":\"You might have thought that this was the answer, but it is not.\""));
         }
         return json.append("]}").toString();
     }

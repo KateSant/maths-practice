@@ -125,7 +125,23 @@ public class Question {
     }
 
     /**
+     * Drops options beyond the given size, from the end.
+     *
+     * <p>Used by an in-place edit that submits fewer options than the question had. The rows are
+     * removed from the collection and deleted by orphan removal on flush, which takes any recorded
+     * pick of those options with them - which is right: the option no longer exists.
+     */
+    public void truncateOptions(int size) {
+        while (options.size() > size) {
+            options.remove(options.size() - 1);
+        }
+    }
+
+    /**
      * Empties the option set so it can be rebuilt.
+     *
+     * <p>No longer used by the admin edit path, which updates in place so that recorded answers
+     * keep their option ids. Kept for callers that genuinely replace the set.
      *
      * <p>Callers must flush between clearing and re-adding. The new options occupy the same
      * {@code (question_id, position)} values as the old ones, so unless the deletes reach the

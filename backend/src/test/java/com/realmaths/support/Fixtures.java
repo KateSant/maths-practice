@@ -19,6 +19,15 @@ import java.util.List;
  */
 public final class Fixtures {
 
+    /**
+     * The message a wrong option carries. Publishing requires one, because a student who picks it
+     * has to be told what they probably thought, so a fixture that looks like a publishable question
+     * has to have one. Tests that need a message-less option build it directly - see
+     * QuestionValidatorTest's refusal cases, which is where that rule is asserted.
+     */
+    public static final String WRONG_OPTION_MESSAGE =
+            "You might have thought that this was the answer, but it is not.";
+
     private Fixtures() {}
 
     public static Topic topic(long id, String slug, String name) {
@@ -44,7 +53,13 @@ public final class Fixtures {
         Question question = new Question(topic, prompt, explanation, 1, YearGroups.MIN, answerType);
         setField(question, "id", id);
         for (int i = 0; i < optionTexts.length; i++) {
-            question.addOption(String.valueOf((char) ('A' + i)), optionTexts[i], i == correctIndex);
+            boolean correct = i == correctIndex;
+            question.addOption(
+                    String.valueOf((char) ('A' + i)),
+                    optionTexts[i],
+                    correct,
+                    null,
+                    correct ? null : WRONG_OPTION_MESSAGE);
         }
         return withOptionIds(question);
     }
@@ -65,7 +80,13 @@ public final class Fixtures {
         Question question = new Question(topic, prompt, explanation, 1, YearGroups.MIN, AnswerType.MULTI_SELECT);
         setField(question, "id", id);
         for (int i = 0; i < optionTexts.length; i++) {
-            question.addOption(String.valueOf((char) ('A' + i)), optionTexts[i], contains(correctIndexes, i));
+            boolean correct = contains(correctIndexes, i);
+            question.addOption(
+                    String.valueOf((char) ('A' + i)),
+                    optionTexts[i],
+                    correct,
+                    null,
+                    correct ? null : WRONG_OPTION_MESSAGE);
         }
         return withOptionIds(question);
     }
